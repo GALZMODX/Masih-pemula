@@ -75,11 +75,164 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
+    <!-- ==================== GATE LOGIN SCREEN ==================== -->
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-darkBg flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-gradient-to-tr from-storePurple/10 via-transparent to-storeRed/10 pointer-events-none"></div>
+        <div class="w-full max-w-md bg-darkCard/90 border border-purple-950/80 p-8 rounded-3xl shadow-2xl relative z-10 backdrop-blur-md">
+            <div class="text-center mb-8">
+                <span class="text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-storeRed via-storePurple to-storeBlue font-space glow-red">
+                    GALZX STORE
+                </span>
+                <p class="text-gray-400 text-xs mt-2">Masukkan akun aktivasi Anda untuk melanjutkan belanja</p>
+            </div>
+            
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="block text-[11px] text-gray-400 font-bold mb-2 uppercase tracking-wider">Username</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-500 text-sm">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <input type="text" id="login-username" required placeholder="Masukan Username" class="w-full bg-darkBg/80 border border-purple-950/60 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-storeRed focus:ring-1 focus:ring-storeRed/40 transition-all">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] text-gray-400 font-bold mb-2 uppercase tracking-wider">Password</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-500 text-sm">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" id="login-password" required placeholder="Masukan Password" class="w-full bg-darkBg/80 border border-purple-950/60 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-storeRed focus:ring-1 focus:ring-storeRed/40 transition-all">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-storeRed via-storePurple to-storeBlue py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-95 transition-all shadow-lg hover:shadow-storePurple/30 flex items-center justify-center space-x-2 mt-2">
+                    <span>Masuk Ke Toko</span> <i class="fas fa-sign-in-alt"></i>
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center text-[10px] text-gray-500">
+                Belum punya akun? Silakan hubungi admin via WhatsApp untuk pendaftaran.
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== VIDEO INTRO SCREEN ==================== -->
+    <div id="video-intro-screen" class="fixed inset-0 z-[110] bg-black hidden flex items-center justify-center">
+        <!-- Skip button top right -->
+        <button onclick="skipVideo()" class="absolute top-6 right-6 z-50 bg-black/60 hover:bg-storeRed/80 border border-storeRed/50 hover:border-white px-5 py-2 rounded-full text-xs font-black tracking-widest text-white transition-all flex items-center space-x-2 backdrop-blur-md">
+            <span>LEWATI</span> <i class="fas fa-forward-step"></i>
+        </button>
+        <!-- Video container -->
+        <video id="intro-video" class="w-full h-full object-contain" playsinline>
+            <source src="https://files.catbox.moe/77pmb4.mp4" type="video/mp4">
+            Browser Anda tidak mendukung tag video.
+        </video>
+    </div>
+
+    <!-- ==================== TELEGRAM GROUP GATE MODAL ==================== -->
+    <div id="tele-gate-modal" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-darkCard border border-storeBlue/30 p-8 rounded-3xl text-center shadow-2xl relative">
+            <span class="w-16 h-16 rounded-full bg-blue-500/10 text-storeBlue flex items-center justify-center text-3xl mx-auto mb-6 border border-storeBlue/20">
+                <i class="fab fa-telegram"></i>
+            </span>
+            <h3 class="text-xl font-black font-space text-white">WAJIB GABUNG GRUP TELEGRAM</h3>
+            <p class="text-xs text-gray-400 mt-2 px-2">
+                Sebelum dapat mengakses semua produk dan layanan premium GALZX STORE, Anda wajib masuk ke Telegram Official kami terlebih dahulu.
+            </p>
+
+            <div class="mt-8 space-y-3">
+                <!-- Action Button -->
+                <button id="tele-btn-action" onclick="handleTeleJoin()" class="w-full py-4 bg-gradient-to-r from-storeBlue to-blue-600 hover:opacity-95 text-black font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-blue-500/10 flex items-center justify-center space-x-2">
+                    <span>MASUK GRUP TELEGRAM</span> <i class="fas fa-external-link-alt text-xs"></i>
+                </button>
+                
+                <p id="tele-countdown-text" class="text-[10px] text-gray-500 hidden italic">
+                    Memverifikasi pendaftaran dalam <span id="tele-timer" class="text-storeBlue font-bold font-space">10</span> detik...
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== LEFT SIDEBAR MENU (HAMBURGER DRAWER) ==================== -->
+    <div id="side-menu-overlay" onclick="toggleSideMenu()" class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="side-menu" class="fixed top-0 left-0 bottom-0 z-50 w-80 bg-darkCard border-r border-purple-950/60 p-6 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex-grow overflow-y-auto no-scrollbar space-y-8">
+            <!-- Header sidebar -->
+            <div class="flex items-center justify-between border-b border-purple-950/45 pb-4">
+                <span class="text-lg font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-storeRed via-storePurple to-storeBlue font-space">
+                    GALZX STORE
+                </span>
+                <button onclick="toggleSideMenu()" class="text-gray-400 hover:text-storeRed text-sm">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Hubungi Admin links -->
+            <div class="space-y-3">
+                <h4 class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Hubungi Layanan Admin</h4>
+                <a href="https://wa.me/6283843123569" target="_blank" class="flex items-center space-x-3 p-3 bg-darkBg/50 hover:bg-green-500/10 border border-purple-950/40 hover:border-green-500/50 rounded-xl transition-all text-xs text-gray-300 hover:text-white font-semibold">
+                    <i class="fab fa-whatsapp text-green-400 text-lg"></i> <span>Hubungi Kami WA</span>
+                </a>
+                <a href="https://t.me/GALZMODX" target="_blank" class="flex items-center space-x-3 p-3 bg-darkBg/50 hover:bg-blue-500/10 border border-purple-950/40 hover:border-blue-500/50 rounded-xl transition-all text-xs text-gray-300 hover:text-white font-semibold">
+                    <i class="fab fa-telegram text-blue-400 text-lg"></i> <span>Hubungi Kami Telegram</span>
+                </a>
+                <a href="https://www.tiktok.com/@galzmodx" target="_blank" class="flex items-center space-x-3 p-3 bg-darkBg/50 hover:bg-pink-500/10 border border-purple-950/40 hover:border-pink-500/50 rounded-xl transition-all text-xs text-gray-300 hover:text-white font-semibold">
+                    <i class="fab fa-tiktok text-pink-400 text-lg"></i> <span>Hubungi Kami TikTok</span>
+                </a>
+            </div>
+
+            <!-- Special APK List text section -->
+            <div class="p-4 bg-darkBg/90 rounded-2xl border border-storePurple/20 text-center font-semibold text-xs leading-relaxed">
+                <div class="text-storeRed font-bold text-sm tracking-wide mb-3">𝙇𝙄𝙎𝙏 𝘼𝙋𝙆 𝙂𝘼𝙇𝙕𝙓</div>
+                <div class="text-gray-300 space-y-1 font-mono">
+                    <div>𝙰𝚉𝚇 𝚇 𝚁𝙰𝚃</div>
+                    <div>𝚇-𝙵𝙰𝚁</div>
+                    <div>𝙼𝙸𝚈𝙰𝙱𝙸</div>
+                    <div>𝙳𝙰𝚁𝙺 𝚅𝙴𝚁𝚂𝙴</div>
+                    <div>𝙶𝚇𝙳 𝙾𝚁𝙱𝙸𝚃</div>
+                    <div>𝚂𝙶𝚇</div>
+                    <div>𝙻𝙸𝙶𝙷 𝚂𝚃𝙰𝚁</div>
+                    <div>𝙿𝙿𝙻</div>
+                    <div>𝙼𝙰𝙽𝚃𝙰</div>
+                    <div>𝙾𝚃𝙰𝚇</div>
+                    <div>𝚃𝚁𝙰𝙿𝙴𝙽𝙳𝙴𝙽</div>
+                    <div>𝙰𝚇 𝚁𝚁𝙶</div>
+                    <div>𝙶𝙾走𝙾</div>
+                    <div>𝙶𝙴𝚃𝚂𝚄𝚉𝙾</div>
+                    <div>𝙷𝙾𝙻𝙾𝚆</div>
+                    <div>𝙰𝚁𝙶 𝚇 𝚁𝙰𝚃</div>
+                    <div>𝚂𝙰𝙽𝚃𝙰𝚇</div>
+                </div>
+                
+                <div class="text-storeBlue font-bold text-sm tracking-widest mt-5 mb-2">𝐓𝐎𝐎𝐋𝐒</div>
+                <div class="text-gray-300 font-mono text-[11px] mb-4">
+                    𝚂𝙿𝙰𝙼 𝙾𝚃𝙿 𝚇 𝙲𝙰𝙻 𝚇 𝚂𝙼𝚂 𝙳𝙻𝙻
+                </div>
+                
+                <div class="text-storePurple font-bold tracking-widest pt-2 border-t border-purple-950/40">
+                    @GALZMODX
+                </div>
+            </div>
+        </div>
+
+        <!-- Log Out Section bottom -->
+        <div class="pt-4 border-t border-purple-950/45">
+            <button onclick="handleLogOut()" class="w-full bg-red-950/30 hover:bg-storeRed/20 border border-storeRed/40 py-3 rounded-xl text-xs font-black text-storeRed tracking-widest uppercase transition-all flex items-center justify-center space-x-2">
+                <i class="fas fa-sign-out-alt"></i> <span>LOG OUT</span>
+            </button>
+        </div>
+    </aside>
+
     <!-- NAVIGATION BAR -->
-    <nav class="sticky top-0 z-50 bg-darkBg/95 backdrop-blur-md border-b border-purple-950/40 py-4 px-4 sm:px-8">
+    <nav class="sticky top-0 z-30 bg-darkBg/95 backdrop-blur-md border-b border-purple-950/40 py-4 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <span class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-storeRed via-storePurple to-storeBlue font-space glow-red">
+            <div class="flex items-center space-x-4">
+                <!-- Hamburger Menu Button -->
+                <button onclick="toggleSideMenu()" class="text-white hover:text-storeRed p-1 transition-colors text-lg">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="text-xl sm:text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-storeRed via-storePurple to-storeBlue font-space glow-red">
                     GALZX STORE
                 </span>
             </div>
@@ -91,7 +244,7 @@
             </div>
             <div class="flex items-center space-x-3">
                 <a href="https://wa.me/6283843123569" target="_blank" class="bg-gradient-to-r from-storeRed to-storePurple px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider hover:opacity-95 transition-all shadow-lg hover:shadow-storePurple/50 flex items-center space-x-1.5">
-                    <i class="fab fa-whatsapp text-sm"></i> <span>HUBUNGI KAMI</span>
+                    <i class="fab fa-whatsapp text-sm"></i> <span class="hidden sm:inline">HUBUNGI KAMI</span>
                 </a>
             </div>
         </div>
@@ -100,8 +253,8 @@
     <!-- MAIN BODY CONTENT -->
     <main class="flex-grow pb-16" id="home">
         
-        <!-- LARGE SIZE ROTATING HERO BANNERS (PERBESAR UKURAN BANNER) -->
-        <div class="max-w-7xl mx-auto px-4 pt-6 sm:px-8">
+        <!-- LARGE SIZE ROTATING HERO BANNERS WITH MANUAL NAV BUTTONS -->
+        <div class="max-w-7xl mx-auto px-4 pt-6 sm:px-8 relative group">
             <div class="relative rounded-3xl overflow-hidden banner-glow border border-purple-950/80 bg-darkCard/40">
                 <!-- Height increased to make banners appear much bigger and clearer -->
                 <div id="banner-slider" class="flex transition-transform duration-500 ease-in-out h-[260px] sm:h-[420px] md:h-[520px] lg:h-[600px]">
@@ -132,13 +285,26 @@
                     </div>
                 </div>
 
-                <!-- Navigation Indicator Dots -->
-                <div class="absolute bottom-5 left-0 right-0 flex justify-center space-x-2.5 z-20">
-                    <button onclick="setSlide(0)" class="w-3 h-3 rounded-full bg-storeRed duration-300 slide-dot"></button>
-                    <button onclick="setSlide(1)" class="w-3 h-3 rounded-full bg-gray-600 duration-300 slide-dot"></button>
-                    <button onclick="setSlide(2)" class="w-3 h-3 rounded-full bg-gray-600 duration-300 slide-dot"></button>
-                    <button onclick="setSlide(3)" class="w-3 h-3 rounded-full bg-gray-600 duration-300 slide-dot"></button>
-                    <button onclick="setSlide(4)" class="w-3 h-3 rounded-full bg-gray-600 duration-300 slide-dot"></button>
+                <!-- Navigation Indicator Dots Flanked by Manual Left & Right buttons -->
+                <div class="absolute bottom-5 left-0 right-0 flex justify-center items-center space-x-5 z-20">
+                    <!-- Left Arrow Button -->
+                    <button onclick="prevSlide()" class="w-8 h-8 rounded-full bg-black/60 hover:bg-storeRed border border-purple-950 hover:border-white text-white flex items-center justify-center transition-all">
+                        <i class="fas fa-chevron-left text-xs"></i>
+                    </button>
+
+                    <!-- Indicators -->
+                    <div class="flex space-x-2.5">
+                        <button onclick="setSlide(0)" class="w-3 h-3 rounded-full bg-storeRed duration-300 slide-dot"></button>
+                        <button onclick="setSlide(1)" class="w-3 h-3 rounded-full bg-gray-600 duration-300 slide-dot"></button>
+                        <button onclick="setSlide(2)" class="w-3 h-3 rounded-full bg-gray-600 duration-300 slide-dot"></button>
+                        <button onclick="setSlide(3)" class="w-3 h-3 rounded-full bg-gray-600 duration-300 slide-dot"></button>
+                        <button onclick="setSlide(4)" class="w-3 h-3 rounded-full bg-gray-600 duration-300 slide-dot"></button>
+                    </div>
+
+                    <!-- Right Arrow Button -->
+                    <button onclick="nextSlide()" class="w-8 h-8 rounded-full bg-black/60 hover:bg-storeRed border border-purple-950 hover:border-white text-white flex items-center justify-center transition-all">
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -155,7 +321,7 @@
                 </span>
             </h1>
             <p class="text-gray-400 mt-3 text-xs sm:text-base max-w-2xl mx-auto">
-                Dapatkan aplikasi modifikasi, bug WhatsApp, kendali RAT tercanggih, dan spammer super cepat dengan jaminan 100% Gacor, Tutorial Lengkap & Free Update selamanya!
+                Dapatkan aplikasi bug WhatsApp, kendali RAT tercanggih, dan spammer super cepat dengan jaminan 100% Gacor, Tutorial Lengkap & Free Update selamanya!
             </p>
         </div>
 
@@ -181,7 +347,7 @@
             </div>
 
             <!-- APK 1: X-FAR RAT V10 -->
-            <div id="content-xfar" class="tab-content block space-y-8 animate-fade-in">
+            <div id="content-xfar" class="tab-content block space-y-8">
                 <div class="bg-gradient-to-r from-red-950/20 to-transparent p-6 rounded-2xl border border-storeRed/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <span class="bg-storeRed/15 text-storeRed px-3 py-1 rounded-md text-[10px] font-black inline-block mb-2 uppercase tracking-widest border border-storeRed/20">
@@ -316,7 +482,7 @@
                             <li class="flex items-center"><i class="fas fa-check text-storeBlue mr-2"></i> Kontrol senter target</li>
                             <li class="flex items-center"><i class="fas fa-check text-storeBlue mr-2"></i> akses kamera target</li>
                             <li class="flex items-center"><i class="fas fa-check text-storeBlue mr-2"></i> Kunci perangkat target</li>
-                            <li class="flex items-center"><i class="fas fa-check text-storeBlue mr-2"></i> lacak lokasi real-timee</li>
+                            <li class="flex items-center"><i class="fas fa-check text-storeBlue mr-2"></i> lacak lokasi real-time</li>
                             <li class="flex items-center"><i class="fas fa-check-double text-storeBlue mr-2"></i> pantau aktivitas target</li>
                             <li class="flex items-center"><i class="fas fa-check text-storeBlue mr-2"></i> scretshot</li>
                             <li class="flex items-center"><i class="fas fa-check text-storeBlue mr-2"></i> ganti walpaper</li>
@@ -333,7 +499,7 @@
             </div>
 
             <!-- APK 2: LIGHTSTAR V10 -->
-            <div id="content-lightstar" class="tab-content hidden space-y-8 animate-fade-in">
+            <div id="content-lightstar" class="tab-content hidden space-y-8">
                 <div class="bg-gradient-to-r from-purple-950/20 to-transparent p-6 rounded-2xl border border-storePurple/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <span class="bg-storePurple/15 text-storePurple px-3 py-1 rounded-md text-[10px] font-black inline-block mb-2 uppercase tracking-widest border border-storePurple/20">
@@ -539,7 +705,7 @@
             </div>
 
             <!-- APK 3: AX RRG -->
-            <div id="content-axrrg" class="tab-content hidden space-y-8 animate-fade-in">
+            <div id="content-axrrg" class="tab-content hidden space-y-8">
                 <div class="bg-gradient-to-r from-blue-950/20 to-transparent p-6 rounded-2xl border border-storeBlue/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <span class="bg-storeBlue/15 text-storeBlue px-3 py-1 rounded-md text-[10px] font-black inline-block mb-2 uppercase tracking-widest border border-storeBlue/20">
@@ -664,7 +830,7 @@
             </div>
 
             <!-- APK 4: AZX V7 -->
-            <div id="content-azxv7" class="tab-content hidden space-y-8 animate-fade-in">
+            <div id="content-azxv7" class="tab-content hidden space-y-8">
                 <div class="bg-gradient-to-r from-red-950/20 to-transparent p-6 rounded-2xl border border-storeRed/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <span class="bg-storeRed/15 text-storeRed px-3 py-1 rounded-md text-[10px] font-black inline-block mb-2 uppercase tracking-widest border border-storeRed/20">
@@ -756,7 +922,7 @@
             </div>
 
             <!-- APK 5: OMG - NEXUS 4.8.2 -->
-            <div id="content-nexus" class="tab-content hidden space-y-8 animate-fade-in">
+            <div id="content-nexus" class="tab-content hidden space-y-8">
                 <div class="bg-gradient-to-r from-blue-950/20 to-transparent p-6 rounded-2xl border border-storeBlue/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <span class="bg-storeBlue/15 text-storeBlue px-3 py-1 rounded-md text-[10px] font-black inline-block mb-2 uppercase tracking-widest border border-storeBlue/20">
@@ -1035,14 +1201,149 @@
         </div>
     </footer>
 
-    <!-- POPUP TOAST ALERTS (No native alerts error) -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-darkCard border border-storeRed/40 text-white py-3 px-5 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-24 opacity-0 flex items-center space-x-3">
+    <!-- POPUP TOAST ALERTS -->
+    <div id="toast" class="fixed bottom-6 right-6 z-[120] bg-darkCard border border-storeRed/40 text-white py-3 px-5 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-24 opacity-0 flex items-center space-x-3">
         <span class="text-storeRed text-lg" id="toast-icon"><i class="fas fa-circle-check"></i></span>
         <span class="text-xs font-bold" id="toast-msg">Notif</span>
     </div>
 
     <!-- CONTROLLER SCRIPTS -->
     <script>
+        // Store user state
+        let isLoggedIn = false;
+        let isGroupVerified = false;
+
+        // On Page Load: Check session/local storage
+        window.onload = function() {
+            if (localStorage.getItem('galzx_logged_in') === 'true') {
+                isLoggedIn = true;
+                document.getElementById('login-screen').classList.add('hidden');
+                
+                if (localStorage.getItem('galzx_group_verified') === 'true') {
+                    isGroupVerified = true;
+                } else {
+                    showTelegramGate();
+                }
+            }
+        };
+
+        // Handle Login Gate Form Submit
+        function handleLogin(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('login-username').value.trim();
+            const passwordInput = document.getElementById('login-password').value.trim();
+
+            if (usernameInput !== "" && passwordInput !== "") {
+                // Show video intro/loading screen
+                document.getElementById('login-screen').classList.add('hidden');
+                const videoScreen = document.getElementById('video-intro-screen');
+                const videoElement = document.getElementById('intro-video');
+                
+                videoScreen.classList.remove('hidden');
+                videoElement.currentTime = 0;
+                videoElement.play().catch(err => {
+                    console.log("Autoplay blocked, user interaction required: ", err);
+                });
+
+                // Set login status
+                isLoggedIn = true;
+                localStorage.setItem('galzx_logged_in', 'true');
+
+                // Auto hide video after ending
+                videoElement.onended = function() {
+                    skipVideo();
+                };
+            } else {
+                showToast("Isi data login dengan benar!", "fa-circle-xmark", true);
+            }
+        }
+
+        // Skip / Lewati Video intro
+        function skipVideo() {
+            const videoElement = document.getElementById('intro-video');
+            videoElement.pause();
+            document.getElementById('video-intro-screen').classList.add('hidden');
+
+            // Proceed to Telegram Group verification modal
+            if (!isGroupVerified && localStorage.getItem('galzx_group_verified') !== 'true') {
+                showTelegramGate();
+            } else {
+                showToast("Selamat datang kembali di GALZX STORE!", "fa-circle-check");
+            }
+        }
+
+        // Show Telegram Modal Gate
+        function showTelegramGate() {
+            document.getElementById('tele-gate-modal').classList.remove('hidden');
+        }
+
+        // Handle telegram join button click
+        function handleTeleJoin() {
+            // Open tele link
+            window.open('https://t.me/+5WQRKmWYHg0xNDNl', '_blank');
+
+            // Change button style & text to "Done" and show verification countdown
+            const actionBtn = document.getElementById('tele-btn-action');
+            const countdownText = document.getElementById('tele-countdown-text');
+            const timerSpan = document.getElementById('tele-timer');
+
+            actionBtn.innerHTML = `<span>MEMPROSES VERIFIKASI...</span> <i class="fas fa-spinner animate-spin"></i>`;
+            actionBtn.disabled = true;
+            actionBtn.classList.remove('from-storeBlue', 'to-blue-600');
+            actionBtn.classList.add('from-gray-700', 'to-gray-800', 'text-gray-400');
+            
+            countdownText.classList.remove('hidden');
+
+            let timeLeft = 10;
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                timerSpan.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    
+                    // Complete verification
+                    isGroupVerified = true;
+                    localStorage.setItem('galzx_group_verified', 'true');
+                    
+                    // Hide modal & show welcome toast
+                    document.getElementById('tele-gate-modal').classList.add('hidden');
+                    showToast("Verifikasi Sukses! Selamat Berbelanja.", "fa-circle-check");
+                }
+            }, 1000);
+        }
+
+        // Handle Logout
+        function handleLogOut() {
+            isLoggedIn = false;
+            isGroupVerified = false;
+            localStorage.removeItem('galzx_logged_in');
+            localStorage.removeItem('galzx_group_verified');
+            
+            // Show login screen
+            document.getElementById('login-screen').classList.remove('hidden');
+            // Hide sidebar
+            toggleSideMenu();
+            // Show alert
+            showToast("Berhasil Log Out dari sistem.", "fa-circle-check");
+        }
+
+        // Slide Sidebar (Drawer) toggle
+        function toggleSideMenu() {
+            const sideMenu = document.getElementById('side-menu');
+            const overlay = document.getElementById('side-menu-overlay');
+
+            if (sideMenu.classList.contains('-translate-x-full')) {
+                sideMenu.classList.remove('-translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100');
+            } else {
+                sideMenu.classList.add('-translate-x-full');
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
         // Banner slider control
         let currentSlide = 0;
         const slides = document.getElementById('banner-slider');
@@ -1066,11 +1367,34 @@
             });
         }
 
-        // Auto slide banners
-        setInterval(() => {
+        // Manual Banner Next / Previous Buttons
+        function nextSlide() {
             currentSlide = (currentSlide + 1) % totalSlides;
             setSlide(currentSlide);
-        }, 4500);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            setSlide(currentSlide);
+        }
+
+        // Auto slide banners
+        let autoSlideInterval = setInterval(() => {
+            nextSlide();
+        }, 5500);
+
+        // Reset auto slide on user action
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(() => {
+                nextSlide();
+            }, 5500);
+        }
+
+        // Add event listeners to slide triggers to avoid spam transitions
+        document.querySelectorAll('.slide-dot, button[onclick^="prevSlide"], button[onclick^="nextSlide"]').forEach(btn => {
+            btn.addEventListener('click', resetAutoSlide);
+        });
 
         setSlide(0);
 
