@@ -1,143 +1,458 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Unban Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background: #050505; color: white; font-family: sans-serif; }
-        .bg-layer { background: url('https://files.catbox.moe/zm2a6c.png') no-repeat center center fixed; background-size: cover; }
-        .glass { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>NAY UNBAN V1</title>
+  <link rel="icon" href="https://files.catbox.moe/ejn7q9.jpeg" />
+
+  <!-- Manifest untuk Android WebAPK / Chrome -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#05060a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="VXZ UNBAN V2">
+  <link rel="apple-touch-icon" href="https://files.catbox.moe/ejn7q9.jpeg">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --size: 300px; /* ukuran intro */
+      --duration: 5s;
+      --bg:#05060a;
+      --accent:#F4320B;
+      --accent2:#FF00F7;
+      --muted:#EBE8EB;
+      --mono:'Share Tech Mono', monospace;
+      --ui: 'Inter', system-ui, sans-serif;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background:var(--bg);
+      color:#e6eef6;
+      font-family:var(--ui);
+      -webkit-font-smoothing:antialiased;
+    }
+    *{box-sizing:border-box}
+
+    /* =========================
+       INTRO (full-screen overlay)
+       ========================= */
+    #introOverlay{
+      position:fixed;
+      inset:0;
+      background:#000;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      transition: opacity .6s ease;
+      pointer-events: auto;
+    }
+
+    /* container from your exact intro */
+    .video-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .video-wrap {
+      width: var(--size);
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 0 10px rgba(255,255,255,0.15);
+      position: relative;
+    }
+
+    video#player {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border: none;
+      outline: none;
+      pointer-events: none;
+    }
+
+    .loading-area {
+      width: var(--size);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .loading-text { font-weight:600; letter-spacing:0.05em; font-size:0.9rem; color:#fff; font-family:var(--ui); }
+    .loading-bar { width:100%; height:8px; background: rgba(255,255,255,0.15); border-radius:999px; overflow:hidden; }
+    .loading-bar i { display:block; height:100%; width:0%; background: linear-gradient(90deg,#fff,rgba(255,255,255,0.5)); border-radius:999px; animation: fillBar var(--duration) linear forwards; }
+    @keyframes fillBar { from{width:0%} to{width:100%} }
+
+    .dots { display:flex; gap:6px; margin-top:6px; }
+    .dot { width:6px; height:6px; border-radius:50%; background:white; opacity:0.2; animation: blink 1s infinite; }
+    .dot:nth-child(2){ animation-delay:.2s } .dot:nth-child(3){ animation-delay:.4s }
+    @keyframes blink { 0%,80%,100%{opacity:.2; transform:translateY(0)} 40%{opacity:1; transform:translateY(-4px)} }
+
+    .brand-text { margin-top:12px; font-family: "Orbitron", sans-serif; font-weight:900; font-size:1.1rem; letter-spacing:2px; color:#fff; text-shadow:0 0 10px rgb(120,120,120); user-select:none; }
+
+    /* hide intro overlay when finished */
+    #introOverlay.hidden { opacity: 0; pointer-events: none; }
+
+    @media (max-width:400px){ :root{ --size:250px } .brand-text{ font-size:1rem } }
+
+    /* =========================
+       MAIN APP LAYOUT (GZX UNBAN)
+       ========================= */
+    #app {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .45s ease .1s, visibility .45s ease .1s;
+      padding: 18px;
+      min-height: 100vh;
+    }
+    #app.visible { opacity: 1; visibility: visible; }
+
+    .topbar { display:flex; align-items:center; background:transparent; padding:8px 12px; }
+    .title-top { font-family: var(--mono); font-size:18px; font-weight:600; color:var(--accent); }
+    .robot-box{ background:radial-gradient(circle at 30% 20%, rgba(124,92,255,0.06), transparent 20%), linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:14px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.02); width:280px; margin-left:auto; margin-right:auto; margin-top:40px; }
+    .robot-face { width:120px; height:120px; border-radius:50%; background:#000; display:flex; align-items:center; justify-content:center; font-size:56px; margin:0 auto; box-shadow:0 0 15px rgba(0,0,0,0.6); }
+    .robot-title-normal { font-size:18px; text-align:center; margin-top:8px; color:#e6eef6; font-weight:600; }
+
+    .form-label{ font-size:12px; font-weight:500; margin:12px 0 6px; display:block; text-align:left; width:280px; margin-left:auto; margin-right:auto; }
+    .input, select, .btn { width:280px; margin:0 auto; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:#071018; color:#7b8a97; font-size:14px; outline:none; display:block; }
+    .btn{ margin-top:18px; padding:12px 14px; background:linear-gradient(90deg,var(--accent),var(--accent2)); border:0; border-radius:10px; color:#000; font-weight:800; cursor:pointer; font-size:15px }
+    .status{ margin-top:12px; font-size:13px; color:var(--muted); min-height:20px; width:280px; margin-left:auto; margin-right:auto; }
+    .small{ font-size:12px; color:var(--muted); margin-top:6px; width:280px; margin-left:auto; margin-right:auto; text-align:center; }
+    .overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:none; z-index:998; }
+    .overlay.active { display:block; }
+
+    /* custom select look */
+    select.input { -webkit-appearance:none; -moz-appearance:none; appearance:none; background: linear-gradient(145deg, #0b1116, #071018); padding-right:36px; }
+    .select-wrapper { position: relative; width:280px; margin:0 auto; }
+    .select-wrapper::after { content: "\25BC"; position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#7b8a97; }
+
+    /* welcome popup - center */
+    #welcomeBox {
+      position: fixed;
+      inset: 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.25);
+      z-index: 10000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+    }
+    #welcomeBox.active { opacity:1; pointer-events:auto; }
+    #welcomeContent {
+      background: rgba(0,0,0,0.6);
+      padding:20px 26px;
+      border-radius:10px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      text-align:center;
+    }
+    .gradientText{
+      font-family: 'Orbitron', sans-serif;
+      font-weight:900;
+      font-size:22px;
+      background: linear-gradient(90deg,#ff0000,#ff4a4a);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      letter-spacing:1px;
+    }
+
+    @media (max-width:420px){
+      .input, select, .btn, .form-label { width:220px; margin-left:auto; margin-right:auto; }
+      .robot-box{ width:220px; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Login -->
-    <div id="authPage" class="bg-layer min-h-screen flex items-center justify-center p-4">
-        <div class="glass border border-purple-500 p-8 rounded-2xl w-full max-w-sm text-center">
-            <h2 id="authTitle" class="text-2xl font-bold text-purple-400 mb-6 uppercase">Login</h2>
-            <input type="text" placeholder="Username" class="w-full bg-black/50 p-3 rounded mb-3 border border-purple-800 text-white">
-            <input type="password" placeholder="Password" class="w-full bg-black/50 p-3 rounded mb-6 border border-purple-800 text-white">
-            <button onclick="enterApp()" class="w-full bg-purple-600 py-3 rounded font-bold uppercase mb-4">Masuk</button>
-            <p class="text-sm cursor-pointer text-gray-400 hover:text-white" onclick="toggleAuth()">Belum punya akun? Buat Akun</p>
-        </div>
-    </div>
-
-    <!-- Intro -->
-    <div id="introPage" class="hidden fixed inset-0 z-50">
-        <button onclick="skipIntro()" class="absolute top-5 right-5 z-50 bg-black/50 px-4 py-2 rounded border border-white/20">SKIP INTRO</button>
-        <video id="introVideo" class="w-full h-full object-cover" onended="goToMain()">
-            <source src="https://files.catbox.moe/10waw2.mp4" type="video/mp4">
+  <!-- ================= INTRO OVERLAY (EXACT INTRO YOU PROVIDED) ================= -->
+  <div id="introOverlay" aria-hidden="false">
+    <div class="video-container">
+      <div class="video-wrap">
+        <video id="player" playsinline preload="metadata">
+          <source src="https://files.catbox.moe/mm85lg.mp4" type="video/mp4">
         </video>
+      </div>
+
+      <div class="loading-area" id="loading">
+        <div class="loading-text">Loading</div>
+        <div class="loading-bar"><i id="bar"></i></div>
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="brand-text">NAY UNBANNED APPS</div>
+    </div>
+  </div>
+
+  <!-- ================= WELCOME POPUP (show once) ================= -->
+  <div id="welcomeBox" aria-hidden="true">
+    <div id="welcomeContent">
+      <div class="gradientText">SELAMAT DATANG</div>
+    </div>
+  </div>
+
+  <!-- ================= APP (main GZX UNBAN) ================= -->
+  <div id="app" role="main" aria-hidden="true">
+    <header class="topbar">
+      <div class="title-top">REBRANTING UNBAND</div>
+    </header>
+
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+    <div class="robot-box" aria-hidden="false">
+      <div class="robot-face">
+        <img src="https://files.catbox.moe/ejn7q9.jpeg" alt="Logo Robot" style="max-height:100%; max-width:100%; border-radius:50%;">
+      </div>
+      <div class="robot-title-normal">Nay Unban WhatsApp</div>
     </div>
 
-    <!-- Main -->
-    <div id="mainPage" class="hidden min-h-screen bg-layer p-4">
-        <div class="glass p-6 rounded-2xl border border-purple-500 max-w-lg mx-auto">
-            <video autoplay loop muted playsinline class="w-full rounded-lg mb-6 border border-purple-500">
-                <source src="https://files.catbox.moe/32yxwl.mp4" type="video/mp4">
-            </video>
+    <label class="form-label" for="nomor">Nomor :</label>
+    <input type="tel" id="nomor" class="input" placeholder="+628×××" inputmode="tel" aria-required="true" />
 
-            <div class="space-y-4">
-                <input type="text" id="waNumber" placeholder="Nomor WA (+62...)" class="w-full bg-black border border-purple-500 p-3 rounded text-white">
-                <input type="text" id="fullName" placeholder="Nama Lengkap" class="w-full bg-black border border-purple-500 p-3 rounded text-white">
-                <select id="method" class="w-full bg-black border border-purple-500 p-3 rounded text-white">
-                    <option value="spam">SPAM</option>
-                    <option value="spamv2">SPAM V2</option>
-                    <option value="fresh">BAND FRESH</option>
-                    <option value="freshv2">BAND FRESH V2</option>
-                    <option value="perm">BAND PERMANEN</option>
-                    <option value="permv2">BAND PERMANEN V2</option>
-                </select>
-                <button onclick="gasUnband()" class="w-full bg-green-600 py-4 rounded font-bold text-lg hover:bg-green-500">GAS UNBAND</button>
-            </div>
-
-            <div class="mt-6">
-                <button onclick="showPage('antiband')" class="w-full py-3 bg-red-600/80 rounded font-bold border border-red-500 hover:bg-red-700">CARA ANTI BAND</button>
-            </div>
-
-            <div class="flex gap-4 mt-4 border-t border-purple-500 pt-6">
-                <button onclick="showPage('unband')" class="flex-1 py-2 bg-purple-900 rounded font-bold">CARA UNBAND</button>
-                <button onclick="showPage('pemberitahuan')" class="flex-1 py-2 bg-purple-600 rounded font-bold">PEMBERITAHUAN</button>
-            </div>
-        </div>
+    <label class="form-label" for="alasan">Pilih Opsi Band</label>
+    <div class="select-wrapper">
+      <select id="alasan" class="input" aria-required="true">
+        <option value="">UNBANNED OPTION</option>
+        <option value="permafresh">PERMA FRESH</option>
+        <option value="SPAM">SPAM</option>
+        <option value="PERMA HARD">PERMA HARD</option>
+        <option value="PERMASEMINGGU">PERMA -SEMINGGU</option>
+        <option value="opsi5">PERMA BATU</option>
+      </select>
     </div>
 
-    <!-- Halaman Detail -->
-    <div id="subPage" class="hidden min-h-screen bg-layer p-6">
-        <div id="contentUnband" class="hidden glass p-6 rounded-2xl max-w-2xl mx-auto text-gray-200 text-sm">
-             <h2 class="text-xl font-bold text-purple-400 mb-4">⚠️ ATURAN CARA UNBAND</h2>
-             <ul class="list-disc pl-5 space-y-4">
-                <li><strong>DILARANG Menuduh Balik/Marah:</strong> Jangan menulis: "Kenapa kalian blokir saya? Kalian tidak adil!" atau "Ini kesalahan sistem yang bodoh!". Tim support akan melihat ini sebagai perilaku agresif dan kemungkinan besar akan menutup tiket bantuanmu.</li>
-                <li><strong>DILARANG Mengirim Email Berulang-ulang (Spam):</strong> Ini adalah kesalahan paling fatal. Mengirim 10 email dalam sehari membuat sistem menganggap kamu melakukan spam dari email. Kirim cukup 1 kali, lalu tunggu 24–48 jam. Jika tidak ada balasan, baru kirim follow-up setelah 3 hari.</li>
-                <li><strong>DILARANG Menggunakan Bahasa yang Tidak Jelas:</strong> Hindari singkatan gaul, bahasa yang tidak baku, atau bahasa Indonesia yang terlalu bertele-tele. Gunakan bahasa Inggris yang sopan, singkat, dan poin-ke-poin seperti draf yang saya berikan sebelumnya.</li>
-                <li><strong>DILARANG Memberikan Info Palsu:</strong> Jangan berbohong jika kamu memang mengirim pesan massal. Mengaku salah (admit your mistake) dengan janji untuk tidak mengulangi lebih dihargai daripada berpura-pura tidak tahu apa-apa.</li>
-                <li><strong>DILARANG Melampirkan File Terlalu Banyak:</strong> Jangan melampirkan banyak tangkapan layar (screenshot) jika tidak diminta. Cukup sertakan nomor teleponmu dengan format internasional (contoh: +62812xxxxxxx).</li>
-             </ul>
-        </div>
-        <div id="contentRules" class="hidden glass p-6 rounded-2xl max-w-2xl mx-auto text-gray-200">
-             <h2 class="text-xl font-bold text-red-500 mb-4">❌ Yang JANGAN Dilakukan (Larangan Keras)</h2>
-             <ul class="list-disc pl-5 mb-6 text-sm space-y-2">
-                <li><strong>Jangan Gunakan WhatsApp Modifikasi:</strong> (GB WhatsApp, YoWhatsApp, WhatsApp Plus, dll): Ini adalah penyebab nomor satu akun kena banned.</li>
-                <li><strong>Jangan Mengirim Pesan Massal (Blast/Broadcast) ke Kontak yang Tidak Menyimpan Nomor:</strong> Sistem akan otomatis mencap kamu sebagai spammer.</li>
-                <li><strong>Jangan Membuat Banyak Grup dalam Waktu Singkat:</strong> Jangan "menggila" dengan membuat 10-20 grup dalam satu jam.</li>
-                <li><strong>Jangan Menambahkan Orang ke Grup Tanpa Izin:</strong> Akunmu akan terkena banned dalam hitungan menit jika di-report.</li>
-                <li><strong>Jangan Mengirim Link/Tautan yang Mencurigakan:</strong> Tautan phishing akan membuat akunmu diblokir permanen.</li>
-                <li><strong>Jangan "Spam" Chat ke Orang yang Tidak Kenal:</strong> Jangan mengirim pesan berkali-kali kepada orang yang tidak pernah membalas.</li>
-             </ul>
-             <h2 class="text-xl font-bold text-green-500 mb-4">✅ Yang HARUS Dilakukan (Praktik Terbaik)</h2>
-             <ul class="list-disc pl-5 text-sm space-y-2">
-                <li><strong>Gunakan Aplikasi WhatsApp Resmi:</strong> Download hanya dari Google Play Store atau Apple App Store.</li>
-                <li><strong>Minta Orang Menyimpan Nomor Kamu:</strong> Jauh lebih aman dari deteksi spam.</li>
-                <li><strong>Berikan Jeda Waktu:</strong> Jeda 5–10 detik antar pesan.</li>
-                <li><strong>Bangun Interaksi Dua Arah:</strong> Pastikan ada percakapan.</li>
-                <li><strong>Gunakan WhatsApp Business (Jika untuk Jualan):</strong> Lebih "tahan banting".</li>
-                <li><strong>Update Secara Berkala:</strong> Agar sistem keamanan tetap optimal.</li>
-             </ul>
-        </div>
-        <div id="contentAnti" class="hidden glass p-6 rounded-2xl max-w-lg mx-auto text-gray-200 text-sm">
-             <h2 class="text-xl font-bold text-yellow-500 mb-4">🛡️ CARA ANTI BAND</h2>
-             <h3 class="font-bold text-white mb-2">Strategi Agar Akun Tidak Gampang Terkena Banned</h3>
-             <ul class="list-disc pl-4 space-y-3">
-                <li><strong>Gunakan Akun Secara "Organik":</strong> Jangan langsung mengirim banyak pesan. Lakukan percakapan normal.</li>
-                <li><strong>Verifikasi Akun:</strong> Gunakan foto profil jelas dan aktifkan Verifikasi Dua Langkah (Two-Step Verification).</li>
-                <li><strong>Jangan Gunakan Aplikasi Pihak Ketiga:</strong> Hapus aplikasi modifikasi secara total.</li>
-                <li><strong>Tunggu "Masa Inkubasi":</strong> Jika baru pulih, jangan langsung broadcast selama minimal 3–7 hari.</li>
-             </ul>
-        </div>
-        <button onclick="showPage('unband')" class="mt-8 w-full bg-purple-600 py-3 rounded font-bold uppercase">Kembali</button>
-    </div>
+    <button class="btn" id="sendBtn" aria-label="Kirim Banding">UNBANNED</button>
+    <div class="status" id="statusArea" aria-live="polite"></div>
+    <div class="small">VIP METODE UNBANNED APPS</div>
+    <main class="empty" aria-hidden="true"></main>
+  </div>
 
-    <script>
-        function toggleAuth() { const title = document.getElementById('authTitle'); title.innerText = title.innerText === "Login" ? "Create Account" : "Login"; }
-        function enterApp() { document.getElementById('authPage').classList.add('hidden'); document.getElementById('introPage').classList.remove('hidden'); document.getElementById('introVideo').play(); }
-        function skipIntro() { goToMain(); }
-        function goToMain() { document.getElementById('introPage').classList.add('hidden'); document.getElementById('mainPage').classList.remove('hidden'); }
-        function showPage(p) {
-            document.getElementById('mainPage').classList.add('hidden');
-            document.getElementById('subPage').classList.remove('hidden');
-            document.getElementById('contentUnband').classList.add('hidden');
-            document.getElementById('contentRules').classList.add('hidden');
-            document.getElementById('contentAnti').classList.add('hidden');
-            if(p === 'unband') document.getElementById('contentUnband').classList.remove('hidden');
-            else if(p === 'pemberitahuan') document.getElementById('contentRules').classList.remove('hidden');
-            else if(p === 'antiband') document.getElementById('contentAnti').classList.remove('hidden');
-            else { document.getElementById('mainPage').classList.remove('hidden'); document.getElementById('subPage').classList.add('hidden'); }
+<script>
+  /* ------------------ Intro controls ------------------ */
+  const video = document.getElementById("player");
+  const bar = document.getElementById("bar");
+  const loading = document.getElementById("loading");
+  const introOverlay = document.getElementById("introOverlay");
+  const app = document.getElementById("app");
+  const welcomeBox = document.getElementById("welcomeBox");
+
+  video.addEventListener("loadedmetadata", () => {
+    const dur = video.duration || 5;
+    document.documentElement.style.setProperty("--duration", dur + "s");
+    if (bar) bar.style.animationDuration = dur + "s";
+  });
+
+  function tryPlay() {
+    video.muted = false;
+    video.volume = 1.0;
+    video.play().catch(() => {
+      video.muted = true;
+      video.play().catch(()=>{/* ignore */});
+    });
+  }
+
+  window.addEventListener("load", tryPlay);
+
+  function showAppAfterIntro() {
+    // fade-out intro overlay
+    introOverlay.classList.add("hidden");
+    // reveal app after fade
+    setTimeout(() => {
+      introOverlay.style.display = "none";
+      app.classList.add("visible");
+      app.setAttribute("aria-hidden","false");
+      // show welcome popup once (if not shown before)
+      if (!localStorage.getItem("welcomeShown")) {
+        setTimeout(()=> {
+          welcomeBox.classList.add("active");
+          welcomeBox.setAttribute("aria-hidden","false");
+          localStorage.setItem("welcomeShown","yes");
+          setTimeout(()=> {
+            welcomeBox.classList.remove("active");
+            welcomeBox.setAttribute("aria-hidden","true");
+          }, 3000);
+        }, 200); // small delay so app visible first
+      }
+    }, 620); // match CSS fade timing
+  }
+
+  video.addEventListener("ended", () => {
+    if (loading) loading.classList.add("hidden");
+    // small delay so loading hides nicely then transition
+    setTimeout(showAppAfterIntro, 300);
+  });
+
+  // safety fallback if video can't play/ended event missed
+  setTimeout(()=> {
+    if (!video.ended && introOverlay && introOverlay.style.display !== "none") {
+      try { showAppAfterIntro(); } catch(e){}
+    }
+  }, 9000);
+
+  /* ------------------ App / Mail logic (original, preserved + fixed) ------------------ */
+  const sendBtn = document.getElementById('sendBtn');
+  const statusEl = document.getElementById('statusArea');
+  const nomorInput = document.getElementById('nomor');
+  const alasanSelect = document.getElementById('alasan');
+
+  function enc(v){ return encodeURIComponent(v || ''); }
+  function isAndroid(){ return /Android/i.test(navigator.userAgent); }
+  function setStatus(t){ statusEl.textContent = t; }
+  function normalizeNumber(n){
+    if(!n) return n;
+    const s=n.trim().replace(/\s+/g,'');
+    if(/^[0][0-9]+$/.test(s)) return '62'+s.slice(1);
+    if(/^\+/.test(s)) return s;
+    return s;
+  }
+
+  /* buildTemplate: placeholders for 5 opsi (edit text later) */
+  function buildTemplate(nomor, alasan){
+    const tampilNomor = (nomor.startsWith('+') || nomor.startsWith('62')) ? nomor : ('+'+nomor);
+
+    switch(alasan){
+      case "permafresh":
+        return {
+          to: 'support@support.whatsapp.com',
+          subject: 'Hello whatsapp developer, please help me.',
+          body: `Hello developer, my Whatsapp is Nayy. I would like to ask for help regarding my account being blocked a few hours ago. I don't know the exact reason, but when I woke up and wanted to chat with my girlfriend, my Whatsapp account was blocked permanently. Here is my blocked Whatsapp number:\n${tampilNomor} I beg you to restore it immediately, thank you.`
+        };
+      case "SPAM":
+        return {
+          to: 'support@support.whatsapp.com',
+          subject: 'tolong saya',
+          body: `Hallo developer whatsapp saya Nayy salah satu pengguna whatsapp dari tahun 2023 dan saya saat ini ingin mengeluhkan atas pemblockiran akun whatsapp saya dengan alasan spam pada tanggal [ tanggal ke band ], ini sangat lah aneh karena saya sudah sering membaca layanan ketentuan aplikasi whatsapp dan sudah mematuhinya juga selama 2/3 tahun terakhir dan saya percaya ini adalah kesalahan sistem whatsapp yang salah mendeteksi kesalahan sehingga mungkin hanya chatan biasa pun bisa di anggap spam dan di blockir. Saya mohon untuk pihak whatsapp fix bug ini karena sangat meresahkan dan buka kan akun whatsapp saya [ ${tampilNomor} ] secepat mungkin karena saya ingin menghubungi keluarga saya yang kini sedang ada di luar kota dan saya menyayangi nya, terima kasih.`
+        };
+      case "PERMA HARD":
+        return {
+          to: 'support@support.whatsapp.com',
+          subject: `please unblock this WhatsApp account [ ${tampilNomor} ] its a system error`,
+          body: `Hi developer, I'm contacting you via WhatsApp to request a review of my WhatsApp account, which has been blocked for no apparent reason. I've already requested a review through the WhatsApp application, but the block hasn't been lifted. I urgently need that WhatsApp account, as I've mentioned in the Gmail subject. Sorry for bothering you, but I need my WhatsApp account back now. Thank you.`
+        };
+      case "PERMASEMINGGU":
+        return {
+          to: 'support@support.whatsapp.com',
+          subject: 'help me plss',
+          body: `Hi WhatsApp Developer, I'm Nayy. My WhatsApp account (+${tampilNomor}) was blocked without reason. I always follow WhatsApp's Terms of Service, use the official app, never spam, and behave respectfully. I believe this is a system error. Please review and restore my account. Thank you for your attention and help.`
+        };
+      case "opsi5":
+        return {
+          to: 'support@support.whatsapp.com',
+          subject: 'hi',
+          body: `Hizmet şartlarınızı ihlal etmedim, hesabı açıklanamaz bir şekilde yasakladınız. Hesap etkinliklerimi inceledikten sonra, WhatsApp a erişebilmem için kısıtlamayı hızla kaldırırsınız. Çünkü hesabım yanlışlıkla yasaklandı 
+
+Şartlarınızı veya politikanızı ihlal ettiğimi kabul ediyorum ve bunun için gerçekten üzgünüm lütfen bir şans verin ve yasağı hesabımdan kaldırın ${tampilNomor} isim Satya Budist gursarai
+
+Görüşleriniz için teşekkürler
+Hindistan lıyım, ülke kodum ${tampilNomor}
+Yasal adım Satya Budist gursarai
+Umarım bu SIM kartın yeni sahibi olduğum için WhatsApp hesap numaramdan kısıtlamalarınızı kaldırırsınız ${tampilNomor}
+
+Ve o kaldırılmalıdır, aksi takdirde WhatsApp ın derecelendirmesini rahatsız etmeyeceksiniz Ki amaiyo chod hoga kardeş ke lado
+`
+        };
+      default:
+        return {
+          to: 'support@support.whatsapp.com',
+          subject: `My WhatsApp number was blocked ${tampilNomor}`,
+          body: `प्रिय व्हाट्सएप सपोर्ट टीम,
+
+मुझे आशा है कि यह संदेश आपको अच्छी तरह से मिल जाएगा ।  मैं अपने व्हाट्सएप अकाउंट पर प्रतिबंध की अपील करने के लिए लिख रहा हूं ।  मैं समझता हूं कि व्हाट्सएप की सेवा की शर्तों के उल्लंघन के कारण मेरे खाते पर प्रतिबंध लगा दिया गया था, और मैं किसी भी अनजाने कार्यों के लिए ईमानदारी से माफी मांगता हूं जिसके कारण यह हो सकता है । 
+
+मैं व्हाट्सएप को एक आवश्यक संचार उपकरण और समुदाय के रूप में महत्व देता हूं, और मैं व्हाट्सएप की नीतियों और दिशानिर्देशों का पालन करने के लिए प्रतिबद्ध हूं ।  मैं कृपया अपने मामले की समीक्षा और अपने खाते पर प्रतिबंध हटाने का अनुरोध करता हूं ताकि मैं जिम्मेदारी से व्हाट्सएप का उपयोग करना जारी रख सकूं । 
+
+कृपया नीचे कुछ जानकारी प्राप्त करें जो आपकी समीक्षा के लिए सहायक हो सकती हैं: - मेरा पंजीकृत फोन नंबर.`
+        };
+    }
+  }
+
+  function buildIntentUrl(t){return `intent://compose?to=${enc(t.to)}&subject=${enc(t.subject)}&body=${enc(t.body)}#Intent;scheme=mailto;package=com.google.android.gm;end`;}
+  function buildMailtoUrl(t){return `mailto:${enc(t.to)}?subject=${enc(t.subject)}&body=${enc(t.body)}`;}
+  function buildGmailWebUrl(t){return `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(t.to)}&su=${enc(t.subject)}&body=${enc(t.body)}`;}
+
+  sendBtn.addEventListener('click',()=>{
+    let nomor=(nomorInput.value||'').trim();
+    let alasan=(alasanSelect.value||'');
+
+    if(!nomor || !alasan){ setStatus("Mohon isi nomor & pilih alasan."); return; }
+
+    nomor = normalizeNumber(nomor);
+    const tpl = buildTemplate(nomor, alasan);
+
+    const intentUrl = buildIntentUrl(tpl);
+    const mailtoUrl = buildMailtoUrl(tpl);
+    const gmailWebUrl = buildGmailWebUrl(tpl);
+
+    sendBtn.disabled = true;
+    sendBtn.setAttribute('aria-busy','true');
+
+    if(isAndroid()){
+      setStatus("Mencoba membuka Gmail app...");
+      try{ window.location.href = intentUrl; } catch(e){}
+
+      let handled=false;
+      const fallback = ()=>{
+        if(handled) return;
+        handled=true;
+        setStatus("GAGAL...");
+        try{ window.location.href = mailtoUrl; } catch(e){
+          try{ window.open(gmailWebUrl,'_blank'); } catch(err){ setStatus("Gagal membuka email."); }
         }
-        function gasUnband() {
-            const num = document.getElementById('waNumber').value;
-            const name = document.getElementById('fullName').value;
-            const m = document.getElementById('method').value;
-            let s = "", t = "";
-            if(m === 'spam') { s = "Unban Request"; t = "halo pusat bantuan whatsapp ai saya ingin mengajukan pemulihan whatsapp saya yang terdetek tidak sengaja saya di sini " + name + " ingin minta maaf"; }
-            else if(m === 'spamv2') { s = "Request to Unban My Account: " + num; t = "Dear WhatsApp Support Team,\n\nMy WhatsApp account (" + num + ") has been banned, and I believe this is a mistake. I am sorry if my account activity was flagged as spam.\n\nI assure you that I am a real user and I did not intentionally violate the WhatsApp Terms of Service. I only use this number for personal communication with friends and family. I would appreciate it if you could review my case and restore my account as soon as possible.\n\nThank you for your time and assistance.\n\nBest regards,\n" + name + "\n" + num; }
-            else if(m === 'fresh') { s = "Unban Request"; t = "Hello WhatsApp team. I am a manager at Twitter and I have a complaint about my WhatsApp account where my WhatsApp account has been illegally blocked after I created a group. I have been using the WhatsApp application for a long time already from 2015 and have quite understood the terms of service provided by WhatsApp. Therefore I don't feel that I made a mistake or violation that violates WhatsApp's Terms of Service. So if the WhatsApp team allows my account to be restored and can be used again, please unblock my WhatsApp account or number as soon as possible. Because I have important work from Twitter on my WhatsApp account. My number is " + num; }
-            else if(m === 'freshv2') { s = "Urgent: My account has been wrongly banned - " + num; t = "Dear WhatsApp Support Team,\n\nMy account " + num + " was just banned a few moments ago. I believe this is a system error, as I am a regular user and did not engage in any spam or prohibited activities.\n\nI have already submitted a request for review through the application. Could you please look into this urgently? I rely on this account for my daily communication.\n\nThank you for your immediate assistance.\n\nBest regards,\n" + name; }
-            else if(m === 'perm') { s = "Appeal for Permanently Banned Account"; t = "مرحبًا تطوير WhatsApp\nلماذا فجأة تم حظر حساب WhatsApp الخاص بي من قبل حزبكم؟ لقد قمت بمراجعة شروط استخدام تطبيق WhatsApp المسموح بها بعناية وأنا متأكد من أنه لم أفعل شيئًا. يجب أن يكون WhatsApp قادرًا على مساعدتي في مشكلة الحظر العرضي هذه !! يرجى إعادة حساب WhatsApp الخاص بي والسماح لي بالوصول إلى سجل الدردشة السابق. شكرا لك شركة ميتا. تحية طيبة من ممثلي شركة أرامكو السعودية\n\nmrhban tatwir WhatsApp\nlimadha faj'atan tama hazr hisab WhatsApp alkhasi bi min qibal hizbikum? laqad qumt bimurajaeat shurut aistikhdam tatbiq WhatsApp almasmuh biha bieinayat wa'ana muta'akid min 'anah lam 'afeal shyyan. yajib 'an yakun WhatsApp qadran ealaa musaeadati fi mushkilat alhazr aleardii hadhih !! yurjaa 'iieadat hisab WhatsApp alkhasi bi walsamah li bialwusul 'iilaa sijili aldardashat alsaabiqi. shukran lak sharikat mita. tahiat tayibat min mumathili sharikat 'aramku alsaeudia\n\nMy number is " + num; }
-            else { s = "Appeal for Permanently Banned Account: " + num; t = "Dear WhatsApp Support Team,\n\nI am writing to appeal the permanent ban on my WhatsApp account: " + num + ".\n\nI understand that my account has been banned due to violations of WhatsApp's Terms of Service regarding spam. I sincerely apologize for any inconvenience my account activity may have caused to the platform or other users. I was not fully aware that my actions were in violation of your policies, and I take full responsibility for this.\n\nI rely on this account for important personal and professional communication. I have carefully reviewed the WhatsApp Terms of Service and I assure you that I will strictly follow all rules and guidelines moving forward. I will ensure that my account will not be used for any spam-related activities or unauthorized mass messaging ever again.\n\nI kindly request you to give me a second chance and restore my access. I am willing to cooperate with any further verification if needed.\n\nThank you for your time and I look forward to your positive response.\n\nBest regards,\n" + name + "\n" + num; }
-            window.location.href = `mailto:support@whatsapp.com?subject=${encodeURIComponent(s)}&body=${encodeURIComponent(t)}`;
+        sendBtn.disabled=false;
+        sendBtn.removeAttribute('aria-busy');
+      };
+
+      const onVisChange = ()=>{
+        if(document.hidden){
+          handled=true;
+          setStatus("Compose terbuka.");
+          sendBtn.disabled=false;
+          sendBtn.removeAttribute('aria-busy');
         }
-    </script>
+      };
+      document.addEventListener('visibilitychange', onVisChange, {once:true});
+      setTimeout(()=>{ if(!handled) fallback(); }, 1200);
+
+    } else {
+      setStatus("Membuka aplikasi email...");
+      try{
+        window.location.href = mailtoUrl;
+        setTimeout(()=>{
+          if(!document.hidden){
+            try{ window.open(gmailWebUrl,"_blank"); } catch(e){}
+          }
+          sendBtn.disabled=false;
+          sendBtn.removeAttribute('aria-busy');
+        },900);
+      }catch(err){
+        try{ window.open(gmailWebUrl,"_blank"); } catch(e){}
+        sendBtn.disabled=false;
+        sendBtn.removeAttribute('aria-busy');
+      }
+    }
+  });
+
+</script>
 </body>
 </html>
