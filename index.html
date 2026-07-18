@@ -1,3374 +1,499 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>NUPZ Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔒 NUPZZ RANSOMWARE</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'SF Pro Display', 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            width: 100%;
-            overflow-x: hidden;
+        /* ===== RESET & LOCK ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body {
             background: #000;
             min-height: 100vh;
-        }
-
-        body {
-            padding: 10px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            background: #000;
-            position: relative;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 999999;
+            margin: 0;
         }
-
-        /* ===== VIDEO BACKGROUND ===== */
-        #bg-video {
+        
+        /* ===== LAYAR LOCK TOTAL ===== */
+        .lock-screen {
             position: fixed;
             top: 0;
             left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #1a0000 0%, #000000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999999;
+            animation: pulse 2s infinite;
+            cursor: default;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { background: radial-gradient(ellipse at center, #1a0000 0%, #000000 100%); }
+            50% { background: radial-gradient(ellipse at center, #2a0000 0%, #000000 100%); }
+        }
+        
+        .container {
+            text-align: center;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(255, 0, 0, 0.3); }
+            100% { text-shadow: 0 0 40px rgba(255, 0, 0, 0.8); }
+        }
+        
+        /* ===== FOTO PROFILE ===== */
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #ff0000;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+            animation: rotateBorder 4s linear infinite;
+        }
+        
+        @keyframes rotateBorder {
+            0% { border-color: #ff0000; }
+            25% { border-color: #ff6600; }
+            50% { border-color: #ff0000; }
+            75% { border-color: #cc0000; }
+            100% { border-color: #ff0000; }
+        }
+        
+        .profile-pic img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: 0;
-            opacity: 0.12;
-            pointer-events: none;
         }
-
-        #bg-video-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.75);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .dashboard {
-            max-width: 480px;
-            width: 100%;
-            background: rgba(10, 10, 20, 0.88);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 40px;
-            padding: 20px 18px 0;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.03),
-                        0 0 60px rgba(122, 92, 255, 0.03);
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .dashboard::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: 42px;
-            background: linear-gradient(135deg, rgba(122,92,255,0.08), rgba(255,51,102,0.05), rgba(122,92,255,0.08));
-            z-index: -1;
-            animation: borderGlow 4s ease-in-out infinite;
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
-        }
-
-        .dashboard::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(122,92,255,0.2), transparent);
-            animation: topLine 3s ease-in-out infinite;
-        }
-
-        @keyframes topLine {
-            0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
-            50% { opacity: 1; transform: scaleX(1); }
-        }
-
-        /* HEADER */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            gap: 10px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-circle {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid rgba(122, 92, 255, 0.15);
-            box-shadow: 0 0 30px rgba(122, 92, 255, 0.15), inset 0 0 20px rgba(122, 92, 255, 0.05);
-            flex-shrink: 0;
-            position: relative;
-            animation: logoGlow 3s ease-in-out infinite;
-            transition: 0.4s;
-        }
-
-        .logo-circle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 50px rgba(122, 92, 255, 0.3);
-        }
-
-        .logo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .logo-circle::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #f0b3ff, #7a5cff, #ff3366);
-            opacity: 0.1;
-            z-index: -1;
-            animation: ringPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes ringPulse {
-            0%, 100% { transform: scale(1); opacity: 0.1; }
-            50% { transform: scale(1.2); opacity: 0.03; }
-        }
-
-        @keyframes logoGlow {
-            0%, 100% { box-shadow: 0 0 30px rgba(122, 92, 255, 0.15); }
-            50% { box-shadow: 0 0 60px rgba(255, 51, 102, 0.15); }
-        }
-
-        .logo-text h1 {
-            font-size: 1.6rem;
+        
+        /* ===== TITLE ===== */
+        .title {
+            font-size: 3em;
             font-weight: 900;
-            background: linear-gradient(135deg, #f0b3ff 0%, #7a5cff 40%, #ff3366 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-            line-height: 1;
-            background-size: 200% 200%;
-            animation: gradientMove 4s ease-in-out infinite;
-            text-shadow: 0 0 40px rgba(122, 92, 255, 0.05);
-        }
-
-        @keyframes gradientMove {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .logo-text span {
-            font-size: 0.5rem;
-            color: rgba(255, 255, 255, 0.12);
-            -webkit-text-fill-color: rgba(255, 255, 255, 0.12);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            display: block;
-            margin-top: 1px;
-        }
-
-        .dev-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 4px 14px 4px 8px;
-            border-radius: 100px;
-            border: 1px solid rgba(122, 92, 255, 0.06);
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
-        }
-
-        .dev-badge:hover {
-            border-color: rgba(122, 92, 255, 0.15);
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        .dev-badge .avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.04);
-            box-shadow: 0 0 20px rgba(122, 92, 255, 0.05);
-        }
-
-        .dev-badge .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .dev-badge .info {
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 0.5rem;
-            font-weight: 500;
-        }
-
-        .dev-badge .info strong {
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.6rem;
-        }
-
-        .online-dot {
-            width: 6px;
-            height: 6px;
-            background: #00ff88;
-            border-radius: 50%;
-            display: inline-block;
-            animation: blink 1.5s ease-in-out infinite;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.6); }
-        }
-
-        /* ===== NAVIGASI ===== */
-        .nav-tabs {
-            display: flex;
-            gap: 8px;
-            margin: 14px 0 18px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .nav-tab {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            color: rgba(255, 255, 255, 0.2);
-            padding: 9px 12px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.65rem;
-            cursor: pointer;
-            transition: 0.4s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(122,92,255,0.05), transparent);
-            transition: 0.5s;
-        }
-
-        .nav-tab:hover::before {
-            left: 100%;
-        }
-
-        .nav-tab i {
-            font-size: 0.75rem;
-        }
-
-        .nav-tab:active {
-            transform: scale(0.95);
-        }
-
-        .nav-tab.active {
-            background: linear-gradient(135deg, rgba(122, 92, 255, 0.12), rgba(255, 51, 102, 0.06));
-            border-color: rgba(122, 92, 255, 0.12);
-            color: #fff;
-            box-shadow: 0 2px 25px rgba(122, 92, 255, 0.05);
-        }
-
-        /* ===== STATS ===== */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 0 0 18px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 16px;
-            padding: 12px 8px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            text-align: center;
-            transition: 0.4s;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(4px);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(122, 92, 255, 0.03), transparent);
-            opacity: 0;
-            transition: 0.4s;
-        }
-
-        .stat-card:hover::before {
-            opacity: 1;
-        }
-
-        .stat-card:active {
-            transform: scale(0.96);
-        }
-
-        .stat-card .label {
-            color: rgba(255, 255, 255, 0.12);
-            font-size: 0.45rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
-        }
-
-        .stat-card .value {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-top: 2px;
-            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
-            position: relative;
-            z-index: 1;
-        }
-
-        .stat-card .value i {
-            color: #7a5cff;
-            margin-right: 4px;
-            font-size: 0.7rem;
-        }
-
-        .stat-card .value .blink-red {
-            animation: blinkRed 0.8s ease-in-out infinite;
-        }
-
-        .stat-card .value .pulse-number {
-            display: inline-block;
-            animation: numberPop 0.5s ease;
-        }
-
-        @keyframes numberPop {
-            0% { transform: scale(0.5) rotate(-5deg); opacity: 0; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        @keyframes blinkRed {
-            0%, 100% { color: #ff3366; }
-            50% { color: #ff6b8a; }
-        }
-
-        /* ===== INFO TABLE ===== */
-        .info-table {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .info-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 12px 10px;
-            text-align: center;
-            backdrop-filter: blur(4px);
-            transition: 0.3s;
-        }
-
-        .info-item:hover {
-            border-color: rgba(122, 92, 255, 0.05);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .info-item .info-icon {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.15);
-            margin-bottom: 4px;
-        }
-
-        .info-item .info-icon i {
-            font-size: 1.2rem;
-        }
-
-        .info-item .info-icon .clock-icon { color: #ffd700; }
-        .info-item .info-icon .weather-icon { color: #00c8ff; }
-        .info-item .info-icon .battery-icon { color: #00ff88; }
-
-        .info-item .info-label {
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 0.45rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
-
-        .info-item .info-value {
-            color: #fff;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-top: 2px;
-            text-shadow: 0 0 20px rgba(122, 92, 255, 0.05);
-        }
-
-        .info-item .info-value .neon-gold {
-            color: #ffd700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.05);
-        }
-
-        .info-item .info-value .battery-fill-mini {
-            display: inline-block;
-            width: 30px;
-            height: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
-            padding: 1px;
-            margin-left: 4px;
-            vertical-align: middle;
-        }
-
-        .info-item .info-value .battery-fill-mini .fill {
-            height: 100%;
-            border-radius: 1px;
-            transition: 0.3s;
-        }
-
-        .info-item .info-value .battery-fill-mini .fill.high { background: #00ff88; }
-        .info-item .info-value .battery-fill-mini .fill.medium { background: #ffd700; }
-        .info-item .info-value .battery-fill-mini .fill.low { background: #ff3366; }
-
-        /* ===== VIDEO ATAS BANNER ===== */
-        .top-video-container {
-            position: relative;
-            z-index: 2;
-            margin-bottom: 14px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            background: rgba(0, 0, 0, 0.3);
-            height: 120px;
-        }
-
-        .top-video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .top-video-container .video-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 12px 16px 10px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.6));
-            z-index: 2;
-        }
-
-        .top-video-container .video-overlay .video-text {
-            color: rgba(255,255,255,0.3);
-            font-size: 0.5rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .top-video-container .video-overlay .video-text i {
-            color: #ff3366;
-            margin-right: 4px;
-        }
-
-        /* ===== BANNER SLIDING ===== */
-        .banner-wrapper {
-            position: relative;
-            z-index: 2;
-            margin-bottom: 18px;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
-            background: rgba(255, 255, 255, 0.02);
-            height: 200px;
-        }
-
-        .banner-slider {
-            display: flex;
-            width: 300%;
-            height: 100%;
-            animation: slideBanner 12s ease-in-out infinite;
-        }
-
-        .banner-slider .slide {
-            width: 33.333%;
-            height: 100%;
-            flex-shrink: 0;
-            position: relative;
-        }
-
-        .banner-slider .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .banner-slider .slide .banner-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 22px 18px 14px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.85));
-            z-index: 2;
-        }
-
-        .banner-slider .slide .banner-overlay .banner-text {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            text-shadow: 0 2px 30px rgba(0,0,0,0.9);
-            letter-spacing: 0.5px;
-        }
-
-        .banner-slider .slide .banner-overlay .banner-text i {
-            color: #ff3366;
-            margin-right: 6px;
-        }
-
-        .banner-slider .slide .banner-overlay .banner-sub {
-            color: rgba(255,255,255,0.2);
-            font-size: 0.55rem;
-            margin-top: 2px;
-            letter-spacing: 2px;
-        }
-
-        @keyframes slideBanner {
-            0%, 20% { transform: translateX(0); }
-            25%, 45% { transform: translateX(-33.333%); }
-            50%, 70% { transform: translateX(-66.666%); }
-            75%, 95% { transform: translateX(-33.333%); }
-            100% { transform: translateX(0); }
-        }
-
-        /* ===== NEON TEXT ===== */
-        .neon-text {
-            color: #fff;
-            text-shadow: 
-                0 0 7px rgba(122, 92, 255, 0.3),
-                0 0 10px rgba(122, 92, 255, 0.2),
-                0 0 21px rgba(122, 92, 255, 0.1),
-                0 0 42px rgba(122, 92, 255, 0.05);
-            animation: neonPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes neonPulse {
-            0%, 100% { text-shadow: 0 0 7px rgba(122, 92, 255, 0.3), 0 0 10px rgba(122, 92, 255, 0.2), 0 0 21px rgba(122, 92, 255, 0.1), 0 0 42px rgba(122, 92, 255, 0.05); }
-            50% { text-shadow: 0 0 10px rgba(122, 92, 255, 0.5), 0 0 20px rgba(122, 92, 255, 0.3), 0 0 40px rgba(122, 92, 255, 0.15), 0 0 80px rgba(122, 92, 255, 0.05); }
-        }
-
-        .neon-red {
-            color: #ff3366;
-            text-shadow: 
-                0 0 7px rgba(255, 51, 102, 0.3),
-                0 0 10px rgba(255, 51, 102, 0.2),
-                0 0 21px rgba(255, 51, 102, 0.1),
-                0 0 42px rgba(255, 51, 102, 0.05);
-            animation: neonRedPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes neonRedPulse {
-            0%, 100% { text-shadow: 0 0 7px rgba(255, 51, 102, 0.3), 0 0 10px rgba(255, 51, 102, 0.2), 0 0 21px rgba(255, 51, 102, 0.1), 0 0 42px rgba(255, 51, 102, 0.05); }
-            50% { text-shadow: 0 0 10px rgba(255, 51, 102, 0.5), 0 0 20px rgba(255, 51, 102, 0.3), 0 0 40px rgba(255, 51, 102, 0.15), 0 0 80px rgba(255, 51, 102, 0.05); }
-        }
-
-        .neon-gold {
-            color: #ffd700;
-            text-shadow: 
-                0 0 7px rgba(255, 215, 0, 0.3),
-                0 0 10px rgba(255, 215, 0, 0.2),
-                0 0 21px rgba(255, 215, 0, 0.1),
-                0 0 42px rgba(255, 215, 0, 0.05);
-            animation: neonGoldPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes neonGoldPulse {
-            0%, 100% { text-shadow: 0 0 7px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2), 0 0 21px rgba(255, 215, 0, 0.1), 0 0 42px rgba(255, 215, 0, 0.05); }
-            50% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.15), 0 0 80px rgba(255, 215, 0, 0.05); }
-        }
-
-        /* ===== SPECIAL SUPPORT ===== */
-        .special-support {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.04), rgba(255, 51, 102, 0.02));
-            border: 1px solid rgba(255, 215, 0, 0.04);
-            border-radius: 20px;
-            padding: 14px 16px;
-            margin-bottom: 18px;
-            position: relative;
-            z-index: 2;
-            backdrop-filter: blur(8px);
-            overflow: hidden;
-            text-align: center;
-            transition: 0.4s;
-        }
-
-        .special-support:hover {
-            border-color: rgba(255, 215, 0, 0.08);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.02);
-        }
-
-        .special-support::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.03), transparent 70%);
-            animation: supportGlow 4s ease-in-out infinite;
-        }
-
-        @keyframes supportGlow {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-
-        .special-support .support-icon {
-            font-size: 1.8rem;
-            display: block;
-            margin-bottom: 2px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .special-support .support-title {
-            color: #ffd700;
-            font-size: 0.8rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2.5px;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.05);
-        }
-
-        .special-support .support-title i {
-            color: #ffd700;
-            margin-right: 6px;
-        }
-
-        .special-support .support-name {
-            color: #fff;
-            font-size: 1.3rem;
-            font-weight: 900;
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(135deg, #ffd700, #ff6b8a, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% 200%;
-            animation: gradientMove 3s ease-in-out infinite;
-            text-shadow: 0 0 60px rgba(255, 215, 0, 0.05);
-        }
-
-        .special-support .support-sub {
-            color: rgba(255, 215, 0, 0.12);
-            font-size: 0.5rem;
-            margin-top: 2px;
-            position: relative;
-            z-index: 1;
-            letter-spacing: 3px;
-        }
-
-        .special-support .support-decoration {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 6px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .special-support .support-decoration span {
-            width: 30px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            border-radius: 2px;
-            opacity: 0.1;
-            animation: linePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes linePulse {
-            0%, 100% { opacity: 0.1; transform: scaleX(0.8); }
-            50% { opacity: 0.2; transform: scaleX(1); }
-        }
-
-        .special-support .support-decoration .star {
-            color: #ffd700;
-            font-size: 0.6rem;
-            opacity: 0.2;
-        }
-
-        /* ===== SECTION TITLE ===== */
-        .section-title {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0 0 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-            z-index: 2;
-            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
-        }
-
-        .section-title i {
-            color: #7a5cff;
-            font-size: 1.2rem;
-        }
-
-        .section-title .badge-new {
-            background: linear-gradient(135deg, rgba(122, 92, 255, 0.12), rgba(255, 51, 102, 0.06));
-            color: #ff6b8a;
-            font-size: 0.45rem;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            border: 1px solid rgba(255, 51, 102, 0.04);
-            animation: badgePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes badgePulse {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.95); }
-        }
-
-        /* ===== ROLE GRID ===== */
-        .role-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .role-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 24px;
-            padding: 18px 12px 16px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-        }
-
-        .role-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(122, 92, 255, 0.04), transparent 70%);
-            opacity: 0;
-            transition: 0.6s;
-            pointer-events: none;
-        }
-
-        .role-card:hover::before {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-
-        .role-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #7a5cff, #ff3366, #7a5cff);
-            background-size: 200% 100%;
-            opacity: 0.15;
-            animation: shimmer 3s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        .role-card:active {
-            transform: scale(0.95);
-        }
-
-        .role-card:hover {
-            transform: translateY(-6px) scale(1.03);
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(122, 92, 255, 0.08);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .role-icon-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 6px;
-        }
-
-        .role-icon-wrapper .role-icon-bg {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            transition: 0.5s;
-            position: relative;
-        }
-
-        .role-icon-wrapper .role-icon-bg .role-icon {
-            font-size: 1.8rem;
-            color: #fff;
-            transition: 0.5s;
-            position: relative;
-            z-index: 2;
-        }
-
-        .role-icon-bg.member { background: linear-gradient(135deg, rgba(122, 92, 255, 0.2), rgba(122, 92, 255, 0.05)); border: 1px solid rgba(122, 92, 255, 0.15); }
-        .role-icon-bg.reseller { background: linear-gradient(135deg, rgba(0, 200, 255, 0.2), rgba(0, 200, 255, 0.05)); border: 1px solid rgba(0, 200, 255, 0.15); }
-        .role-icon-bg.vip { background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.05)); border: 1px solid rgba(255, 215, 0, 0.15); }
-        .role-icon-bg.pt { background: linear-gradient(135deg, rgba(255, 51, 102, 0.2), rgba(255, 51, 102, 0.05)); border: 1px solid rgba(255, 51, 102, 0.15); }
-        .role-icon-bg.moderator { background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.05)); border: 1px solid rgba(0, 255, 136, 0.15); }
-
-        .role-icon-bg.member::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(122, 92, 255, 0.1); filter: blur(8px); z-index: 0; animation: glowPulseMember 2s ease-in-out infinite; }
-        .role-icon-bg.reseller::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(0, 200, 255, 0.1); filter: blur(8px); z-index: 0; animation: glowPulseReseller 2s ease-in-out infinite; }
-        .role-icon-bg.vip::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(255, 215, 0, 0.1); filter: blur(8px); z-index: 0; animation: glowPulseVip 2s ease-in-out infinite; }
-        .role-icon-bg.pt::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(255, 51, 102, 0.1); filter: blur(8px); z-index: 0; animation: glowPulsePt 2s ease-in-out infinite; }
-        .role-icon-bg.moderator::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(0, 255, 136, 0.1); filter: blur(8px); z-index: 0; animation: glowPulseModerator 2s ease-in-out infinite; }
-
-        @keyframes glowPulseMember { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
-        @keyframes glowPulseReseller { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
-        @keyframes glowPulseVip { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
-        @keyframes glowPulsePt { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
-        @keyframes glowPulseModerator { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
-
-        .role-card:hover .role-icon-bg {
-            transform: scale(1.1) rotate(-5deg);
-        }
-
-        .role-card:hover .role-icon-bg .role-icon {
-            transform: scale(1.15);
-            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
-        }
-
-        .role-name {
-            color: #fff;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 1;
-            margin-top: 2px;
-        }
-
-        .role-price {
-            font-size: 1.3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #f0b3ff, #7a5cff, #ff3366);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 4px 0 12px;
-            background-size: 200% 200%;
-            animation: gradientMove 3s ease-in-out infinite;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 40px rgba(122, 92, 255, 0.05);
-        }
-
-        .btn-buy {
-            background: linear-gradient(135deg, rgba(122, 92, 255, 0.08), rgba(255, 51, 102, 0.04));
-            border: 1px solid rgba(122, 92, 255, 0.06);
-            color: #fff;
-            padding: 9px 12px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.65rem;
-            cursor: pointer;
-            transition: 0.4s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            justify-content: center;
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .btn-buy::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-            transition: 0.5s;
-        }
-
-        .btn-buy:hover::before {
-            left: 100%;
-        }
-
-        .btn-buy i {
-            color: #b8a5ff;
-            font-size: 0.7rem;
-            transition: 0.3s;
-        }
-
-        .btn-buy:active {
-            transform: scale(0.95);
-        }
-
-        .btn-buy:hover {
-            background: linear-gradient(135deg, #7a5cff, #ff3366);
-            border-color: #7a5cff;
-            box-shadow: 0 4px 30px rgba(122, 92, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .btn-buy:hover i {
-            color: #fff;
-        }
-
-        .role-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 0.4rem;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            z-index: 2;
-            backdrop-filter: blur(4px);
-        }
-
-        .role-badge.member { background: rgba(122, 92, 255, 0.12); color: #7a5cff; border: 1px solid rgba(122, 92, 255, 0.05); }
-        .role-badge.reseller { background: rgba(0, 200, 255, 0.08); color: #00c8ff; border: 1px solid rgba(0, 200, 255, 0.04); }
-        .role-badge.vip { background: rgba(255, 215, 0, 0.08); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.04); }
-        .role-badge.pt { background: rgba(255, 51, 102, 0.08); color: #ff3366; border: 1px solid rgba(255, 51, 102, 0.04); }
-        .role-badge.moderator { background: rgba(0, 255, 136, 0.08); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.04); }
-
-        /* ===== PAYMENT ===== */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            position: relative;
-            z-index: 2;
-            margin-bottom: 20px;
-        }
-
-        .payment-section {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 24px;
-            padding: 18px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(8px);
-            transition: 0.4s;
-        }
-
-        .payment-section:hover {
-            border-color: rgba(122, 92, 255, 0.04);
-        }
-
-        .payment-info h3 {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
+            color: #ff0000;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+            animation: shake 0.5s infinite;
+            letter-spacing: 5px;
         }
-
-        .payment-info h3 i {
-            color: #7a5cff;
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
-
-        .dana-box {
-            background: linear-gradient(135deg, rgba(0, 90, 156, 0.08), rgba(0, 50, 100, 0.04));
-            border: 1px solid rgba(0, 90, 156, 0.08);
-            border-radius: 18px;
-            padding: 16px 18px;
-            margin-bottom: 12px;
-            transition: 0.4s;
-            display: flex;
-            align-items: center;
-            gap: 14px;
+        
+        .sub-title {
+            color: rgba(255, 0, 0, 0.5);
+            font-size: 0.9em;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
         }
-
-        .dana-box:hover {
-            border-color: rgba(0, 90, 156, 0.15);
-            box-shadow: 0 0 40px rgba(0, 90, 156, 0.03);
-        }
-
-        .dana-box .dana-logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #005a9c, #003d6b);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: #fff;
-            flex-shrink: 0;
-            box-shadow: 0 0 30px rgba(0, 90, 156, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .dana-box .dana-logo i {
-            color: #fff;
-            font-size: 1.6rem;
-        }
-
-        .dana-box .dana-info {
-            flex: 1;
-        }
-
-        .dana-box .dana-info .label {
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
-
-        .dana-box .dana-info .number {
-            color: #fff;
-            font-size: 1.3rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            text-shadow: 0 0 30px rgba(0, 90, 156, 0.05);
-        }
-
-        .dana-box .dana-info .number i {
-            color: #00aaff;
-            font-size: 1rem;
-            margin-right: 4px;
-        }
-
-        .btn-copy-dana {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            color: #b8a5ff;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 0.55rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-copy-dana:active {
-            transform: scale(0.95);
-        }
-
-        .btn-copy-dana:hover {
-            background: #005a9c;
-            color: #fff;
-            border-color: #005a9c;
-            box-shadow: 0 0 30px rgba(0, 90, 156, 0.05);
-        }
-
-        .qris-container {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            margin-bottom: 12px;
-            text-align: center;
-            transition: 0.4s;
-        }
-
-        .qris-container:hover {
-            border-color: rgba(122, 92, 255, 0.04);
-            box-shadow: 0 0 30px rgba(122, 92, 255, 0.02);
-        }
-
-        .qris-container .qris-label {
-            color: rgba(255, 255, 255, 0.1);
-            font-size: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-
-        .qris-container .qris-label i {
-            color: #7a5cff;
-            margin-right: 4px;
-        }
-
-        .qris-container .qris-image {
-            max-width: 180px;
-            margin: 0 auto;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            transition: 0.4s;
-            cursor: pointer;
-        }
-
-        .qris-container .qris-image:hover {
-            transform: scale(1.03);
-            border-color: rgba(122, 92, 255, 0.05);
-            box-shadow: 0 0 40px rgba(122, 92, 255, 0.05);
-        }
-
-        .qris-container .qris-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .qris-container .qris-detail {
-            margin-top: 8px;
-            color: rgba(255, 255, 255, 0.08);
-            font-size: 0.45rem;
-            letter-spacing: 1px;
-        }
-
-        .social-buttons {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 6px;
-        }
-
-        .social-btn {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 0.6rem;
-            font-weight: 600;
-            transition: 0.4s;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            text-decoration: none;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .social-btn i {
-            font-size: 0.7rem;
-        }
-
-        .social-btn:active {
-            transform: scale(0.95);
-        }
-
-        .ss-warning {
-            background: linear-gradient(135deg, rgba(255, 51, 102, 0.04), rgba(122, 92, 255, 0.02));
-            border: 1px solid rgba(255, 51, 102, 0.04);
-            border-radius: 12px;
-            padding: 8px 12px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .ss-warning i {
-            color: #ff3366;
-            font-size: 0.7rem;
-            animation: blinkRed 0.8s ease-in-out infinite;
-        }
-
-        .ss-warning span {
-            color: rgba(255, 255, 255, 0.08);
-            font-size: 0.5rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .ss-warning strong {
-            color: #ff3366;
-            font-weight: 700;
-        }
-
-        .upload-area {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 16px;
-            padding: 12px;
-            border: 1px dashed rgba(255, 255, 255, 0.03);
-            text-align: center;
-            margin-top: 8px;
-            transition: 0.4s;
-        }
-
-        .upload-area:hover {
-            border-color: rgba(122, 92, 255, 0.04);
-        }
-
-        .upload-area h4 {
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .upload-area p {
-            color: rgba(255, 255, 255, 0.1);
-            font-size: 0.55rem;
-            margin-bottom: 6px;
-        }
-
-        .upload-area input[type="file"] {
-            display: none;
-        }
-
-        .upload-area .file-label {
-            background: linear-gradient(135deg, rgba(122, 92, 255, 0.06), rgba(255, 51, 102, 0.03));
-            border: 1px solid rgba(122, 92, 255, 0.04);
-            color: #fff;
-            padding: 6px 18px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.65rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.4s;
-        }
-
-        .upload-area .file-label:active {
-            transform: scale(0.95);
-        }
-
-        .upload-area .file-label i {
-            color: #b8a5ff;
-        }
-
-        .upload-area .file-label:hover {
-            background: linear-gradient(135deg, #7a5cff, #ff3366);
-            border-color: #7a5cff;
-            box-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
-        }
-
-        .upload-area .file-label:hover i {
-            color: #fff;
-        }
-
-        .note-upload {
-            color: rgba(255, 255, 255, 0.04);
-            font-size: 0.5rem;
-            margin-top: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        /* ===== IQC ===== */
-        .iqc-section {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 24px;
-            padding: 18px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(8px);
-            transition: 0.4s;
-        }
-
-        .iqc-section:hover {
-            border-color: rgba(255, 51, 102, 0.04);
-        }
-
-        .iqc-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .iqc-header h3 {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
-        }
-
-        .iqc-header h3 i {
-            color: #ff3366;
-        }
-
-        .iqc-header .iqc-badge {
-            background: linear-gradient(135deg, rgba(255, 51, 102, 0.08), rgba(122, 92, 255, 0.04));
-            color: #ff3366;
-            font-size: 0.45rem;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            border: 1px solid rgba(255, 51, 102, 0.04);
-        }
-
-        .iqc-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 12px;
-            height: 170px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .iqc-box::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .iqc-box::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.01);
+        
+        /* ===== THREAT MESSAGE ===== */
+        .threat {
+            font-size: 1.3em;
+            color: #ff3333;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 15px;
             border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            margin: 20px 0;
+            font-weight: bold;
+            line-height: 1.8;
+            animation: blinkText 1.5s infinite;
         }
-
-        .iqc-box::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #7a5cff, #ff3366);
-            border-radius: 10px;
+        
+        @keyframes blinkText {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
-
-        .iqc-message {
-            margin-bottom: 8px;
+        
+        /* ===== INPUT ===== */
+        .input-group {
             display: flex;
             flex-direction: column;
-            animation: msgSlide 0.3s ease;
+            gap: 15px;
+            margin-top: 25px;
         }
-
-        @keyframes msgSlide {
-            0% { opacity: 0; transform: translateX(-8px); }
-            100% { opacity: 1; transform: translateX(0); }
-        }
-
-        .iqc-message .msg-user {
-            font-size: 0.45rem;
-            color: rgba(255, 255, 255, 0.1);
-            margin-bottom: 1px;
-            font-weight: 600;
-        }
-
-        .iqc-message .msg-text {
-            background: rgba(255, 51, 102, 0.04);
-            border: 1px solid rgba(255, 51, 102, 0.04);
-            padding: 6px 12px;
-            border-radius: 12px;
-            color: #ff6b8a;
-            font-size: 0.7rem;
-            max-width: 90%;
-            word-wrap: break-word;
-            font-weight: 500;
-        }
-
-        .iqc-message.bot .msg-text {
-            background: linear-gradient(135deg, rgba(255, 51, 102, 0.06), rgba(122, 92, 255, 0.03));
-            border-color: rgba(255, 51, 102, 0.06);
-            align-self: flex-end;
-            color: #ff3366;
-            border-left: 2px solid #ff3366;
-        }
-
-        .iqc-message.bot .msg-user {
-            text-align: right;
-            color: rgba(255, 51, 102, 0.12);
-        }
-
-        .iqc-message.user .msg-text {
-            background: linear-gradient(135deg, rgba(122, 92, 255, 0.04), rgba(255, 51, 102, 0.02));
-            border-color: rgba(122, 92, 255, 0.04);
-            color: #b8a5ff;
-            border-left: 2px solid #7a5cff;
-        }
-
-        .iqc-message .msg-text .time {
-            font-size: 0.4rem;
-            color: rgba(255, 255, 255, 0.05);
-            margin-left: 6px;
-        }
-
-        .iqc-message .msg-image {
-            max-width: 120px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.03);
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 4px;
-        }
-
-        .iqc-message .msg-image:active {
-            transform: scale(0.96);
-        }
-
-        .iqc-message .msg-image img {
-            width: 100%;
-            border-radius: 12px;
-            display: block;
-        }
-
-        .iqc-message .image-actions {
-            display: flex;
-            gap: 4px;
-            margin-top: 4px;
-        }
-
-        .iqc-message .image-actions button {
-            background: rgba(255,255,255,0.02);
-            border: none;
-            color: rgba(255,255,255,0.12);
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.45rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-
-        .iqc-message .image-actions button:active {
-            transform: scale(0.95);
-        }
-
-        .iqc-input-area {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .iqc-input-area input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 30px;
-            padding: 6px 14px;
-            color: #fff;
-            font-size: 0.7rem;
-            outline: none;
-            transition: 0.3s;
-            min-width: 0;
-        }
-
-        .iqc-input-area input::placeholder {
-            color: rgba(255, 255, 255, 0.06);
-        }
-
-        .iqc-input-area input:focus {
-            border-color: rgba(255, 51, 102, 0.08);
-            box-shadow: 0 0 30px rgba(255, 51, 102, 0.02);
-        }
-
-        .iqc-input-area .gallery-btn {
-            background: linear-gradient(135deg, #7a5cff, #4a2fd0);
-            border: none;
-            color: #fff;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: 0.4s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .iqc-input-area .gallery-btn:active {
-            transform: scale(0.9);
-        }
-
-        .iqc-input-area .gallery-btn input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .iqc-input-area .send-btn {
-            background: linear-gradient(135deg, #ff3366, #cc0044);
-            border: none;
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.65rem;
-            cursor: pointer;
-            transition: 0.4s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
-        }
-
-        .iqc-input-area .send-btn:active {
-            transform: scale(0.95);
-        }
-
-        .iqc-input-area .send-btn i {
-            font-size: 0.65rem;
-        }
-
-        .iqc-status {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: rgba(255, 255, 255, 0.1);
-            font-size: 0.5rem;
-        }
-
-        .iqc-status .dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: #ff3366;
-            animation: blinkRed 0.8s ease-in-out infinite;
-        }
-
-        /* ===== GLOBAL CHAT ===== */
-        .global-chat {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 24px;
+        
+        .input-group input {
             padding: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            margin-bottom: 18px;
-            backdrop-filter: blur(8px);
-            transition: 0.4s;
-        }
-
-        .global-chat:hover {
-            border-color: rgba(122, 92, 255, 0.04);
-        }
-
-        .global-chat .chat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .global-chat .chat-header h3 {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
-        }
-
-        .global-chat .chat-header h3 i {
-            color: #00ff88;
-        }
-
-        .global-chat .chat-header .online-count {
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 0.55rem;
-        }
-
-        .global-chat .chat-messages {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 16px;
-            padding: 12px;
-            height: 200px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .global-chat .chat-messages::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .global-chat .chat-messages::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.01);
-            border-radius: 10px;
-        }
-
-        .global-chat .chat-messages::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #7a5cff, #ff3366);
-            border-radius: 10px;
-        }
-
-        .global-chat .chat-messages .msg {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 6px;
-            animation: msgSlide 0.3s ease;
-        }
-
-        .global-chat .chat-messages .msg .msg-user {
-            font-size: 0.5rem;
-            color: rgba(255, 255, 255, 0.2);
-            font-weight: 600;
-        }
-
-        .global-chat .chat-messages .msg .msg-user .badge {
-            background: rgba(122, 92, 255, 0.08);
-            color: #7a5cff;
-            font-size: 0.4rem;
-            padding: 1px 6px;
-            border-radius: 10px;
-            margin-left: 4px;
-        }
-
-        .global-chat .chat-messages .msg .msg-text {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.7rem;
-            word-wrap: break-word;
-        }
-
-        .global-chat .chat-messages .msg .msg-text .time {
-            color: rgba(255, 255, 255, 0.08);
-            font-size: 0.4rem;
-            margin-left: 6px;
-        }
-
-        .global-chat .chat-input-area {
-            display: flex;
-            gap: 8px;
-        }
-
-        .global-chat .chat-input-area input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 30px;
-            padding: 6px 14px;
-            color: #fff;
-            font-size: 0.7rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            color: #ff0000;
+            font-size: 1.2em;
+            text-align: center;
+            font-family: 'Courier New', monospace;
             outline: none;
-            transition: 0.3s;
+            transition: all 0.3s;
+            letter-spacing: 5px;
         }
-
-        .global-chat .chat-input-area input::placeholder {
-            color: rgba(255, 255, 255, 0.06);
+        
+        .input-group input:focus {
+            border-color: #ff0000;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+            background: rgba(255, 0, 0, 0.05);
         }
-
-        .global-chat .chat-input-area input:focus {
-            border-color: rgba(122, 92, 255, 0.08);
+        
+        .input-group input::placeholder {
+            color: rgba(255, 0, 0, 0.3);
+            letter-spacing: 2px;
         }
-
-        .global-chat .chat-input-area .chat-send {
-            background: linear-gradient(135deg, #7a5cff, #ff3366);
-            border: none;
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.65rem;
-            cursor: pointer;
-            transition: 0.4s;
-        }
-
-        .global-chat .chat-input-area .chat-send:active {
-            transform: scale(0.95);
-        }
-
-        /* ===== REVIEW SECTION ===== */
-        .review-section {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 24px;
+        
+        .input-group button {
             padding: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            margin-bottom: 18px;
-            backdrop-filter: blur(8px);
-            transition: 0.4s;
-        }
-
-        .review-section:hover {
-            border-color: rgba(122, 92, 255, 0.04);
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .review-header h3 {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            border: none;
+            border-radius: 12px;
             color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
-        }
-
-        .review-header h3 i {
-            color: #ffd700;
-        }
-
-        .review-header .review-count {
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 0.55rem;
-        }
-
-        .review-video {
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 12px;
-            background: rgba(0,0,0,0.3);
-            position: relative;
-        }
-
-        .review-video video {
-            width: 100%;
-            display: block;
-            border-radius: 16px;
-        }
-
-        .review-actions {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 12px;
-        }
-
-        .review-actions .action-btn {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            color: rgba(255, 255, 255, 0.3);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.65rem;
-            font-weight: 600;
+            font-size: 1.3em;
+            font-weight: 900;
             cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 3px;
         }
-
-        .review-actions .action-btn:active {
+        
+        .input-group button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.4);
+        }
+        
+        .input-group button:active {
             transform: scale(0.95);
         }
-
-        .review-actions .action-btn.liked {
-            color: #ff3366;
-            border-color: rgba(255, 51, 102, 0.1);
-            background: rgba(255, 51, 102, 0.05);
-        }
-
-        .review-actions .action-btn i {
-            font-size: 0.8rem;
-        }
-
-        .review-comments {
-            margin-top: 8px;
-        }
-
-        .review-comments .comment {
-            display: flex;
-            gap: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .review-comments .comment:last-child {
-            border-bottom: none;
-        }
-
-        .review-comments .comment .avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #7a5cff, #ff3366);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            font-weight: 700;
-            color: #fff;
-            flex-shrink: 0;
-        }
-
-        .review-comments .comment .comment-body {
-            flex: 1;
-        }
-
-        .review-comments .comment .comment-body .name {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.55rem;
-            font-weight: 600;
-        }
-
-        .review-comments .comment .comment-body .text {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.7rem;
-            margin-top: 1px;
-        }
-
-        .review-comments .comment .comment-body .time {
-            color: rgba(255, 255, 255, 0.08);
-            font-size: 0.45rem;
-            margin-top: 1px;
-        }
-
-        .review-input-area {
-            display: flex;
-            gap: 8px;
+        
+        /* ===== ERROR & COUNTER ===== */
+        .error-msg {
+            color: #ff4444;
+            font-size: 0.9em;
             margin-top: 10px;
+            min-height: 30px;
+            animation: shake 0.3s infinite;
         }
-
-        .review-input-area input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 30px;
-            padding: 6px 14px;
-            color: #fff;
-            font-size: 0.7rem;
-            outline: none;
-            transition: 0.3s;
+        
+        .counter {
+            color: rgba(255, 0, 0, 0.3);
+            font-size: 0.8em;
+            margin-top: 15px;
+            letter-spacing: 2px;
         }
-
-        .review-input-area input::placeholder {
-            color: rgba(255, 255, 255, 0.06);
-        }
-
-        .review-input-area input:focus {
-            border-color: rgba(122, 92, 255, 0.08);
-        }
-
-        .review-input-area .comment-send {
-            background: linear-gradient(135deg, #7a5cff, #ff3366);
-            border: none;
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.65rem;
-            cursor: pointer;
-            transition: 0.4s;
-        }
-
-        .review-input-area .comment-send:active {
-            transform: scale(0.95);
-        }
-
-        /* ===== BOT KASAR ===== */
-        .bot-kasar-container {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 24px;
-            padding: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            margin-bottom: 18px;
-            backdrop-filter: blur(8px);
-            transition: 0.4s;
-        }
-
-        .bot-kasar-container:hover {
-            border-color: rgba(255, 51, 102, 0.04);
-        }
-
-        .bot-kasar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .bot-kasar-header h2 {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
-        }
-
-        .bot-kasar-header h2 i {
-            color: #ff3366;
-        }
-
-        .bot-kasar-header .bot-status {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: rgba(255, 255, 255, 0.1);
-            font-size: 0.5rem;
-        }
-
-        .bot-kasar-header .bot-status .dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: #ff3366;
-            animation: blinkRed 0.8s ease-in-out infinite;
-        }
-
-        .bot-kasar-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-        }
-
-        .kasar-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 14px;
-            padding: 10px 8px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            text-align: center;
-            transition: 0.3s;
-        }
-
-        .kasar-card:active {
-            transform: scale(0.96);
-        }
-
-        .kasar-card .kasar-icon {
-            font-size: 1.2rem;
-            color: #ff3366;
-            margin-bottom: 2px;
-            display: block;
-        }
-
-        .kasar-card .kasar-text {
-            color: rgba(255,255,255,0.4);
-            font-size: 0.55rem;
-            font-weight: 600;
-            line-height: 1.2;
-        }
-
-        .kasar-card .kasar-text span {
-            color: #ff6b8a;
-        }
-
-        /* ===== FEATURE CARDS ===== */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 18px;
-            padding: 14px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            text-align: center;
-            transition: 0.4s;
-        }
-
-        .feature-card:active {
-            transform: scale(0.96);
-        }
-
-        .feature-card .value {
-            font-size: 1.6rem;
-            color: #7a5cff;
-        }
-
-        .feature-card .label {
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        .feature-card p {
-            color: rgba(255,255,255,0.1);
-            font-size: 0.5rem;
-            margin-top: 2px;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            background: rgba(255, 255, 255, 0.02);
-            border-top: 1px solid rgba(255, 255, 255, 0.02);
-            padding: 16px 0 14px;
-            margin-top: 6px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .footer-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .footer-logo-small {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .footer-logo-small img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .footer-text {
-            color: rgba(255, 255, 255, 0.04);
-            font-size: 0.45rem;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-text strong {
-            color: rgba(255, 255, 255, 0.08);
-            font-weight: 700;
-        }
-
-        .footer-text .heart {
-            color: #ff3366;
-            animation: heartBeat 2s ease-in-out infinite;
-        }
-
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .footer-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 8px;
-        }
-
-        .footer-social a {
-            color: rgba(255, 255, 255, 0.04);
-            font-size: 0.8rem;
-            transition: 0.3s;
-            text-decoration: none;
-        }
-
-        .footer-social a:active {
-            color: #7a5cff;
-        }
-
-        .footer-version {
-            color: rgba(255, 255, 255, 0.02);
-            font-size: 0.4rem;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        /* ===== TOAST ===== */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid rgba(122, 92, 255, 0.08);
-            color: #fff;
-            padding: 10px 22px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            display: none;
-            z-index: 999;
-            align-items: center;
-            gap: 8px;
-            max-width: 90%;
-        }
-
-        .toast i {
-            color: #7a5cff;
-            font-size: 0.8rem;
-        }
-
-        .toast.show {
-            display: flex;
-            animation: slideUp 0.4s ease;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        /* ===== HIDE SECTION ===== */
-        .section-hidden {
-            display: none !important;
-        }
-
-        /* ===== MODAL ===== */
-        .image-modal {
-            display: none;
+        
+        /* ===== GLITCH EFFECT ===== */
+        .glitch {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            backdrop-filter: blur(30px);
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(255,0,0,0.03) 0px, rgba(255,0,0,0.03) 2px, transparent 2px, transparent 4px);
+            z-index: 99999999;
+            animation: glitchEffect 0.1s infinite;
         }
-
-        .image-modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
+        
+        @keyframes glitchEffect {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0.2; }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .image-modal .modal-content {
-            max-width: 90%;
-            max-height: 70vh;
-            border-radius: 20px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .image-modal .modal-content img {
-            width: 100%;
-            height: auto;
-            max-height: 70vh;
-            border-radius: 20px;
-            display: block;
-        }
-
-        .image-modal .modal-close {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.03);
-            color: rgba(255,255,255,0.12);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .image-modal .modal-close:active {
-            transform: scale(0.9);
-        }
-
-        .image-modal .modal-download {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #7a5cff, #ff3366);
-            border: none;
-            color: #fff;
-            padding: 10px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: 0.4s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 40px rgba(122, 92, 255, 0.05);
-        }
-
-        .image-modal .modal-download:active {
-            transform: translateX(-50%) scale(0.95);
-        }
-
+        
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 400px) {
-            body { padding: 6px; }
-            .dashboard { padding: 14px 12px 0; border-radius: 28px; }
-            .logo-circle { width: 40px; height: 40px; }
-            .logo-text h1 { font-size: 1.2rem; }
-            .logo-text span { font-size: 0.4rem; }
-            .nav-tab { font-size: 0.55rem; padding: 6px 8px; }
-            .stats { gap: 4px; }
-            .stat-card { padding: 8px 4px; }
-            .stat-card .value { font-size: 0.8rem; }
-            .info-table { gap: 6px; }
-            .info-item { padding: 8px 6px; }
-            .info-item .info-value { font-size: 0.7rem; }
-            .role-grid { gap: 8px; }
-            .role-card { padding: 12px 8px 10px; border-radius: 18px; }
-            .role-icon-wrapper .role-icon-bg { width: 44px; height: 44px; }
-            .role-icon-wrapper .role-icon-bg .role-icon { font-size: 1.3rem; }
-            .role-name { font-size: 0.75rem; }
-            .role-price { font-size: 1rem; }
-            .btn-buy { font-size: 0.5rem; padding: 6px 8px; }
-            .top-video-container { height: 80px; }
-            .banner-wrapper { height: 140px; }
-            .banner-overlay .banner-text { font-size: 0.75rem; }
-            .dana-box { padding: 12px 14px; gap: 10px; }
-            .dana-box .dana-logo { width: 38px; height: 38px; font-size: 1rem; }
-            .dana-box .dana-logo i { font-size: 1.2rem; }
-            .dana-box .dana-info .number { font-size: 1rem; }
-            .qris-container .qris-image { max-width: 140px; }
-            .iqc-box { height: 130px; }
-            .global-chat .chat-messages { height: 150px; }
-            .review-video video { height: 180px; }
+        @media (max-width: 600px) {
+            .title { font-size: 2.2em; }
+            .threat { font-size: 1em; padding: 12px; }
+            .profile-pic { width: 120px; height: 120px; }
         }
-
-        @media (max-width: 360px) {
-            .role-grid { grid-template-columns: 1fr 1fr; gap: 5px; }
-            .role-card { padding: 8px 4px 6px; border-radius: 14px; }
-            .role-icon-wrapper .role-icon-bg { width: 36px; height: 36px; }
-            .role-icon-wrapper .role-icon-bg .role-icon { font-size: 1rem; }
-            .role-name { font-size: 0.6rem; }
-            .role-price { font-size: 0.8rem; }
-            .btn-buy { font-size: 0.4rem; padding: 4px 6px; }
-            .stats { grid-template-columns: 1fr 1fr 1fr; gap: 3px; }
-            .stat-card { padding: 4px 3px; }
-            .stat-card .value { font-size: 0.65rem; }
-            .stat-card .label { font-size: 0.35rem; }
-            .info-table { gap: 4px; }
-            .info-item { padding: 6px 4px; }
-            .info-item .info-value { font-size: 0.6rem; }
-            .info-item .info-icon { font-size: 0.9rem; }
-            .top-video-container { height: 60px; }
-            .banner-wrapper { height: 110px; }
-            .dana-box .dana-info .number { font-size: 0.85rem; }
-            .dana-box .dana-logo { width: 32px; height: 32px; }
-            .dana-box .dana-logo i { font-size: 1rem; }
-            .qris-container .qris-image { max-width: 100px; }
-            .global-chat .chat-messages { height: 120px; }
-            .review-video video { height: 140px; }
-        }
+        
+        /* ===== HIDE SCROLLBAR ===== */
+        ::-webkit-scrollbar { display: none; }
+        ::selection { background: transparent; }
+        ::-moz-selection { background: transparent; }
     </style>
 </head>
 <body>
-
-    <!-- ===== VIDEO BACKGROUND ===== -->
-    <video id="bg-video" autoplay loop muted playsinline>
-        <source src="https://files.catbox.moe/k1cj4h.mp4" type="video/mp4" />
-    </video>
-    <div id="bg-video-overlay"></div>
-
-    <!-- ===== CANVAS PARTIKEL ===== -->
-    <canvas id="particles-canvas"></canvas>
-
-    <!-- TOAST -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMsg">Berhasil!</span>
-    </div>
-
-    <!-- MODAL GAMBAR -->
-    <div class="image-modal" id="imageModal" onclick="closeModal(event)">
-        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-        <img class="modal-content" id="modalImage" src="" alt="Preview" />
-        <button class="modal-download" onclick="downloadImage()">
-            <i class="fas fa-download"></i> Simpan
-        </button>
-    </div>
-
-    <!-- ===== AUDIO KLIK ===== -->
-    <audio id="clickSound" preload="auto">
-        <source src="https://www.soundjay.com/misc/sounds/pop-up-1.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="likeSound" preload="auto">
-        <source src="https://www.soundjay.com/misc/sounds/bell-tick-1.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="dashboard">
-
-        <!-- HEADER -->
-        <div class="header">
-            <div class="logo-container">
-                <div class="logo-circle">
-                    <img src="https://files.catbox.moe/dv1xua.jpg" alt="NUPZ Logo" />
-                </div>
-                <div class="logo-text">
-                    <h1 class="neon-text">NUPZ Store</h1>
-                    <span>✦ premium role shop ✦</span>
-                </div>
+    <!-- LAYAR LOCK -->
+    <div class="lock-screen" id="lockScreen">
+        <div class="container">
+            <!-- FOTO PROFILE -->
+            <div class="profile-pic">
+                <img src="https://files.catbox.moe/dv1xua.jpg" alt="NUPZZ" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect fill=%22%23000%22 width=%22150%22 height=%22150%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23ff0000%22 font-size=%2240%22 font-family=%22monospace%22%3ENUPZZ%3C/text%3E%3C/svg%3E'">
             </div>
-            <div class="dev-badge">
-                <div class="avatar">
-                    <img src="https://files.catbox.moe/dv1xua.jpg" alt="Nupz" />
-                </div>
-                <div class="info">
-                    <strong>Nupz</strong>
-                    <span style="display:block; font-size:0.4rem; color:rgba(255,255,255,0.06);">
-                        <span class="online-dot"></span> Online
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <!-- NAVIGASI -->
-        <div class="nav-tabs">
-            <button class="nav-tab active" data-tab="dashboard" onclick="playClick(); switchTab('dashboard')">
-                <i class="fas fa-th-large"></i> Dashboard
-            </button>
-            <button class="nav-tab" data-tab="features" onclick="playClick(); switchTab('features')">
-                <i class="fas fa-cogs"></i> Fitur Lainnya
-            </button>
-        </div>
-
-        <!-- STATS - REAL TIME -->
-        <div class="stats" id="statsContainer">
-            <div class="stat-card">
-                <div class="label"><i class="fas fa-users"></i> Pengunjung</div>
-                <div class="value">
-                    <i class="fas fa-eye"></i>
-                    <span id="visitorCount" class="pulse-number">0</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="label"><i class="fas fa-user"></i> Online</div>
-                <div class="value">
-                    <i class="fas fa-circle blink-red" style="font-size:0.4rem;"></i>
-                    <span id="onlineCount" class="blink-red pulse-number">0</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Role</div>
-                <div class="value"><i class="fas fa-layer-group"></i> 5</div>
-            </div>
-        </div>
-
-        <!-- ===== INFO TABLE ===== -->
-        <div class="info-table">
-            <div class="info-item">
-                <div class="info-icon"><i class="fas fa-clock clock-icon"></i></div>
-                <div class="info-label">Jam</div>
-                <div class="info-value"><span class="neon-gold" id="clockDisplay">00:00:00</span></div>
-            </div>
-            <div class="info-item">
-                <div class="info-icon"><i class="fas fa-cloud-sun weather-icon"></i></div>
-                <div class="info-label">Cuaca</div>
-                <div class="info-value" id="weatherDisplay">--°C</div>
-            </div>
-            <div class="info-item">
-                <div class="info-icon"><i class="fas fa-battery-three-quarters battery-icon"></i></div>
-                <div class="info-label">Baterai</div>
-                <div class="info-value">
-                    <span id="batteryDisplay">--%</span>
-                    <span class="battery-fill-mini">
-                        <span class="fill" id="batteryFillBar" style="width:0%;"></span>
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== VIDEO ATAS BANNER ===== -->
-        <div class="top-video-container">
-            <video autoplay loop muted playsinline>
-                <source src="https://files.catbox.moe/qwjqp8.mp4" type="video/mp4" />
-            </video>
-            <div class="video-overlay">
-                <div class="video-text"><i class="fas fa-play-circle"></i> NUPZ STORE PREMIUM</div>
-            </div>
-        </div>
-
-        <!-- ===== SECTION DASHBOARD ===== -->
-        <div id="dashboardSection">
             
-            <!-- SPECIAL SUPPORT -->
-            <div class="special-support" onclick="playClick()">
-                <span class="support-icon">🌟</span>
-                <div class="support-title neon-gold"><i class="fas fa-star"></i> Spesial Support</div>
-                <div class="support-name neon-gold">MAMA ALLAH FRIEND</div>
-                <div class="support-sub">✦ Support Terbaik Dari Kami ✦</div>
-                <div class="support-decoration">
-                    <span></span>
-                    <span class="star">✦</span>
-                    <span></span>
-                </div>
+            <!-- TITLE -->
+            <div class="title">🔒 NUPZZ</div>
+            <div class="sub-title">• RANSOMWARE •</div>
+            
+            <!-- THREAT MESSAGE -->
+            <div class="threat">
+                YAH HP KAMU KENA LOCK BY NUPZZ<br>
+                KALO MAU KEMBALI BAYAR 500K WKWK🤣🤣🤣
             </div>
-
-            <!-- ===== BANNER SLIDING ===== -->
-            <div class="banner-wrapper">
-                <div class="banner-slider" id="bannerSlider">
-                    <div class="slide">
-                        <img src="https://files.catbox.moe/m7aqnc.jpg" alt="Banner 1" />
-                        <div class="banner-overlay">
-                            <div class="banner-text"><i class="fas fa-crown"></i> NUPZ Store Premium</div>
-                            <div class="banner-sub">✦ Pilih Role & Dapatkan Keistimewaan ✦</div>
-                        </div>
-                    </div>
-                    <div class="slide">
-                        <img src="https://files.catbox.moe/h3pxnz.jpg" alt="Banner 2" />
-                        <div class="banner-overlay">
-                            <div class="banner-text neon-red"><i class="fas fa-fire"></i> Hot Deal!</div>
-                            <div class="banner-sub">✦ Dapatkan Diskon Spesial ✦</div>
-                        </div>
-                    </div>
-                    <div class="slide">
-                        <img src="https://files.catbox.moe/vmynac.jpg" alt="Banner 3" />
-                        <div class="banner-overlay">
-                            <div class="banner-text"><i class="fas fa-gem"></i> Premium Role</div>
-                            <div class="banner-sub">✦ Harga Terbaik Se-Indonesia ✦</div>
-                        </div>
-                    </div>
-                </div>
+            
+            <!-- INPUT PASSWORD -->
+            <div class="input-group">
+                <input type="password" id="passwordInput" placeholder="MASUKKAN PASSWORD" maxlength="10" autofocus>
+                <button id="unlockBtn" onclick="checkPassword()">🔓 UNLOCK</button>
             </div>
-
-            <!-- ROLE GRID -->
-            <div class="section-title">
-                <i class="fas fa-gem neon-text"></i> <span class="neon-text">Pilih Role Premium</span>
-                <span class="badge-new neon-red">🔥 HOT</span>
-            </div>
-            <div class="role-grid" id="roleGrid"></div>
-
-            <!-- 2 KOLOM: PAYMENT + IQC -->
-            <div class="two-col">
-                <!-- PAYMENT -->
-                <div class="payment-section">
-                    <div class="payment-info">
-                        <h3><i class="fas fa-credit-card neon-text"></i> <span class="neon-text">Payment & Kontak</span></h3>
-                        
-                        <div class="qris-container" onclick="playClick(); openImage('https://files.catbox.moe/1wlm3v.jpg')">
-                            <div class="qris-label neon-text"><i class="fas fa-qrcode"></i> QRIS</div>
-                            <div class="qris-image">
-                                <img src="https://files.catbox.moe/1wlm3v.jpg" alt="QRIS NUPZ" />
-                            </div>
-                            <div class="qris-detail">
-                                <strong>NMID:</strong> ID2024313592113
-                            </div>
-                        </div>
-
-                        <div class="dana-box">
-                            <div class="dana-logo">
-                                <i class="fas fa-wallet"></i>
-                            </div>
-                            <div class="dana-info">
-                                <div class="label">No. DANA (Owner)</div>
-                                <div class="number">
-                                    <i class="fas fa-phone-alt"></i> 081275188480
-                                    <button class="btn-copy-dana" onclick="playClick(); copyDana()">
-                                        <i class="fas fa-copy"></i> Salin
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="social-buttons">
-                            <a href="https://wa.me/6281275188480?text=Halo%20Nupz%2C%20saya%20mau%20beli%20role" target="_blank" class="social-btn dana" onclick="playClick()">
-                                <i class="fab fa-whatsapp"></i> Chat
-                            </a>
-                            <a href="https://t.me/Nupzz_reals" target="_blank" class="social-btn tele" onclick="playClick()">
-                                <i class="fab fa-telegram-plane"></i> @Nupzz
-                            </a>
-                            <a href="https://tiktok.com/@nupzz99" target="_blank" class="social-btn tiktok" onclick="playClick()">
-                                <i class="fab fa-tiktok"></i> @nupzz99
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="ss-warning">
-                        <i class="fas fa-exclamation-triangle neon-red"></i>
-                        <span><strong class="neon-red">WAJIB SS DETAIL!</strong> Kalo gak SS detail, <strong class="neon-red">HANGUS!</strong></span>
-                    </div>
-
-                    <div class="upload-area">
-                        <h4><i class="fas fa-cloud-upload-alt"></i> Kirim Bukti Transfer</h4>
-                        <p>Upload screenshot pembayaran (WAJIB SS DETAIL)</p>
-                        <input type="file" id="fileInput" accept="image/*" />
-                        <label for="fileInput" class="file-label" onclick="playClick()">
-                            <i class="fas fa-image"></i> Pilih Bukti
-                        </label>
-                        <div style="margin-top:4px; color:rgba(255,255,255,0.05); font-size:0.5rem;" id="fileName">Belum ada file</div>
-                        <div class="note-upload">
-                            <i class="fas fa-shield-alt"></i> Diverifikasi oleh Nupz
-                        </div>
-                    </div>
-                </div>
-
-                <!-- IQC -->
-                <div class="iqc-section">
-                    <div class="iqc-header">
-                        <h3>
-                            <i class="fas fa-robot neon-red"></i> <span class="neon-red">IQC</span>
-                            <span class="iqc-badge neon-red">🔥 KASAR</span>
-                        </h3>
-                        <div class="iqc-status">
-                            <span class="dot"></span>
-                            <span id="iqcStatus" style="color:#ff3366;">Bot Siap</span>
-                        </div>
-                    </div>
-                    <div class="iqc-box" id="iqcBox">
-                        <div class="iqc-message bot">
-                            <div class="msg-user">🤖 IQC Bot</div>
-                            <div class="msg-text neon-red">🗣️ ANJING! MAU BELI APA? CEPETAN! 😠<span class="time">Now</span></div>
-                        </div>
-                        <div class="iqc-message bot">
-                            <div class="msg-user">🤖 IQC Bot</div>
-                            <div class="msg-text neon-red">🗣️ JANGAN BANYAK COBAAN KONTOL! LANGSUNG BELI! 🤬<span class="time">Now</span></div>
-                        </div>
-                    </div>
-                    <div class="iqc-input-area">
-                        <input type="text" id="iqcInput" placeholder="Ketik pesan..." />
-                        <label class="gallery-btn" title="Kirim dari Galeri" onclick="playClick()">
-                            <i class="fas fa-images"></i>
-                            <input type="file" id="iqcGalleryInput" accept="image/*" onchange="playClick(); handleIqcGallery(event)" />
-                        </label>
-                        <button class="send-btn" onclick="playClick(); sendIqcMessage()">
-                            <i class="fas fa-paper-plane"></i> Kirim
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== SECTION FITUR LAINNYA ===== -->
-        <div id="featuresSection" class="section-hidden">
-            <div class="section-title">
-                <i class="fas fa-cogs neon-text"></i> <span class="neon-text">Fitur Lainnya</span>
-                <span class="badge-new">NEW</span>
-            </div>
-
-            <!-- ===== GLOBAL CHAT ===== -->
-            <div class="global-chat">
-                <div class="chat-header">
-                    <h3><i class="fas fa-globe-asia"></i> <span class="neon-text">Chat Global</span></h3>
-                    <span class="online-count" id="globalOnline">👤 0 online</span>
-                </div>
-                <div class="chat-messages" id="globalChatMessages">
-                    <div class="msg">
-                        <div class="msg-user">🤖 System <span class="badge">Bot</span></div>
-                        <div class="msg-text">Selamat datang di Chat Global NUPZ Store! Chat dengan sesama pengunjung 💬</div>
-                    </div>
-                </div>
-                <div class="chat-input-area">
-                    <input type="text" id="globalChatInput" placeholder="Tulis pesan ke semua pengunjung..." />
-                    <button class="chat-send" onclick="playClick(); sendGlobalMessage()">
-                        <i class="fas fa-paper-plane"></i> Kirim
-                    </button>
-                </div>
-            </div>
-
-            <!-- ===== REVIEW SECTION ===== -->
-            <div class="review-section">
-                <div class="review-header">
-                    <h3><i class="fas fa-star"></i> <span class="neon-gold">Review & Komentar</span></h3>
-                    <span class="review-count">★ 4.8 (120 reviews)</span>
-                </div>
-
-                <div class="review-video" onclick="playClick()">
-                    <video id="reviewVideo" controls playsinline>
-                        <source src="https://files.catbox.moe/he9ari.mp4" type="video/mp4" />
-                        Browser kamu tidak support video.
-                    </video>
-                </div>
-
-                <div class="review-actions">
-                    <button class="action-btn" id="likeBtn" onclick="playLikeSound(); toggleLike()">
-                        <i class="fas fa-heart"></i> <span id="likeCount">47</span>
-                    </button>
-                    <button class="action-btn" onclick="playClick(); document.getElementById('commentInput').focus()">
-                        <i class="fas fa-comment"></i> Komentar
-                    </button>
-                    <button class="action-btn" onclick="playClick(); shareReview()">
-                        <i class="fas fa-share-alt"></i> Bagikan
-                    </button>
-                </div>
-
-                <div class="review-comments" id="commentSection">
-                    <div class="comment">
-                        <div class="avatar">N</div>
-                        <div class="comment-body">
-                            <div class="name">Nupz • Owner</div>
-                            <div class="text">🔥 Mantap banget ini! Role premium terbaik!</div>
-                            <div class="time">2 jam lalu</div>
-                        </div>
-                    </div>
-                    <div class="comment">
-                        <div class="avatar">A</div>
-                        <div class="comment-body">
-                            <div class="name">Ahmad • User</div>
-                            <div class="text">👍 Langsung beli Member, pelayanan cepet banget!</div>
-                            <div class="time">5 jam lalu</div>
-                        </div>
-                    </div>
-                    <div class="comment">
-                        <div class="avatar">R</div>
-                        <div class="comment-body">
-                            <div class="name">Rina • User</div>
-                            <div class="text">❤️ VIP keren abis! Recommended!</div>
-                            <div class="time">1 hari lalu</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="review-input-area">
-                    <input type="text" id="commentInput" placeholder="Tulis komentar..." />
-                    <button class="comment-send" onclick="playClick(); postComment()">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- BOT KASAR -->
-            <div class="bot-kasar-container">
-                <div class="bot-kasar-header">
-                    <h2>
-                        <i class="fas fa-skull neon-red"></i> <span class="neon-red">BOT KASAR</span>
-                        <span style="font-size:0.45rem; color:#ff3366; font-weight:400;">🔥 SADIS</span>
-                    </h2>
-                    <div class="bot-status">
-                        <span class="dot"></span>
-                        <span style="color:#ff3366;">Online</span>
-                    </div>
-                </div>
-
-                <div class="bot-kasar-grid">
-                    <div class="kasar-card" onclick="playClick()">
-                        <span class="kasar-icon"><i class="fas fa-fire"></i></span>
-                        <div class="kasar-text neon-red">🗣️ <span>ANJING!</span> CEPETAN!</div>
-                    </div>
-                    <div class="kasar-card" onclick="playClick()">
-                        <span class="kasar-icon"><i class="fas fa-skull"></i></span>
-                        <div class="kasar-text neon-red">🗣️ <span>KONTOL!</span> GA USAH COBAAN!</div>
-                    </div>
-                    <div class="kasar-card" onclick="playClick()">
-                        <span class="kasar-icon"><i class="fas fa-bolt"></i></span>
-                        <div class="kasar-text neon-red">🗣️ <span>MEMEK!</span> TRANSFER!</div>
-                    </div>
-                    <div class="kasar-card" onclick="playClick()">
-                        <span class="kasar-icon"><i class="fas fa-dragon"></i></span>
-                        <div class="kasar-text neon-red">🗣️ <span>ASU!</span> GA PUNYA WAKTU!</div>
-                    </div>
-                    <div class="kasar-card" onclick="playClick()">
-                        <span class="kasar-icon"><i class="fas fa-fist-raised"></i></span>
-                        <div class="kasar-text neon-red">🗣️ <span>BACOT!</span> BELI AJA!</div>
-                    </div>
-                    <div class="kasar-card" onclick="playClick()">
-                        <span class="kasar-icon"><i class="fas fa-crown"></i></span>
-                        <div class="kasar-text neon-red">🗣️ <span>GOBLOK!</span> KALO GA BELI!</div>
-                    </div>
-                    <div class="kasar-card" onclick="playClick()">
-                        <span class="kasar-icon"><i class="fas fa-robot"></i></span>
-                        <div class="kasar-text neon-red">🗣️ <span>JANCOK!</span> BOSAN!</div>
-                    </div>
-                    <div class="kasar-card" onclick="playClick()">
-                        <span class="kasar-icon"><i class="fas fa-ghost"></i></span>
-                        <div class="kasar-text neon-red">🗣️ <span>TOLOL!</span> MAU APA?</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FEATURE CARDS -->
-            <div class="feature-grid">
-                <div class="feature-card" onclick="playClick()">
-                    <div class="value neon-text"><i class="fas fa-rocket"></i></div>
-                    <div class="label neon-text">Fast Response</div>
-                    <p>Bot siap mencaci kapan aja</p>
-                </div>
-                <div class="feature-card" onclick="playClick()">
-                    <div class="value neon-text"><i class="fas fa-qrcode"></i></div>
-                    <div class="label neon-text">QRIS</div>
-                    <p>Bayar pake QRIS</p>
-                </div>
-                <div class="feature-card" onclick="playClick()">
-                    <div class="value neon-text"><i class="fas fa-bolt"></i></div>
-                    <div class="label neon-text">Real-Time Online</div>
-                    <p>Lihat user online</p>
-                </div>
-                <div class="feature-card" onclick="playClick()">
-                    <div class="value neon-red"><i class="fas fa-skull"></i></div>
-                    <div class="label neon-red">Bot Sadis</div>
-                    <p>50+ kata-kata kasar</p>
-                </div>
-                <div class="feature-card" onclick="playClick()">
-                    <div class="value neon-text"><i class="fas fa-download"></i></div>
-                    <div class="label neon-text">Simpan Gambar</div>
-                    <p>Download hasil generate</p>
-                </div>
-                <div class="feature-card" onclick="playClick()">
-                    <div class="value neon-gold"><i class="fas fa-crown"></i></div>
-                    <div class="label neon-gold">NUPZ Store</div>
-                    <p>Role premium sadis</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="footer">
-            <div class="footer-content">
-                <div class="footer-left">
-                    <div class="footer-logo-small">
-                        <img src="https://files.catbox.moe/dv1xua.jpg" alt="NUPZ" />
-                    </div>
-                    <div class="footer-text">
-                        &copy; 2026 <strong>NUPZ</strong> · 
-                        <span class="heart">♥</span> by <strong>Nupz</strong>
-                        <br>
-                        <span style="font-size:0.35rem; opacity:0.3;">Bot Sadis · QRIS · Chat Global</span>
-                    </div>
-                </div>
-                <div class="footer-right">
-                    <div class="footer-social">
-                        <a href="https://t.me/Nupzz_reals" target="_blank" onclick="playClick()"><i class="fab fa-telegram-plane"></i></a>
-                        <a href="https://tiktok.com/@nupzz99" target="_blank" onclick="playClick()"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://wa.me/6281275188480" target="_blank" onclick="playClick()"><i class="fab fa-whatsapp"></i></a>
-                    </div>
-                    <div class="footer-version">v21.0</div>
-                </div>
-            </div>
+            
+            <!-- ERROR MESSAGE -->
+            <div class="error-msg" id="errorMsg"></div>
+            
+            <!-- COUNTER -->
+            <div class="counter" id="counter">PERCOBAAN KE- 0</div>
         </div>
     </div>
+    
+    <!-- GLITCH EFFECT -->
+    <div class="glitch"></div>
 
     <script>
-        // ===== NUPZ STORE v21.0 - INFO TABLE RAPIH =====
-        (function() {
-            'use strict';
+        // ==================== KONFIGURASI ====================
+        const PASSWORD = "6779";
+        let attempts = 0;
+        let isLocked = true;
+        let audioPlayed = false;
+        
+        // ==================== PLAY SOUND DARI URL ====================
+        function playSoundFromURL() {
+            try {
+                const audio = new Audio('https://files.catbox.moe/w3t82s.m4a');
+                audio.volume = 0.8;
+                audio.loop = true; // Repeat biar serem terus
+                audio.play().catch(() => {
+                    // Fallback kalo gagal load
+                    playScarySound();
+                });
+                
+                // Kalo suara gagal total, pake oscillator
+                setTimeout(() => {
+                    if (!audioPlayed) {
+                        playScarySound();
+                    }
+                }, 2000);
+                
+                audioPlayed = true;
+                return audio;
+            } catch (e) {
+                playScarySound();
+                return null;
+            }
+        }
+        
+        // ==================== SUARA SEREM (FALLBACK) ====================
+        function playScarySound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Oscillator 1 - bass serem
+                const osc1 = audioCtx.createOscillator();
+                const gain1 = audioCtx.createGain();
+                osc1.connect(gain1);
+                gain1.connect(audioCtx.destination);
+                osc1.frequency.setValueAtTime(50, audioCtx.currentTime);
+                osc1.frequency.linearRampToValueAtTime(30, audioCtx.currentTime + 3);
+                osc1.type = 'sawtooth';
+                gain1.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 4);
+                osc1.start();
+                osc1.stop(audioCtx.currentTime + 4);
+                
+                // Oscillator 2 - noise tinggi
+                setTimeout(() => {
+                    const osc2 = audioCtx.createOscillator();
+                    const gain2 = audioCtx.createGain();
+                    osc2.connect(gain2);
+                    gain2.connect(audioCtx.destination);
+                    osc2.frequency.setValueAtTime(120, audioCtx.currentTime);
+                    osc2.type = 'square';
+                    gain2.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
+                    osc2.start();
+                    osc2.stop(audioCtx.currentTime + 2);
+                }, 300);
+                
+            } catch (e) {
+                // Diam aja kalo gagal
+            }
+        }
+        
+        // ==================== PLAY SOUND SAAT LOAD ====================
+        let soundInterval;
+        window.addEventListener('load', function() {
+            // Play sound dari URL
+            const audio = playSoundFromURL();
             
-            console.log('🔥 NUPZ Store v21.0 - Info Table Rapi Loaded!');
-
-            // ===== SUARA KLIK =====
-            var clickAudio = document.getElementById('clickSound');
-            var likeAudio = document.getElementById('likeSound');
-
-            window.playClick = function() {
+            // Ulang sound setiap 10 detik
+            soundInterval = setInterval(() => {
+                if (document.getElementById('lockScreen').style.display !== 'none') {
+                    playSoundFromURL();
+                }
+            }, 10000);
+            
+            // Fokus ke input
+            document.getElementById('passwordInput').focus();
+            
+            // Lock semua interaksi
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Block keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                    (e.ctrlKey && e.key === 'U') ||
+                    e.key === 'Escape') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Block touch
+            document.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+        });
+        
+        // ==================== CEK PASSWORD ====================
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const errorMsg = document.getElementById('errorMsg');
+            const counter = document.getElementById('counter');
+            const password = input.value.trim();
+            
+            if (password === PASSWORD) {
+                // UNLOCK
+                errorMsg.style.color = '#00ff00';
+                errorMsg.textContent = '✅ AKSES DIBUKA! SELAMAT!';
+                
+                // Stop sound
+                if (soundInterval) {
+                    clearInterval(soundInterval);
+                }
+                
+                // Play sound sukses
                 try {
-                    if (clickAudio) {
-                        clickAudio.currentTime = 0;
-                        clickAudio.play().catch(function(e) {});
-                    }
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                    osc.type = 'sine';
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 1.5);
                 } catch(e) {}
-            };
-
-            window.playLikeSound = function() {
+                
+                // Unlock screen
+                setTimeout(() => {
+                    document.getElementById('lockScreen').style.display = 'none';
+                    document.querySelector('.glitch').style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    document.body.style.position = 'relative';
+                    document.body.innerHTML = `
+                        <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:#00ff00;font-family:'Courier New',monospace;text-align:center;padding:20px;">
+                            <div>
+                                <h1 style="font-size:3em;margin-bottom:20px;">✅ UNLOCKED</h1>
+                                <p style="font-size:1.5em;color:#00ff88;">Selamat! Kamu berhasil membuka lock.</p>
+                                <p style="color:#8899aa;margin-top:20px;">NUPZZ RANSOMWARE</p>
+                            </div>
+                        </div>
+                    `;
+                }, 1000);
+                
+            } else {
+                // PASSWORD SALAH
+                attempts++;
+                errorMsg.style.color = '#ff0000';
+                errorMsg.textContent = '❌ PASSWORD SALAH! COBA LAGI!';
+                counter.textContent = `PERCOBAAN KE- ${attempts}`;
+                
+                // Play sound error
                 try {
-                    if (likeAudio) {
-                        likeAudio.currentTime = 0;
-                        likeAudio.play().catch(function(e) {});
-                    }
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                    osc.type = 'square';
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.5);
                 } catch(e) {}
-            };
-
-            // ===== VIDEO BACKGROUND =====
-            var bgVideo = document.getElementById('bg-video');
-            if (bgVideo) {
-                bgVideo.play().catch(function(e) {});
-            }
-
-            // ===== JAM =====
-            function updateClock() {
-                var now = new Date();
-                document.getElementById('clockDisplay').textContent = 
-                    String(now.getHours()).padStart(2, '0') + ':' +
-                    String(now.getMinutes()).padStart(2, '0') + ':' +
-                    String(now.getSeconds()).padStart(2, '0');
-            }
-            updateClock();
-            setInterval(updateClock, 1000);
-
-            // ===== CUACA =====
-            function updateWeather() {
-                var weathers = ['☀️ Cerah', '⛅ Berawan', '🌤️ Sebagian Cerah', '🌧️ Hujan', '⛈️ Badai', '🌫️ Berkabut'];
-                var temps = [24, 26, 28, 30, 32, 34];
-                document.getElementById('weatherDisplay').textContent = 
-                    weathers[Math.floor(Math.random() * weathers.length)] + ' ' + 
-                    temps[Math.floor(Math.random() * temps.length)] + '°C';
-            }
-            updateWeather();
-            setInterval(updateWeather, 300000);
-
-            // ===== BATTERY =====
-            function updateBattery() {
-                if (navigator.getBattery) {
-                    navigator.getBattery().then(function(battery) {
-                        var level = Math.round(battery.level * 100);
-                        var isCharging = battery.charging;
-                        document.getElementById('batteryDisplay').textContent = 
-                            (isCharging ? '⚡' : '🔋') + ' ' + level + '%';
-                        var fillBar = document.getElementById('batteryFillBar');
-                        fillBar.style.width = level + '%';
-                        fillBar.className = 'fill';
-                        if (level > 50) fillBar.classList.add('high');
-                        else if (level > 20) fillBar.classList.add('medium');
-                        else fillBar.classList.add('low');
-                    }).catch(function() { fallbackBattery(); });
-                } else {
-                    fallbackBattery();
-                }
-            }
-
-            function fallbackBattery() {
-                var level = Math.floor(Math.random() * 40) + 60;
-                document.getElementById('batteryDisplay').textContent = '🔋 ' + level + '%';
-                var fillBar = document.getElementById('batteryFillBar');
-                fillBar.style.width = level + '%';
-                fillBar.className = 'fill high';
-            }
-            updateBattery();
-            setInterval(updateBattery, 10000);
-
-            // ===== PARTIKEL =====
-            (function initParticles() {
-                var canvas = document.getElementById('particles-canvas');
-                var ctx = canvas.getContext('2d');
-                var particles = [];
-                var w, h;
-
-                function resize() {
-                    w = canvas.width = window.innerWidth;
-                    h = canvas.height = window.innerHeight;
-                }
-                resize();
-                window.addEventListener('resize', resize);
-
-                for (var i = 0; i < 40; i++) {
-                    particles.push({
-                        x: Math.random() * w,
-                        y: Math.random() * h,
-                        r: Math.random() * 1.5 + 0.5,
-                        dx: (Math.random() - 0.5) * 0.3,
-                        dy: (Math.random() - 0.5) * 0.3,
-                        color: 'rgba(122,92,255,' + (Math.random() * 0.15 + 0.03) + ')'
-                    });
-                }
-
-                function draw() {
-                    ctx.clearRect(0, 0, w, h);
-                    particles.forEach(function(p) {
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                        ctx.fillStyle = p.color;
-                        ctx.fill();
-                        p.x += p.dx;
-                        p.y += p.dy;
-                        if (p.x < 0 || p.x > w) p.dx *= -1;
-                        if (p.y < 0 || p.y > h) p.dy *= -1;
-                    });
-                    requestAnimationFrame(draw);
-                }
-                draw();
-            })();
-
-            // ===== REAL TIME STATS =====
-            function updateRealTimeStats() {
-                try {
-                    var visitors = parseInt(localStorage.getItem('nupz_visitors') || '0');
-                    if (!sessionStorage.getItem('nupz_visited')) {
-                        visitors++;
-                        localStorage.setItem('nupz_visitors', visitors.toString());
-                        sessionStorage.setItem('nupz_visited', 'true');
-                    }
-                    document.getElementById('visitorCount').textContent = visitors.toLocaleString();
-
-                    var userId = sessionStorage.getItem('nupz_user_id');
-                    if (!userId) {
-                        userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-                        sessionStorage.setItem('nupz_user_id', userId);
-                    }
-
-                    var onlineList = JSON.parse(localStorage.getItem('nupz_online') || '[]');
-                    var now = Date.now();
-                    
-                    var exists = onlineList.some(function(u) { return u.id === userId; });
-                    if (!exists) onlineList.push({ id: userId, lastSeen: now });
-                    else {
-                        onlineList = onlineList.map(function(u) {
-                            if (u.id === userId) u.lastSeen = now;
-                            return u;
-                        });
-                    }
-
-                    onlineList = onlineList.filter(function(u) { return (now - u.lastSeen) < 30000; });
-                    localStorage.setItem('nupz_online', JSON.stringify(onlineList));
-
-                    var onlineCount = onlineList.length;
-                    document.getElementById('onlineCount').textContent = onlineCount;
-                    document.getElementById('globalOnline').textContent = '👤 ' + onlineCount + ' online';
-
-                    var iqcStatus = document.getElementById('iqcStatus');
-                    if (iqcStatus) {
-                        iqcStatus.textContent = onlineCount > 1 ? onlineCount + ' user online' : 'Kamu doang';
-                        iqcStatus.style.color = onlineCount > 1 ? '#ff3366' : '#ff6b8a';
-                    }
-
-                } catch(e) { console.log('Stat error:', e); }
-            }
-            updateRealTimeStats();
-            setInterval(updateRealTimeStats, 5000);
-            document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) updateRealTimeStats();
-            });
-
-            // ===== DATA ROLE =====
-            var roles = [
-                { name: 'Member', price: 15000, icon: 'fa-user', badge: 'member', iconClass: 'member' },
-                { name: 'Reseller', price: 25000, icon: 'fa-store', badge: 'reseller', iconClass: 'reseller' },
-                { name: 'VIP', price: 35000, icon: 'fa-star', badge: 'vip', iconClass: 'vip' },
-                { name: 'PT', price: 55000, icon: 'fa-bolt', badge: 'pt', iconClass: 'pt' },
-                { name: 'Moderator', price: 75000, icon: 'fa-shield-halved', badge: 'moderator', iconClass: 'moderator' }
-            ];
-
-            var roleGrid = document.getElementById('roleGrid');
-            if (roleGrid) {
-                roles.forEach(function(role) {
-                    var card = document.createElement('div');
-                    card.className = 'role-card';
-                    card.innerHTML = 
-                        '<span class="role-badge ' + role.badge + '">' + role.badge + '</span>' +
-                        '<div class="role-icon-wrapper">' +
-                            '<div class="role-icon-bg ' + role.iconClass + '">' +
-                                '<i class="fas ' + role.icon + ' role-icon"></i>' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="role-name">' + role.name + '</div>' +
-                        '<div class="role-price">Rp ' + role.price.toLocaleString('id-ID') + '</div>' +
-                        '<button class="btn-buy" data-role="' + role.name + '" data-price="' + role.price + '">' +
-                            '<i class="fas fa-cart-plus"></i> Beli Sekarang' +
-                        '</button>';
-                    roleGrid.appendChild(card);
-                });
-            }
-
-            // ===== EVENT BELI =====
-            document.querySelectorAll('.btn-buy').forEach(function(btn) {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    playClick();
-                    var role = this.getAttribute('data-role');
-                    var price = parseInt(this.getAttribute('data-price'));
-                    var formatted = price.toLocaleString('id-ID');
-
-                    showToast('\ud83c\udfaf ' + role + ' Rp ' + formatted);
-                    document.querySelector('.payment-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                    addIqcMessage('🗣️ GUA MAU BELI ' + role + ' (Rp ' + formatted + ')', false);
-                    setTimeout(function() { iqcBotReply('GUA MAU BELI ' + role); }, 600);
-
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(function() { if (btn) btn.style.transform = ''; }, 200);
-                });
-            });
-
-            document.querySelectorAll('.role-card').forEach(function(card) {
-                card.addEventListener('click', function() {
-                    var btn = this.querySelector('.btn-buy');
-                    if (btn) btn.click();
-                });
-            });
-
-            // ===== BOT KASAR =====
-            var sadisReplies = [
-                '🗣️ ANJING! CEPETAN BELI! GA USAH BANYAK COBAAN! 😤',
-                '🗣️ LO KIRA GUA RELA NGELAYANIN LO? CEPETAN TOT! 🤬',
-                '🗣️ BACOT! MAU BELI APA? CEPETAN!',
-                '🗣️ GO BLOK! INI TOKO ROLE, BUKAN TOKO MAINAN!',
-                '🗣️ HARGA SUDAH JELAS, KALO GA MAMPU PERGI!',
-                '🗣️ JANGAN BANYAK TANYA, LANGSUNG TRANSFER!',
-                '🗣️ GUA BOSAN SAMA ORANG YANG CUMA NANYA DOANG!',
-                '🗣️ KALO MAU BELI YA BELI, KALO GA PERGI!',
-                '🗣️ LO GA PUNYA DUIT? MENDING CABUT!',
-                '🗣️ BANYAK BANGET ALAHANNYA!',
-                '🗣️ MEMEK! MEMBER 15K AJA GA SANGGUP?',
-                '🗣️ ASU! RESELLER 25K? MODAL AJA GA PUNYA!',
-                '🗣️ JANCOK! VIP 35K? LO PENCIT!',
-                '🗣️ KONTOL! PT 55K? LO PIKIR LO PRO?',
-                '🗣️ ANJING! MODERATOR 75K? MODAL GA PUNYA!'
-            ];
-
-            function iqcBotReply(userMsg) {
-                var lower = userMsg.toLowerCase();
-                var reply = '';
-                if (lower.includes('member')) reply = '🗣️ MEMBER 15K? HAHA MISKIN! TAPI YASUDLAH BELI! 😏';
-                else if (lower.includes('reseller')) reply = '🗣️ RESELLER? MODAL GA PUNYA! 25K! 😑';
-                else if (lower.includes('vip')) reply = '🗣️ VIP? 35K NEGO? GA USAH COBAAN! 😤';
-                else if (lower.includes('pt')) reply = '🗣️ PT? 55K! KALO GA BELI GUSI AJA! 🤬';
-                else if (lower.includes('moderator')) reply = '🗣️ MODERATOR? 75K! KALO GA MAMPU PERGI! 😡';
-                else if (lower.includes('harga')) reply = '🗣️ BACA! MEMBER 15K, RESELLER 25K, VIP 35K, PT 55K, MODERATOR 75K! 👊';
-                else if (lower.includes('dana')) reply = '🗣️ NO DANA 081275188480! TRANSFER CEPETAN! 💢';
-                else if (lower.includes('ss') || lower.includes('screenshot')) reply = '🗣️ WAJIB SS DETAIL ANJING! KALO GA HANGUS! 😠';
-                else reply = sadisReplies[Math.floor(Math.random() * sadisReplies.length)];
-
-                setTimeout(function() { addIqcMessage(reply, true); }, 500);
-            }
-
-            // ===== IQC =====
-            var iqcBox = document.getElementById('iqcBox');
-            var iqcInput = document.getElementById('iqcInput');
-
-            window.sendIqcMessage = function() {
-                var msg = iqcInput.value.trim();
-                if (msg === '') return;
-                addIqcMessage('🗣️ ' + msg, false);
-                iqcInput.value = '';
-                setTimeout(function() { iqcBotReply(msg); }, 500);
-            };
-
-            function addIqcMessage(text, isBot) {
-                var div = document.createElement('div');
-                div.className = 'iqc-message' + (isBot ? ' bot' : ' user');
-                div.innerHTML = 
-                    '<div class="msg-user">' + (isBot ? '🤖 IQC Bot' : '👤 Customer') + '</div>' +
-                    '<div class="msg-text">' + text + '<span class="time">' + 
-                    new Date().getHours().toString().padStart(2, '0') + ':' + 
-                    new Date().getMinutes().toString().padStart(2, '0') + '</span></div>';
-                iqcBox.appendChild(div);
-                iqcBox.scrollTop = iqcBox.scrollHeight;
-            }
-
-            function addIqcImage(imgData) {
-                var div = document.createElement('div');
-                div.className = 'iqc-message user';
-                div.innerHTML = 
-                    '<div class="msg-user">👤 Customer</div>' +
-                    '<div class="msg-text">' +
-                        '<div class="msg-image" onclick="openImage(\'' + imgData + '\')"><img src="' + imgData + '" /></div>' +
-                        '<div class="image-actions">' +
-                            '<button onclick="openImage(\'' + imgData + '\')"><i class="fas fa-eye"></i> Buka</button>' +
-                            '<button onclick="downloadImage()"><i class="fas fa-download"></i> Simpan</button>' +
-                        '</div>' +
-                        '<span class="time">' + 
-                        new Date().getHours().toString().padStart(2, '0') + ':' + 
-                        new Date().getMinutes().toString().padStart(2, '0') + '</span>' +
-                    '</div>';
-                iqcBox.appendChild(div);
-                iqcBox.scrollTop = iqcBox.scrollHeight;
-            }
-
-            window.handleIqcGallery = function(event) {
-                var file = event.target.files[0];
-                if (!file) return;
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    addIqcImage(e.target.result);
-                    showToast('✅ Gambar terkirim!');
-                    setTimeout(function() {
-                        var replies = ['🗣️ NIH GAMBAR LO! GA KEREN! TRANSFER CEPETAN! 😤', '🗣️ GAMBAR APAAN INI? TRANSFER DULU KONTOL! 🤬'];
-                        addIqcMessage(replies[Math.floor(Math.random() * replies.length)], true);
-                    }, 800);
-                };
-                reader.readAsDataURL(file);
-                event.target.value = '';
-            };
-
-            if (iqcInput) {
-                iqcInput.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') { e.preventDefault(); playClick(); window.sendIqcMessage(); }
-                });
-            }
-
-            // ===== GLOBAL CHAT =====
-            var globalMessages = document.getElementById('globalChatMessages');
-            var globalInput = document.getElementById('globalChatInput');
-
-            window.sendGlobalMessage = function() {
-                var text = globalInput.value.trim();
-                if (text === '') { showToast('⚠️ Tulis pesan dulu!'); return; }
-                playClick();
-
-                var userId = sessionStorage.getItem('nupz_user_id') || 'Guest';
-                var userName = 'User_' + userId.substr(userId.length - 4);
-
-                var msgDiv = document.createElement('div');
-                msgDiv.className = 'msg';
-                msgDiv.innerHTML = 
-                    '<div class="msg-user">👤 ' + userName + '</div>' +
-                    '<div class="msg-text">' + text + 
-                    '<span class="time">' + new Date().getHours().toString().padStart(2, '0') + ':' + 
-                    new Date().getMinutes().toString().padStart(2, '0') + '</span></div>';
-                globalMessages.appendChild(msgDiv);
-                globalMessages.scrollTop = globalMessages.scrollHeight;
-                globalInput.value = '';
-
-                var chatHistory = JSON.parse(localStorage.getItem('nupz_global_chat') || '[]');
-                chatHistory.push({ user: userName, text: text, time: new Date().toISOString() });
-                if (chatHistory.length > 50) chatHistory.shift();
-                localStorage.setItem('nupz_global_chat', JSON.stringify(chatHistory));
-
-                showToast('💬 Pesan terkirim!');
-            };
-
-            function loadGlobalChat() {
-                var chatHistory = JSON.parse(localStorage.getItem('nupz_global_chat') || '[]');
-                chatHistory.forEach(function(msg) {
-                    var msgDiv = document.createElement('div');
-                    msgDiv.className = 'msg';
-                    var time = new Date(msg.time);
-                    msgDiv.innerHTML = 
-                        '<div class="msg-user">👤 ' + msg.user + '</div>' +
-                        '<div class="msg-text">' + msg.text + 
-                        '<span class="time">' + time.getHours().toString().padStart(2, '0') + ':' + 
-                        time.getMinutes().toString().padStart(2, '0') + '</span></div>';
-                    globalMessages.appendChild(msgDiv);
-                });
-                globalMessages.scrollTop = globalMessages.scrollHeight;
-            }
-            loadGlobalChat();
-
-            globalInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') { e.preventDefault(); window.sendGlobalMessage(); }
-            });
-
-            // ===== REVIEW =====
-            var likeCount = 47;
-            var isLiked = false;
-
-            window.toggleLike = function() {
-                playLikeSound();
-                isLiked = !isLiked;
-                var btn = document.getElementById('likeBtn');
-                var count = document.getElementById('likeCount');
-                if (isLiked) { btn.classList.add('liked'); likeCount++; } 
-                else { btn.classList.remove('liked'); likeCount--; }
-                count.textContent = likeCount;
-            };
-
-            window.postComment = function() {
-                var input = document.getElementById('commentInput');
-                var text = input.value.trim();
-                if (text === '') { showToast('⚠️ Tulis komentar dulu!'); return; }
-                playClick();
-                var commentSection = document.getElementById('commentSection');
-                var div = document.createElement('div');
-                div.className = 'comment';
-                div.innerHTML = 
-                    '<div class="avatar">K</div>' +
-                    '<div class="comment-body">' +
-                        '<div class="name">Kamu • User</div>' +
-                        '<div class="text">' + text + '</div>' +
-                        '<div class="time">Baru saja</div>' +
-                    '</div>';
-                commentSection.appendChild(div);
+                
                 input.value = '';
-                showToast('✅ Komentar terkirim!');
-            };
-
-            window.shareReview = function() {
-                playClick();
-                if (navigator.share) {
-                    navigator.share({ title: 'NUPZ Store Review', text: 'Lihat review NUPZ Store!', url: window.location.href }).catch(function() {});
-                } else {
-                    showToast('📋 Link disalin!');
-                }
-            };
-
-            document.getElementById('commentInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') { e.preventDefault(); window.postComment(); }
-            });
-
-            // ===== MODAL =====
-            var currentImageSrc = '';
-
-            window.openImage = function(src) {
-                if (!src) { showToast('⚠️ Tidak ada gambar!'); return; }
-                playClick();
-                currentImageSrc = src;
-                document.getElementById('modalImage').src = src;
-                document.getElementById('imageModal').classList.add('active');
-            };
-
-            window.closeModal = function(e) {
-                if (e && e.target !== e.currentTarget) return;
-                document.getElementById('imageModal').classList.remove('active');
-            };
-
-            window.downloadImage = function() {
-                if (!currentImageSrc) { showToast('⚠️ Tidak ada gambar!'); return; }
-                playClick();
-                var link = document.createElement('a');
-                link.download = 'iqc_image_' + Date.now() + '.png';
-                link.href = currentImageSrc;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                showToast('✅ Gambar disimpan!');
-            };
-
-            // ===== UPLOAD FILE =====
-            var fileInput = document.getElementById('fileInput');
-            var fileName = document.getElementById('fileName');
-            if (fileInput) {
-                fileInput.addEventListener('change', function() {
-                    if (this.files && this.files.length > 0) {
-                        var file = this.files[0];
-                        fileName.textContent = '\ud83d\udcce ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
-                        playClick();
-                        showToast('\u2705 Bukti terkirim!');
-                        addIqcMessage('🗣️ UDAH UPLOAD BUKTI, CEK CEPETAN!', false);
-                        setTimeout(function() { iqcBotReply('udah upload bukti'); }, 600);
-                    }
-                });
-            }
-
-            // ===== SWITCH TAB =====
-            window.switchTab = function(tab) {
-                document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
-                document.querySelector('.nav-tab[data-tab="' + tab + '"]').classList.add('active');
-                document.getElementById('dashboardSection').classList.toggle('section-hidden', tab !== 'dashboard');
-                document.getElementById('featuresSection').classList.toggle('section-hidden', tab !== 'features');
-            };
-
-            // ===== TOAST =====
-            function showToast(msg) {
-                var toast = document.getElementById('toast');
-                var toastMsg = document.getElementById('toastMsg');
-                if (toast && toastMsg) {
-                    toastMsg.textContent = msg;
-                    toast.classList.add('show');
-                    clearTimeout(toast._timeout);
-                    toast._timeout = setTimeout(function() { toast.classList.remove('show'); }, 3000);
+                input.focus();
+                
+                // Shake effect
+                const container = document.querySelector('.container');
+                container.style.animation = 'none';
+                setTimeout(() => {
+                    container.style.animation = 'shake 0.3s';
+                }, 10);
+                setTimeout(() => {
+                    container.style.animation = '';
+                }, 300);
+                
+                // Random scary sound
+                if (attempts % 3 === 0) {
+                    playSoundFromURL();
                 }
             }
-
-            // ===== COPY DANA =====
-            window.copyDana = function() {
-                var dana = '081275188480';
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(dana).then(function() {
-                        showToast('\ud83d\udccb No. DANA disalin!');
-                    }).catch(function() { fallbackCopy(dana); });
-                } else {
-                    fallbackCopy(dana);
-                }
-            };
-
-            function fallbackCopy(text) {
-                var input = document.createElement('input');
-                input.value = text;
-                document.body.appendChild(input);
-                input.select();
-                try {
-                    document.execCommand('copy');
-                    showToast('\ud83d\udccb No. DANA disalin!');
-                } catch(e) {
-                    alert('Salin manual: ' + text);
-                }
-                document.body.removeChild(input);
+        }
+        
+        // ==================== ENTER KEY ====================
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
             }
-
-            // ===== WELCOME =====
-            setTimeout(function() {
-                addIqcMessage('🗣️ EH KONTOL! SELAMAT DATANG! LANGSUNG BELI! 😠', true);
-            }, 1000);
-
-            window.addIqcMessage = addIqcMessage;
-            window.addIqcImage = addIqcImage;
-            window.showToast = showToast;
-
-        })();
+        });
+        
+        // ==================== BLOCK NAVIGATION ====================
+        window.addEventListener('beforeunload', function(e) {
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        });
+        
+        history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function() {
+            history.pushState(null, null, location.href);
+        });
+        
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        console.log('%c🔒 NUPZZ RANSOMWARE', 'font-size:30px;color:red;font-weight:bold;');
+        console.log('%cPassword: 6779', 'font-size:20px;color:yellow;');
     </script>
-
 </body>
 </html>
