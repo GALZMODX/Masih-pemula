@@ -1,458 +1,2735 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>NAY UNBAN V1</title>
-  <link rel="icon" href="https://files.catbox.moe/ejn7q9.jpeg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>NUPZ Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-  <!-- Manifest untuk Android WebAPK / Chrome -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#05060a">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="VXZ UNBAN V2">
-  <link rel="apple-touch-icon" href="https://files.catbox.moe/ejn7q9.jpeg">
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            background: #000;
+            min-height: 100vh;
+        }
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        body {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: #000;
+            position: relative;
+        }
 
-  <style>
-    :root {
-      --size: 300px; /* ukuran intro */
-      --duration: 5s;
-      --bg:#05060a;
-      --accent:#F4320B;
-      --accent2:#FF00F7;
-      --muted:#EBE8EB;
-      --mono:'Share Tech Mono', monospace;
-      --ui: 'Inter', system-ui, sans-serif;
-    }
+        /* ===== BACKGROUND NEON ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(122, 92, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 51, 102, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 100%, rgba(74, 47, 208, 0.02) 0%, transparent 60%);
+            z-index: 0;
+            animation: bgPulse 8s ease-in-out infinite;
+        }
 
-    html,body{
-      height:100%;
-      margin:0;
-      background:var(--bg);
-      color:#e6eef6;
-      font-family:var(--ui);
-      -webkit-font-smoothing:antialiased;
-    }
-    *{box-sizing:border-box}
+        @keyframes bgPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
 
-    /* =========================
-       INTRO (full-screen overlay)
-       ========================= */
-    #introOverlay{
-      position:fixed;
-      inset:0;
-      background:#000;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-      transition: opacity .6s ease;
-      pointer-events: auto;
-    }
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
 
-    /* container from your exact intro */
-    .video-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
+        .dashboard {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(10, 10, 20, 0.85);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 40px;
+            padding: 20px 18px 0;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+                        0 0 60px rgba(122, 92, 255, 0.03);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+        }
 
-    .video-wrap {
-      width: var(--size);
-      aspect-ratio: 1 / 1;
-      border-radius: 10px;
-      overflow: hidden;
-      background: white;
-      box-shadow: 0 0 10px rgba(255,255,255,0.15);
-      position: relative;
-    }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-    video#player {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      border: none;
-      outline: none;
-      pointer-events: none;
-    }
+        /* ===== GLOW BORDER ANIMASI ===== */
+        .dashboard::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 42px;
+            background: linear-gradient(135deg, rgba(122,92,255,0.08), rgba(255,51,102,0.05), rgba(122,92,255,0.08));
+            z-index: -1;
+            animation: borderGlow 4s ease-in-out infinite;
+        }
 
-    .loading-area {
-      width: var(--size);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-    }
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
 
-    .loading-text { font-weight:600; letter-spacing:0.05em; font-size:0.9rem; color:#fff; font-family:var(--ui); }
-    .loading-bar { width:100%; height:8px; background: rgba(255,255,255,0.15); border-radius:999px; overflow:hidden; }
-    .loading-bar i { display:block; height:100%; width:0%; background: linear-gradient(90deg,#fff,rgba(255,255,255,0.5)); border-radius:999px; animation: fillBar var(--duration) linear forwards; }
-    @keyframes fillBar { from{width:0%} to{width:100%} }
+        .dashboard::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(122,92,255,0.2), transparent);
+            animation: topLine 3s ease-in-out infinite;
+        }
 
-    .dots { display:flex; gap:6px; margin-top:6px; }
-    .dot { width:6px; height:6px; border-radius:50%; background:white; opacity:0.2; animation: blink 1s infinite; }
-    .dot:nth-child(2){ animation-delay:.2s } .dot:nth-child(3){ animation-delay:.4s }
-    @keyframes blink { 0%,80%,100%{opacity:.2; transform:translateY(0)} 40%{opacity:1; transform:translateY(-4px)} }
+        @keyframes topLine {
+            0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
 
-    .brand-text { margin-top:12px; font-family: "Orbitron", sans-serif; font-weight:900; font-size:1.1rem; letter-spacing:2px; color:#fff; text-shadow:0 0 10px rgb(120,120,120); user-select:none; }
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
 
-    /* hide intro overlay when finished */
-    #introOverlay.hidden { opacity: 0; pointer-events: none; }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    @media (max-width:400px){ :root{ --size:250px } .brand-text{ font-size:1rem } }
+        .logo-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(122, 92, 255, 0.15);
+            box-shadow: 0 0 30px rgba(122, 92, 255, 0.15), inset 0 0 20px rgba(122, 92, 255, 0.05);
+            flex-shrink: 0;
+            position: relative;
+            animation: logoGlow 3s ease-in-out infinite;
+            transition: 0.4s;
+        }
 
-    /* =========================
-       MAIN APP LAYOUT (GZX UNBAN)
-       ========================= */
-    #app {
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity .45s ease .1s, visibility .45s ease .1s;
-      padding: 18px;
-      min-height: 100vh;
-    }
-    #app.visible { opacity: 1; visibility: visible; }
+        .logo-circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(122, 92, 255, 0.3);
+        }
 
-    .topbar { display:flex; align-items:center; background:transparent; padding:8px 12px; }
-    .title-top { font-family: var(--mono); font-size:18px; font-weight:600; color:var(--accent); }
-    .robot-box{ background:radial-gradient(circle at 30% 20%, rgba(124,92,255,0.06), transparent 20%), linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:14px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.02); width:280px; margin-left:auto; margin-right:auto; margin-top:40px; }
-    .robot-face { width:120px; height:120px; border-radius:50%; background:#000; display:flex; align-items:center; justify-content:center; font-size:56px; margin:0 auto; box-shadow:0 0 15px rgba(0,0,0,0.6); }
-    .robot-title-normal { font-size:18px; text-align:center; margin-top:8px; color:#e6eef6; font-weight:600; }
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
-    .form-label{ font-size:12px; font-weight:500; margin:12px 0 6px; display:block; text-align:left; width:280px; margin-left:auto; margin-right:auto; }
-    .input, select, .btn { width:280px; margin:0 auto; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:#071018; color:#7b8a97; font-size:14px; outline:none; display:block; }
-    .btn{ margin-top:18px; padding:12px 14px; background:linear-gradient(90deg,var(--accent),var(--accent2)); border:0; border-radius:10px; color:#000; font-weight:800; cursor:pointer; font-size:15px }
-    .status{ margin-top:12px; font-size:13px; color:var(--muted); min-height:20px; width:280px; margin-left:auto; margin-right:auto; }
-    .small{ font-size:12px; color:var(--muted); margin-top:6px; width:280px; margin-left:auto; margin-right:auto; text-align:center; }
-    .overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:none; z-index:998; }
-    .overlay.active { display:block; }
+        .logo-circle::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f0b3ff, #7a5cff, #ff3366);
+            opacity: 0.1;
+            z-index: -1;
+            animation: ringPulse 3s ease-in-out infinite;
+        }
 
-    /* custom select look */
-    select.input { -webkit-appearance:none; -moz-appearance:none; appearance:none; background: linear-gradient(145deg, #0b1116, #071018); padding-right:36px; }
-    .select-wrapper { position: relative; width:280px; margin:0 auto; }
-    .select-wrapper::after { content: "\25BC"; position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#7b8a97; }
+        @keyframes ringPulse {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.2); opacity: 0.03; }
+        }
 
-    /* welcome popup - center */
-    #welcomeBox {
-      position: fixed;
-      inset: 0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      backdrop-filter: blur(6px);
-      background: rgba(0,0,0,0.25);
-      z-index: 10000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .35s ease;
-    }
-    #welcomeBox.active { opacity:1; pointer-events:auto; }
-    #welcomeContent {
-      background: rgba(0,0,0,0.6);
-      padding:20px 26px;
-      border-radius:10px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      text-align:center;
-    }
-    .gradientText{
-      font-family: 'Orbitron', sans-serif;
-      font-weight:900;
-      font-size:22px;
-      background: linear-gradient(90deg,#ff0000,#ff4a4a);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      letter-spacing:1px;
-    }
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(122, 92, 255, 0.15); }
+            50% { box-shadow: 0 0 60px rgba(255, 51, 102, 0.15); }
+        }
 
-    @media (max-width:420px){
-      .input, select, .btn, .form-label { width:220px; margin-left:auto; margin-right:auto; }
-      .robot-box{ width:220px; }
-    }
-  </style>
+        .logo-text h1 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f0b3ff 0%, #7a5cff 40%, #ff3366 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            line-height: 1;
+            background-size: 200% 200%;
+            animation: gradientMove 4s ease-in-out infinite;
+            text-shadow: 0 0 40px rgba(122, 92, 255, 0.05);
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .logo-text span {
+            font-size: 0.5rem;
+            color: rgba(255, 255, 255, 0.12);
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.12);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            display: block;
+            margin-top: 1px;
+        }
+
+        .dev-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4px 14px 4px 8px;
+            border-radius: 100px;
+            border: 1px solid rgba(122, 92, 255, 0.06);
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+
+        .dev-badge:hover {
+            border-color: rgba(122, 92, 255, 0.15);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .dev-badge .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.04);
+            box-shadow: 0 0 20px rgba(122, 92, 255, 0.05);
+        }
+
+        .dev-badge .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dev-badge .info {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.5rem;
+            font-weight: 500;
+        }
+
+        .dev-badge .info strong {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.6rem;
+        }
+
+        .online-dot {
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
+            border-radius: 50%;
+            display: inline-block;
+            animation: blink 1.5s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.6); }
+        }
+
+        /* NAVIGASI */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 14px 0 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-tab {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.2);
+            padding: 9px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(122,92,255,0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+
+        .nav-tab i {
+            font-size: 0.75rem;
+        }
+
+        .nav-tab:active {
+            transform: scale(0.95);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, rgba(122, 92, 255, 0.12), rgba(255, 51, 102, 0.06));
+            border-color: rgba(122, 92, 255, 0.12);
+            color: #fff;
+            box-shadow: 0 2px 25px rgba(122, 92, 255, 0.05);
+        }
+
+        /* STATS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 0 0 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 12px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            text-align: center;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(122, 92, 255, 0.03), transparent);
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:active {
+            transform: scale(0.96);
+        }
+
+        .stat-card .label {
+            color: rgba(255, 255, 255, 0.12);
+            font-size: 0.45rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card .value {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-top: 2px;
+            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card .value i {
+            color: #7a5cff;
+            margin-right: 4px;
+            font-size: 0.7rem;
+        }
+
+        .stat-card .value .blink-red {
+            animation: blinkRed 0.8s ease-in-out infinite;
+        }
+
+        .stat-card .value .pulse-number {
+            display: inline-block;
+            animation: numberPop 0.5s ease;
+        }
+
+        @keyframes numberPop {
+            0% { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes blinkRed {
+            0%, 100% { color: #ff3366; }
+            50% { color: #ff6b8a; }
+        }
+
+        /* ===== BANNER SLIDESHOW ===== */
+        .banner-slider {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 18px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.02);
+            height: 200px;
+        }
+
+        .banner-slider .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            object-fit: cover;
+        }
+
+        .banner-slider .slide.active {
+            opacity: 1;
+        }
+
+        .banner-slider .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .banner-slider .banner-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 22px 18px 14px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            z-index: 2;
+        }
+
+        .banner-slider .banner-overlay .banner-text {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            text-shadow: 0 2px 30px rgba(0,0,0,0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .banner-slider .banner-overlay .banner-text i {
+            color: #ff3366;
+            margin-right: 6px;
+        }
+
+        .banner-slider .banner-overlay .banner-sub {
+            color: rgba(255,255,255,0.2);
+            font-size: 0.55rem;
+            margin-top: 2px;
+            letter-spacing: 2px;
+        }
+
+        /* ===== NEON TEXT ===== */
+        .neon-text {
+            color: #fff;
+            text-shadow: 
+                0 0 7px rgba(122, 92, 255, 0.3),
+                0 0 10px rgba(122, 92, 255, 0.2),
+                0 0 21px rgba(122, 92, 255, 0.1),
+                0 0 42px rgba(122, 92, 255, 0.05);
+            animation: neonPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 7px rgba(122, 92, 255, 0.3), 0 0 10px rgba(122, 92, 255, 0.2), 0 0 21px rgba(122, 92, 255, 0.1), 0 0 42px rgba(122, 92, 255, 0.05); }
+            50% { text-shadow: 0 0 10px rgba(122, 92, 255, 0.5), 0 0 20px rgba(122, 92, 255, 0.3), 0 0 40px rgba(122, 92, 255, 0.15), 0 0 80px rgba(122, 92, 255, 0.05); }
+        }
+
+        .neon-red {
+            color: #ff3366;
+            text-shadow: 
+                0 0 7px rgba(255, 51, 102, 0.3),
+                0 0 10px rgba(255, 51, 102, 0.2),
+                0 0 21px rgba(255, 51, 102, 0.1),
+                0 0 42px rgba(255, 51, 102, 0.05);
+            animation: neonRedPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes neonRedPulse {
+            0%, 100% { text-shadow: 0 0 7px rgba(255, 51, 102, 0.3), 0 0 10px rgba(255, 51, 102, 0.2), 0 0 21px rgba(255, 51, 102, 0.1), 0 0 42px rgba(255, 51, 102, 0.05); }
+            50% { text-shadow: 0 0 10px rgba(255, 51, 102, 0.5), 0 0 20px rgba(255, 51, 102, 0.3), 0 0 40px rgba(255, 51, 102, 0.15), 0 0 80px rgba(255, 51, 102, 0.05); }
+        }
+
+        .neon-gold {
+            color: #ffd700;
+            text-shadow: 
+                0 0 7px rgba(255, 215, 0, 0.3),
+                0 0 10px rgba(255, 215, 0, 0.2),
+                0 0 21px rgba(255, 215, 0, 0.1),
+                0 0 42px rgba(255, 215, 0, 0.05);
+            animation: neonGoldPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes neonGoldPulse {
+            0%, 100% { text-shadow: 0 0 7px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2), 0 0 21px rgba(255, 215, 0, 0.1), 0 0 42px rgba(255, 215, 0, 0.05); }
+            50% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.15), 0 0 80px rgba(255, 215, 0, 0.05); }
+        }
+
+        /* ===== SPECIAL SUPPORT ===== */
+        .special-support {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.04), rgba(255, 51, 102, 0.02));
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            border-radius: 20px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(8px);
+            overflow: hidden;
+            text-align: center;
+            transition: 0.4s;
+        }
+
+        .special-support:hover {
+            border-color: rgba(255, 215, 0, 0.08);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.02);
+        }
+
+        .special-support::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.03), transparent 70%);
+            animation: supportGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes supportGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .special-support .support-icon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .special-support .support-title {
+            color: #ffd700;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.05);
+        }
+
+        .special-support .support-title i {
+            color: #ffd700;
+            margin-right: 6px;
+        }
+
+        .special-support .support-name {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 900;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #ffd700, #ff6b8a, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease-in-out infinite;
+            text-shadow: 0 0 60px rgba(255, 215, 0, 0.05);
+        }
+
+        .special-support .support-sub {
+            color: rgba(255, 215, 0, 0.12);
+            font-size: 0.5rem;
+            margin-top: 2px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 3px;
+        }
+
+        .special-support .support-decoration {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .special-support .support-decoration span {
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            border-radius: 2px;
+            opacity: 0.1;
+            animation: linePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes linePulse {
+            0%, 100% { opacity: 0.1; transform: scaleX(0.8); }
+            50% { opacity: 0.2; transform: scaleX(1); }
+        }
+
+        .special-support .support-decoration .star {
+            color: #ffd700;
+            font-size: 0.6rem;
+            opacity: 0.2;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+        }
+
+        .section-title i {
+            color: #7a5cff;
+            font-size: 1.2rem;
+        }
+
+        .section-title .badge-new {
+            background: linear-gradient(135deg, rgba(122, 92, 255, 0.12), rgba(255, 51, 102, 0.06));
+            color: #ff6b8a;
+            font-size: 0.45rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 51, 102, 0.04);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.95); }
+        }
+
+        /* ===== ROLE GRID - EPIC ===== */
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            padding: 18px 12px 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(122, 92, 255, 0.04), transparent 70%);
+            opacity: 0;
+            transition: 0.6s;
+            pointer-events: none;
+        }
+
+        .role-card:hover::before {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .role-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #7a5cff, #ff3366, #7a5cff);
+            background-size: 200% 100%;
+            opacity: 0.15;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .role-card:active {
+            transform: scale(0.95);
+        }
+
+        .role-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(122, 92, 255, 0.08);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .role-icon {
+            font-size: 2rem;
+            color: #b8a5ff;
+            margin-bottom: 4px;
+            display: block;
+            transition: 0.5s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .role-card:hover .role-icon {
+            transform: scale(1.2) rotate(-8deg);
+            color: #ff6b8a;
+            filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.2));
+        }
+
+        .role-name {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .role-price {
+            font-size: 1.3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f0b3ff, #7a5cff, #ff3366);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 4px 0 12px;
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 40px rgba(122, 92, 255, 0.05);
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, rgba(122, 92, 255, 0.08), rgba(255, 51, 102, 0.04));
+            border: 1px solid rgba(122, 92, 255, 0.06);
+            color: #fff;
+            padding: 9px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.4s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .btn-buy::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-buy:hover::before {
+            left: 100%;
+        }
+
+        .btn-buy i {
+            color: #b8a5ff;
+            font-size: 0.7rem;
+            transition: 0.3s;
+        }
+
+        .btn-buy:active {
+            transform: scale(0.95);
+        }
+
+        .btn-buy:hover {
+            background: linear-gradient(135deg, #7a5cff, #ff3366);
+            border-color: #7a5cff;
+            box-shadow: 0 4px 30px rgba(122, 92, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-buy:hover i {
+            color: #fff;
+        }
+
+        .role-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 0.4rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            backdrop-filter: blur(4px);
+        }
+
+        .role-badge.member { background: rgba(122, 92, 255, 0.12); color: #7a5cff; border: 1px solid rgba(122, 92, 255, 0.05); }
+        .role-badge.reseller { background: rgba(0, 200, 255, 0.08); color: #00c8ff; border: 1px solid rgba(0, 200, 255, 0.04); }
+        .role-badge.vip { background: rgba(255, 215, 0, 0.08); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.04); }
+        .role-badge.pt { background: rgba(255, 51, 102, 0.08); color: #ff3366; border: 1px solid rgba(255, 51, 102, 0.04); }
+        .role-badge.moderator { background: rgba(0, 255, 136, 0.08); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.04); }
+
+        /* ===== 2 KOLOM ===== */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 20px;
+        }
+
+        /* PAYMENT */
+        .payment-section {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            padding: 18px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(8px);
+            transition: 0.4s;
+        }
+
+        .payment-section:hover {
+            border-color: rgba(122, 92, 255, 0.04);
+        }
+
+        .payment-info h3 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+        }
+
+        .payment-info h3 i {
+            color: #7a5cff;
+        }
+
+        .qris-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-bottom: 12px;
+            text-align: center;
+            transition: 0.4s;
+        }
+
+        .qris-container:hover {
+            border-color: rgba(122, 92, 255, 0.04);
+            box-shadow: 0 0 30px rgba(122, 92, 255, 0.02);
+        }
+
+        .qris-container .qris-label {
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .qris-container .qris-label i {
+            color: #7a5cff;
+            margin-right: 4px;
+        }
+
+        .qris-container .qris-image {
+            max-width: 180px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .qris-container .qris-image:hover {
+            transform: scale(1.03);
+            border-color: rgba(122, 92, 255, 0.05);
+            box-shadow: 0 0 40px rgba(122, 92, 255, 0.05);
+        }
+
+        .qris-container .qris-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .qris-container .qris-detail {
+            margin-top: 8px;
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 0.45rem;
+            letter-spacing: 1px;
+        }
+
+        .qris-container .qris-detail strong {
+            color: rgba(255, 255, 255, 0.12);
+            font-weight: 600;
+        }
+
+        .dana-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .dana-box:hover {
+            border-color: rgba(122, 92, 255, 0.04);
+        }
+
+        .dana-box .label {
+            color: rgba(255, 255, 255, 0.12);
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .dana-box .number {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+        }
+
+        .dana-box .number i {
+            color: #7a5cff;
+            font-size: 1.1rem;
+        }
+
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.03);
+            border: none;
+            color: #b8a5ff;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-copy:active {
+            transform: scale(0.95);
+        }
+
+        .btn-copy:hover {
+            background: #7a5cff;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(122, 92, 255, 0.1);
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .social-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            transition: 0.4s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .social-btn i {
+            font-size: 0.7rem;
+        }
+
+        .social-btn:active {
+            transform: scale(0.95);
+        }
+
+        .social-btn.tele:active { background: #0088cc; box-shadow: 0 0 30px rgba(0, 136, 204, 0.1); }
+        .social-btn.tiktok:active { background: #000; box-shadow: 0 0 30px rgba(255, 0, 80, 0.05); }
+        .social-btn.dana:active { background: #005a9c; box-shadow: 0 0 30px rgba(0, 90, 156, 0.1); }
+
+        .ss-warning {
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.04), rgba(122, 92, 255, 0.02));
+            border: 1px solid rgba(255, 51, 102, 0.04);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .ss-warning i {
+            color: #ff3366;
+            font-size: 0.7rem;
+            animation: blinkRed 0.8s ease-in-out infinite;
+        }
+
+        .ss-warning span {
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .ss-warning strong {
+            color: #ff3366;
+            font-weight: 700;
+        }
+
+        .upload-area {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.03);
+            text-align: center;
+            margin-top: 8px;
+            transition: 0.4s;
+        }
+
+        .upload-area:hover {
+            border-color: rgba(122, 92, 255, 0.04);
+        }
+
+        .upload-area h4 {
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .upload-area p {
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 0.55rem;
+            margin-bottom: 6px;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-area .file-label {
+            background: linear-gradient(135deg, rgba(122, 92, 255, 0.06), rgba(255, 51, 102, 0.03));
+            border: 1px solid rgba(122, 92, 255, 0.04);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.65rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.4s;
+        }
+
+        .upload-area .file-label:active {
+            transform: scale(0.95);
+        }
+
+        .upload-area .file-label i {
+            color: #b8a5ff;
+        }
+
+        .upload-area .file-label:hover {
+            background: linear-gradient(135deg, #7a5cff, #ff3366);
+            border-color: #7a5cff;
+            box-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+        }
+
+        .upload-area .file-label:hover i {
+            color: #fff;
+        }
+
+        .note-upload {
+            color: rgba(255, 255, 255, 0.04);
+            font-size: 0.5rem;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== IQC ===== */
+        .iqc-section {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            padding: 18px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(8px);
+            transition: 0.4s;
+        }
+
+        .iqc-section:hover {
+            border-color: rgba(255, 51, 102, 0.04);
+        }
+
+        .iqc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .iqc-header h3 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+        }
+
+        .iqc-header h3 i {
+            color: #ff3366;
+        }
+
+        .iqc-header .iqc-badge {
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.08), rgba(122, 92, 255, 0.04));
+            color: #ff3366;
+            font-size: 0.45rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            border: 1px solid rgba(255, 51, 102, 0.04);
+        }
+
+        .iqc-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 12px;
+            height: 170px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .iqc-box::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .iqc-box::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 10px;
+        }
+
+        .iqc-box::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #7a5cff, #ff3366);
+            border-radius: 10px;
+        }
+
+        .iqc-message {
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            animation: msgSlide 0.3s ease;
+        }
+
+        @keyframes msgSlide {
+            0% { opacity: 0; transform: translateX(-8px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .iqc-message .msg-user {
+            font-size: 0.45rem;
+            color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 1px;
+            font-weight: 600;
+        }
+
+        .iqc-message .msg-text {
+            background: rgba(255, 51, 102, 0.04);
+            border: 1px solid rgba(255, 51, 102, 0.04);
+            padding: 6px 12px;
+            border-radius: 12px;
+            color: #ff6b8a;
+            font-size: 0.7rem;
+            max-width: 90%;
+            word-wrap: break-word;
+            font-weight: 500;
+        }
+
+        .iqc-message.bot .msg-text {
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.06), rgba(122, 92, 255, 0.03));
+            border-color: rgba(255, 51, 102, 0.06);
+            align-self: flex-end;
+            color: #ff3366;
+            border-left: 2px solid #ff3366;
+        }
+
+        .iqc-message.bot .msg-user {
+            text-align: right;
+            color: rgba(255, 51, 102, 0.12);
+        }
+
+        .iqc-message.user .msg-text {
+            background: linear-gradient(135deg, rgba(122, 92, 255, 0.04), rgba(255, 51, 102, 0.02));
+            border-color: rgba(122, 92, 255, 0.04);
+            color: #b8a5ff;
+            border-left: 2px solid #7a5cff;
+        }
+
+        .iqc-message .msg-text .time {
+            font-size: 0.4rem;
+            color: rgba(255, 255, 255, 0.05);
+            margin-left: 6px;
+        }
+
+        .iqc-message .msg-image {
+            max-width: 120px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 4px;
+        }
+
+        .iqc-message .msg-image:active {
+            transform: scale(0.96);
+        }
+
+        .iqc-message .msg-image img {
+            width: 100%;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .iqc-message .image-actions {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .iqc-message .image-actions button {
+            background: rgba(255,255,255,0.02);
+            border: none;
+            color: rgba(255,255,255,0.12);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.45rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .iqc-message .image-actions button:active {
+            transform: scale(0.95);
+        }
+
+        .iqc-message .image-actions button i {
+            font-size: 0.45rem;
+        }
+
+        .iqc-input-area {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .iqc-input-area input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            padding: 6px 14px;
+            color: #fff;
+            font-size: 0.7rem;
+            outline: none;
+            transition: 0.3s;
+            min-width: 0;
+        }
+
+        .iqc-input-area input::placeholder {
+            color: rgba(255, 255, 255, 0.06);
+        }
+
+        .iqc-input-area input:focus {
+            border-color: rgba(255, 51, 102, 0.08);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.02);
+        }
+
+        .iqc-input-area .gallery-btn {
+            background: linear-gradient(135deg, #7a5cff, #4a2fd0);
+            border: none;
+            color: #fff;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .iqc-input-area .gallery-btn:active {
+            transform: scale(0.9);
+        }
+
+        .iqc-input-area .gallery-btn input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .iqc-input-area .send-btn {
+            background: linear-gradient(135deg, #ff3366, #cc0044);
+            border: none;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .iqc-input-area .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .iqc-input-area .send-btn i {
+            font-size: 0.65rem;
+        }
+
+        .iqc-status {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 0.5rem;
+        }
+
+        .iqc-status .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ff3366;
+            animation: blinkRed 0.8s ease-in-out infinite;
+        }
+
+        /* ===== BOT KASAR ===== */
+        .bot-kasar-container {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-bottom: 18px;
+            backdrop-filter: blur(8px);
+            transition: 0.4s;
+        }
+
+        .bot-kasar-container:hover {
+            border-color: rgba(255, 51, 102, 0.04);
+        }
+
+        .bot-kasar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .bot-kasar-header h2 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+        }
+
+        .bot-kasar-header h2 i {
+            color: #ff3366;
+        }
+
+        .bot-kasar-header .bot-status {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 0.5rem;
+        }
+
+        .bot-kasar-header .bot-status .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ff3366;
+            animation: blinkRed 0.8s ease-in-out infinite;
+        }
+
+        .bot-kasar-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .kasar-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            padding: 10px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .kasar-card:active {
+            transform: scale(0.96);
+        }
+
+        .kasar-card .kasar-icon {
+            font-size: 1.2rem;
+            color: #ff3366;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .kasar-card .kasar-text {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.55rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .kasar-card .kasar-text span {
+            color: #ff6b8a;
+        }
+
+        /* ===== FEATURE CARDS ===== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 18px;
+            padding: 14px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            text-align: center;
+            transition: 0.4s;
+        }
+
+        .feature-card:active {
+            transform: scale(0.96);
+        }
+
+        .feature-card .value {
+            font-size: 1.6rem;
+            color: #7a5cff;
+        }
+
+        .feature-card .label {
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .feature-card p {
+            color: rgba(255,255,255,0.1);
+            font-size: 0.5rem;
+            margin-top: 2px;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 16px 0 14px;
+            margin-top: 6px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .footer-logo-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.04);
+            font-size: 0.45rem;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-text strong {
+            color: rgba(255, 255, 255, 0.08);
+            font-weight: 700;
+        }
+
+        .footer-text .heart {
+            color: #ff3366;
+            animation: heartBeat 2s ease-in-out infinite;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 8px;
+        }
+
+        .footer-social a {
+            color: rgba(255, 255, 255, 0.04);
+            font-size: 0.8rem;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .footer-social a:active {
+            color: #7a5cff;
+        }
+
+        .footer-version {
+            color: rgba(255, 255, 255, 0.02);
+            font-size: 0.4rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid rgba(122, 92, 255, 0.08);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            display: none;
+            z-index: 999;
+            align-items: center;
+            gap: 8px;
+            max-width: 90%;
+        }
+
+        .toast i {
+            color: #7a5cff;
+            font-size: 0.8rem;
+        }
+
+        .toast.show {
+            display: flex;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* HIDE SECTION */
+        .section-hidden {
+            display: none !important;
+        }
+
+        /* ===== MODAL ===== */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(30px);
+        }
+
+        .image-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .image-modal .modal-content {
+            max-width: 90%;
+            max-height: 70vh;
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .image-modal .modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            border-radius: 20px;
+            display: block;
+        }
+
+        .image-modal .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.03);
+            color: rgba(255,255,255,0.12);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-modal .modal-close:active {
+            transform: scale(0.9);
+        }
+
+        .image-modal .modal-download {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #7a5cff, #ff3366);
+            border: none;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 40px rgba(122, 92, 255, 0.05);
+        }
+
+        .image-modal .modal-download:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 400px) {
+            body { padding: 6px; }
+            .dashboard { padding: 14px 12px 0; border-radius: 28px; }
+            .logo-circle { width: 40px; height: 40px; }
+            .logo-text h1 { font-size: 1.2rem; }
+            .logo-text span { font-size: 0.4rem; }
+            .nav-tab { font-size: 0.55rem; padding: 6px 8px; }
+            .stats { gap: 4px; }
+            .stat-card { padding: 8px 4px; }
+            .stat-card .value { font-size: 0.8rem; }
+            .role-grid { gap: 8px; }
+            .role-card { padding: 12px 8px 10px; border-radius: 18px; }
+            .role-icon { font-size: 1.4rem; }
+            .role-name { font-size: 0.75rem; }
+            .role-price { font-size: 1rem; }
+            .btn-buy { font-size: 0.5rem; padding: 6px 8px; }
+            .banner-slider { height: 140px; }
+            .banner-overlay .banner-text { font-size: 0.75rem; }
+            .qris-container .qris-image { max-width: 140px; }
+            .dana-box .number { font-size: 1rem; }
+            .iqc-box { height: 130px; }
+            .iqc-input-area input { font-size: 0.6rem; padding: 5px 10px; }
+            .iqc-input-area .send-btn { font-size: 0.55rem; padding: 5px 10px; }
+            .iqc-input-area .gallery-btn { width: 28px; height: 28px; font-size: 0.6rem; }
+            .special-support .support-name { font-size: 1rem; }
+            .special-support .support-title { font-size: 0.65rem; }
+            .role-badge { font-size: 0.35rem; padding: 1px 6px; top: 4px; right: 4px; }
+        }
+
+        @media (max-width: 360px) {
+            .role-grid { grid-template-columns: 1fr 1fr; gap: 5px; }
+            .role-card { padding: 8px 4px 6px; border-radius: 14px; }
+            .role-icon { font-size: 1rem; }
+            .role-name { font-size: 0.6rem; }
+            .role-price { font-size: 0.8rem; }
+            .btn-buy { font-size: 0.4rem; padding: 4px 6px; }
+            .stats { grid-template-columns: 1fr 1fr 1fr; gap: 3px; }
+            .stat-card { padding: 4px 3px; }
+            .stat-card .value { font-size: 0.65rem; }
+            .stat-card .label { font-size: 0.35rem; }
+            .banner-slider { height: 110px; }
+            .qris-container .qris-image { max-width: 100px; }
+            .special-support .support-name { font-size: 0.85rem; }
+            .special-support .support-title { font-size: 0.55rem; }
+            .special-support .support-icon { font-size: 1.2rem; }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- ================= INTRO OVERLAY (EXACT INTRO YOU PROVIDED) ================= -->
-  <div id="introOverlay" aria-hidden="false">
-    <div class="video-container">
-      <div class="video-wrap">
-        <video id="player" playsinline preload="metadata">
-          <source src="https://files.catbox.moe/mm85lg.mp4" type="video/mp4">
-        </video>
-      </div>
+    <!-- ===== CANVAS PARTIKEL ===== -->
+    <canvas id="particles-canvas"></canvas>
 
-      <div class="loading-area" id="loading">
-        <div class="loading-text">Loading</div>
-        <div class="loading-bar"><i id="bar"></i></div>
-        <div class="dots">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMsg">Berhasil!</span>
+    </div>
+
+    <!-- MODAL GAMBAR -->
+    <div class="image-modal" id="imageModal" onclick="closeModal(event)">
+        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        <img class="modal-content" id="modalImage" src="" alt="Preview" />
+        <button class="modal-download" onclick="downloadImage()">
+            <i class="fas fa-download"></i> Simpan
+        </button>
+    </div>
+
+    <div class="dashboard">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <img src="https://files.catbox.moe/dv1xua.jpg" alt="NUPZ Logo" />
+                </div>
+                <div class="logo-text">
+                    <h1 class="neon-text">NUPZ Store</h1>
+                    <span>✦ premium role shop ✦</span>
+                </div>
+            </div>
+            <div class="dev-badge">
+                <div class="avatar">
+                    <img src="https://files.catbox.moe/dv1xua.jpg" alt="Nupz" />
+                </div>
+                <div class="info">
+                    <strong>Nupz</strong>
+                    <span style="display:block; font-size:0.4rem; color:rgba(255,255,255,0.06);">
+                        <span class="online-dot"></span> Online
+                    </span>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div class="brand-text">NAY UNBANNED APPS</div>
+        <!-- NAVIGASI -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard" onclick="switchTab('dashboard')">
+                <i class="fas fa-th-large"></i> Dashboard
+            </button>
+            <button class="nav-tab" data-tab="features" onclick="switchTab('features')">
+                <i class="fas fa-cogs"></i> Fitur Lainnya
+            </button>
+        </div>
+
+        <!-- STATS - REAL TIME -->
+        <div class="stats" id="statsContainer">
+            <div class="stat-card">
+                <div class="label"><i class="fas fa-users"></i> Pengunjung</div>
+                <div class="value">
+                    <i class="fas fa-eye"></i>
+                    <span id="visitorCount" class="pulse-number">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="label"><i class="fas fa-user"></i> Online</div>
+                <div class="value">
+                    <i class="fas fa-circle blink-red" style="font-size:0.4rem;"></i>
+                    <span id="onlineCount" class="blink-red pulse-number">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Role</div>
+                <div class="value"><i class="fas fa-layer-group"></i> 5</div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION DASHBOARD ===== -->
+        <div id="dashboardSection">
+            
+            <!-- SPECIAL SUPPORT -->
+            <div class="special-support">
+                <span class="support-icon">🌟</span>
+                <div class="support-title neon-gold"><i class="fas fa-star"></i> Spesial Support</div>
+                <div class="support-name neon-gold">MAMA ALLAH FRIEND</div>
+                <div class="support-sub">✦ Support Terbaik Dari Kami ✦</div>
+                <div class="support-decoration">
+                    <span></span>
+                    <span class="star">✦</span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- ===== BANNER SLIDESHOW ===== -->
+            <div class="banner-slider" id="bannerSlider">
+                <div class="slide active" data-index="0">
+                    <img src="https://files.catbox.moe/m7aqnc.jpg" alt="Banner 1" />
+                    <div class="banner-overlay">
+                        <div class="banner-text"><i class="fas fa-crown"></i> NUPZ Store Premium</div>
+                        <div class="banner-sub">✦ Pilih Role & Dapatkan Keistimewaan ✦</div>
+                    </div>
+                </div>
+                <div class="slide" data-index="1">
+                    <img src="https://files.catbox.moe/h3pxnz.jpg" alt="Banner 2" />
+                    <div class="banner-overlay">
+                        <div class="banner-text neon-red"><i class="fas fa-fire"></i> Hot Deal!</div>
+                        <div class="banner-sub">✦ Dapatkan Diskon Spesial ✦</div>
+                    </div>
+                </div>
+                <div class="slide" data-index="2">
+                    <img src="https://files.catbox.moe/vmynac.jpg" alt="Banner 3" />
+                    <div class="banner-overlay">
+                        <div class="banner-text"><i class="fas fa-gem"></i> Premium Role</div>
+                        <div class="banner-sub">✦ Harga Terbaik Se-Indonesia ✦</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROLE GRID - EPIC -->
+            <div class="section-title">
+                <i class="fas fa-gem neon-text"></i> <span class="neon-text">Pilih Role Premium</span>
+                <span class="badge-new neon-red">🔥 HOT</span>
+            </div>
+            <div class="role-grid" id="roleGrid"></div>
+
+            <!-- 2 KOLOM: PAYMENT + IQC -->
+            <div class="two-col">
+                <!-- PAYMENT -->
+                <div class="payment-section">
+                    <div class="payment-info">
+                        <h3><i class="fas fa-credit-card neon-text"></i> <span class="neon-text">Payment & Kontak</span></h3>
+                        
+                        <!-- ===== QRIS ===== -->
+                        <div class="qris-container">
+                            <div class="qris-label neon-text"><i class="fas fa-qrcode"></i> QRIS</div>
+                            <div class="qris-image" onclick="openImage('https://files.catbox.moe/1wlm3v.jpg')">
+                                <img src="https://files.catbox.moe/1wlm3v.jpg" alt="QRIS NUPZ" />
+                            </div>
+                            <div class="qris-detail">
+                                <strong>NMID:</strong> ID2024313592113
+                            </div>
+                        </div>
+
+                        <div class="dana-box">
+                            <div class="label">No. DANA (Owner)</div>
+                            <div class="number">
+                                <i class="fas fa-phone-alt"></i> 081275188480
+                                <button class="btn-copy" onclick="copyDana()"><i class="fas fa-copy"></i> Salin</button>
+                            </div>
+                        </div>
+
+                        <div class="social-buttons">
+                            <a href="https://wa.me/6281275188480?text=Halo%20Nupz%2C%20saya%20mau%20beli%20role" target="_blank" class="social-btn dana">
+                                <i class="fab fa-whatsapp"></i> Chat
+                            </a>
+                            <a href="https://t.me/Nupzz_reals" target="_blank" class="social-btn tele">
+                                <i class="fab fa-telegram-plane"></i> @Nupzz
+                            </a>
+                            <a href="https://tiktok.com/@nupzz99" target="_blank" class="social-btn tiktok">
+                                <i class="fab fa-tiktok"></i> @nupzz99
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- ===== WAJIB SS DETAIL ===== -->
+                    <div class="ss-warning">
+                        <i class="fas fa-exclamation-triangle neon-red"></i>
+                        <span><strong class="neon-red">WAJIB SS DETAIL!</strong> Kalo gak SS detail, <strong class="neon-red">HANGUS!</strong></span>
+                    </div>
+
+                    <div class="upload-area">
+                        <h4><i class="fas fa-cloud-upload-alt"></i> Kirim Bukti Transfer</h4>
+                        <p>Upload screenshot pembayaran (WAJIB SS DETAIL)</p>
+                        <input type="file" id="fileInput" accept="image/*" />
+                        <label for="fileInput" class="file-label">
+                            <i class="fas fa-image"></i> Pilih Bukti
+                        </label>
+                        <div style="margin-top:4px; color:rgba(255,255,255,0.05); font-size:0.5rem;" id="fileName">Belum ada file</div>
+                        <div class="note-upload">
+                            <i class="fas fa-shield-alt"></i> Diverifikasi oleh Nupz
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IQC -->
+                <div class="iqc-section">
+                    <div class="iqc-header">
+                        <h3>
+                            <i class="fas fa-robot neon-red"></i> <span class="neon-red">IQC</span>
+                            <span class="iqc-badge neon-red">🔥 KASAR</span>
+                        </h3>
+                        <div class="iqc-status">
+                            <span class="dot"></span>
+                            <span id="iqcStatus" style="color:#ff3366;">Bot Siap</span>
+                        </div>
+                    </div>
+                    <div class="iqc-box" id="iqcBox">
+                        <div class="iqc-message bot">
+                            <div class="msg-user">🤖 IQC Bot</div>
+                            <div class="msg-text neon-red">🗣️ ANJING! MAU BELI APA? CEPETAN! 😠<span class="time">Now</span></div>
+                        </div>
+                        <div class="iqc-message bot">
+                            <div class="msg-user">🤖 IQC Bot</div>
+                            <div class="msg-text neon-red">🗣️ JANGAN BANYAK COBAAN KONTOL! LANGSUNG BELI! 🤬<span class="time">Now</span></div>
+                        </div>
+                    </div>
+                    <div class="iqc-input-area">
+                        <input type="text" id="iqcInput" placeholder="Ketik pesan..." />
+                        <label class="gallery-btn" title="Kirim dari Galeri">
+                            <i class="fas fa-images"></i>
+                            <input type="file" id="iqcGalleryInput" accept="image/*" onchange="handleIqcGallery(event)" />
+                        </label>
+                        <button class="send-btn" onclick="sendIqcMessage()">
+                            <i class="fas fa-paper-plane"></i> Kirim
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION FITUR LAINNYA ===== -->
+        <div id="featuresSection" class="section-hidden">
+            <div class="section-title">
+                <i class="fas fa-cogs neon-text"></i> <span class="neon-text">Fitur Lainnya</span>
+                <span class="badge-new">NEW</span>
+            </div>
+
+            <!-- BOT KASAR -->
+            <div class="bot-kasar-container">
+                <div class="bot-kasar-header">
+                    <h2>
+                        <i class="fas fa-skull neon-red"></i> <span class="neon-red">BOT KASAR</span>
+                        <span style="font-size:0.45rem; color:#ff3366; font-weight:400;">🔥 SADIS</span>
+                    </h2>
+                    <div class="bot-status">
+                        <span class="dot"></span>
+                        <span style="color:#ff3366;">Online</span>
+                    </div>
+                </div>
+
+                <div class="bot-kasar-grid">
+                    <div class="kasar-card">
+                        <span class="kasar-icon"><i class="fas fa-fire"></i></span>
+                        <div class="kasar-text neon-red">🗣️ <span>ANJING!</span> CEPETAN!</div>
+                    </div>
+                    <div class="kasar-card">
+                        <span class="kasar-icon"><i class="fas fa-skull"></i></span>
+                        <div class="kasar-text neon-red">🗣️ <span>KONTOL!</span> GA USAH COBAAN!</div>
+                    </div>
+                    <div class="kasar-card">
+                        <span class="kasar-icon"><i class="fas fa-bolt"></i></span>
+                        <div class="kasar-text neon-red">🗣️ <span>MEMEK!</span> TRANSFER!</div>
+                    </div>
+                    <div class="kasar-card">
+                        <span class="kasar-icon"><i class="fas fa-dragon"></i></span>
+                        <div class="kasar-text neon-red">🗣️ <span>ASU!</span> GA PUNYA WAKTU!</div>
+                    </div>
+                    <div class="kasar-card">
+                        <span class="kasar-icon"><i class="fas fa-fist-raised"></i></span>
+                        <div class="kasar-text neon-red">🗣️ <span>BACOT!</span> BELI AJA!</div>
+                    </div>
+                    <div class="kasar-card">
+                        <span class="kasar-icon"><i class="fas fa-crown"></i></span>
+                        <div class="kasar-text neon-red">🗣️ <span>GOBLOK!</span> KALO GA BELI!</div>
+                    </div>
+                    <div class="kasar-card">
+                        <span class="kasar-icon"><i class="fas fa-robot"></i></span>
+                        <div class="kasar-text neon-red">🗣️ <span>JANCOK!</span> BOSAN!</div>
+                    </div>
+                    <div class="kasar-card">
+                        <span class="kasar-icon"><i class="fas fa-ghost"></i></span>
+                        <div class="kasar-text neon-red">🗣️ <span>TOLOL!</span> MAU APA?</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEATURE CARDS -->
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="value neon-text"><i class="fas fa-rocket"></i></div>
+                    <div class="label neon-text">Fast Response</div>
+                    <p>Bot siap mencaci kapan aja</p>
+                </div>
+                <div class="feature-card">
+                    <div class="value neon-text"><i class="fas fa-qrcode"></i></div>
+                    <div class="label neon-text">QRIS</div>
+                    <p>Bayar pake QRIS</p>
+                </div>
+                <div class="feature-card">
+                    <div class="value neon-text"><i class="fas fa-bolt"></i></div>
+                    <div class="label neon-text">Real-Time Online</div>
+                    <p>Lihat user online</p>
+                </div>
+                <div class="feature-card">
+                    <div class="value neon-red"><i class="fas fa-skull"></i></div>
+                    <div class="label neon-red">Bot Sadis</div>
+                    <p>50+ kata-kata kasar</p>
+                </div>
+                <div class="feature-card">
+                    <div class="value neon-text"><i class="fas fa-download"></i></div>
+                    <div class="label neon-text">Simpan Gambar</div>
+                    <p>Download hasil generate</p>
+                </div>
+                <div class="feature-card">
+                    <div class="value neon-gold"><i class="fas fa-crown"></i></div>
+                    <div class="label neon-gold">NUPZ Store</div>
+                    <p>Role premium sadis</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-logo-small">
+                        <img src="https://files.catbox.moe/dv1xua.jpg" alt="NUPZ" />
+                    </div>
+                    <div class="footer-text">
+                        &copy; 2026 <strong>NUPZ</strong> · 
+                        <span class="heart">♥</span> by <strong>Nupz</strong>
+                        <br>
+                        <span style="font-size:0.35rem; opacity:0.3;">Bot Sadis · QRIS · Kirim Gambar</span>
+                    </div>
+                </div>
+                <div class="footer-right">
+                    <div class="footer-social">
+                        <a href="https://t.me/Nupzz_reals" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="https://tiktok.com/@nupzz99" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://wa.me/6281275188480" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                    <div class="footer-version">v15.0</div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- ================= WELCOME POPUP (show once) ================= -->
-  <div id="welcomeBox" aria-hidden="true">
-    <div id="welcomeContent">
-      <div class="gradientText">SELAMAT DATANG</div>
-    </div>
-  </div>
+    <script>
+        // ===== NUPZ STORE v15.0 - NEON + SLIDESHOW =====
+        (function() {
+            'use strict';
+            
+            console.log('🔥 NUPZ Store v15.0 - Neon + Slideshow Loaded!');
 
-  <!-- ================= APP (main GZX UNBAN) ================= -->
-  <div id="app" role="main" aria-hidden="true">
-    <header class="topbar">
-      <div class="title-top">REBRANTING UNBAND</div>
-    </header>
+            // ===== PARTIKEL =====
+            (function initParticles() {
+                var canvas = document.getElementById('particles-canvas');
+                var ctx = canvas.getContext('2d');
+                var particles = [];
+                var w, h;
 
-    <div class="overlay" id="overlay" aria-hidden="true"></div>
+                function resize() {
+                    w = canvas.width = window.innerWidth;
+                    h = canvas.height = window.innerHeight;
+                }
+                resize();
+                window.addEventListener('resize', resize);
 
-    <div class="robot-box" aria-hidden="false">
-      <div class="robot-face">
-        <img src="https://files.catbox.moe/ejn7q9.jpeg" alt="Logo Robot" style="max-height:100%; max-width:100%; border-radius:50%;">
-      </div>
-      <div class="robot-title-normal">Nay Unban WhatsApp</div>
-    </div>
+                for (var i = 0; i < 40; i++) {
+                    particles.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        r: Math.random() * 1.5 + 0.5,
+                        dx: (Math.random() - 0.5) * 0.3,
+                        dy: (Math.random() - 0.5) * 0.3,
+                        color: 'rgba(122,92,255,' + (Math.random() * 0.15 + 0.03) + ')'
+                    });
+                }
 
-    <label class="form-label" for="nomor">Nomor :</label>
-    <input type="tel" id="nomor" class="input" placeholder="+628×××" inputmode="tel" aria-required="true" />
+                function draw() {
+                    ctx.clearRect(0, 0, w, h);
+                    particles.forEach(function(p) {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        ctx.fillStyle = p.color;
+                        ctx.fill();
+                        p.x += p.dx;
+                        p.y += p.dy;
+                        if (p.x < 0 || p.x > w) p.dx *= -1;
+                        if (p.y < 0 || p.y > h) p.dy *= -1;
+                    });
+                    requestAnimationFrame(draw);
+                }
+                draw();
+            })();
 
-    <label class="form-label" for="alasan">Pilih Opsi Band</label>
-    <div class="select-wrapper">
-      <select id="alasan" class="input" aria-required="true">
-        <option value="">UNBANNED OPTION</option>
-        <option value="permafresh">PERMA FRESH</option>
-        <option value="SPAM">SPAM</option>
-        <option value="PERMA HARD">PERMA HARD</option>
-        <option value="PERMASEMINGGU">PERMA -SEMINGGU</option>
-        <option value="opsi5">PERMA BATU</option>
-      </select>
-    </div>
+            // ===== BANNER SLIDESHOW =====
+            var currentSlide = 0;
+            var slides = document.querySelectorAll('.banner-slider .slide');
+            var totalSlides = slides.length;
 
-    <button class="btn" id="sendBtn" aria-label="Kirim Banding">UNBANNED</button>
-    <div class="status" id="statusArea" aria-live="polite"></div>
-    <div class="small">VIP METODE UNBANNED APPS</div>
-    <main class="empty" aria-hidden="true"></main>
-  </div>
+            function showSlide(index) {
+                slides.forEach(function(slide, i) {
+                    slide.classList.remove('active');
+                    if (i === index) {
+                        slide.classList.add('active');
+                    }
+                });
+            }
 
-<script>
-  /* ------------------ Intro controls ------------------ */
-  const video = document.getElementById("player");
-  const bar = document.getElementById("bar");
-  const loading = document.getElementById("loading");
-  const introOverlay = document.getElementById("introOverlay");
-  const app = document.getElementById("app");
-  const welcomeBox = document.getElementById("welcomeBox");
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
 
-  video.addEventListener("loadedmetadata", () => {
-    const dur = video.duration || 5;
-    document.documentElement.style.setProperty("--duration", dur + "s");
-    if (bar) bar.style.animationDuration = dur + "s";
-  });
+            // Auto slide setiap 4 detik
+            setInterval(nextSlide, 4000);
 
-  function tryPlay() {
-    video.muted = false;
-    video.volume = 1.0;
-    video.play().catch(() => {
-      video.muted = true;
-      video.play().catch(()=>{/* ignore */});
-    });
-  }
+            // ===== REAL TIME STATS =====
+            function updateRealTimeStats() {
+                try {
+                    var visitors = parseInt(localStorage.getItem('nupz_visitors') || '0');
+                    if (!sessionStorage.getItem('nupz_visited')) {
+                        visitors++;
+                        localStorage.setItem('nupz_visitors', visitors.toString());
+                        sessionStorage.setItem('nupz_visited', 'true');
+                    }
+                    var visitorEl = document.getElementById('visitorCount');
+                    if (visitorEl) {
+                        visitorEl.textContent = visitors.toLocaleString();
+                        visitorEl.classList.remove('pulse-number');
+                        void visitorEl.offsetWidth;
+                        visitorEl.classList.add('pulse-number');
+                    }
 
-  window.addEventListener("load", tryPlay);
+                    var userId = sessionStorage.getItem('nupz_user_id');
+                    if (!userId) {
+                        userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+                        sessionStorage.setItem('nupz_user_id', userId);
+                    }
 
-  function showAppAfterIntro() {
-    // fade-out intro overlay
-    introOverlay.classList.add("hidden");
-    // reveal app after fade
-    setTimeout(() => {
-      introOverlay.style.display = "none";
-      app.classList.add("visible");
-      app.setAttribute("aria-hidden","false");
-      // show welcome popup once (if not shown before)
-      if (!localStorage.getItem("welcomeShown")) {
-        setTimeout(()=> {
-          welcomeBox.classList.add("active");
-          welcomeBox.setAttribute("aria-hidden","false");
-          localStorage.setItem("welcomeShown","yes");
-          setTimeout(()=> {
-            welcomeBox.classList.remove("active");
-            welcomeBox.setAttribute("aria-hidden","true");
-          }, 3000);
-        }, 200); // small delay so app visible first
-      }
-    }, 620); // match CSS fade timing
-  }
+                    var onlineList = JSON.parse(localStorage.getItem('nupz_online') || '[]');
+                    var now = Date.now();
+                    
+                    var exists = onlineList.some(function(u) { return u.id === userId; });
+                    if (!exists) {
+                        onlineList.push({ id: userId, lastSeen: now });
+                    } else {
+                        onlineList = onlineList.map(function(u) {
+                            if (u.id === userId) {
+                                u.lastSeen = now;
+                            }
+                            return u;
+                        });
+                    }
 
-  video.addEventListener("ended", () => {
-    if (loading) loading.classList.add("hidden");
-    // small delay so loading hides nicely then transition
-    setTimeout(showAppAfterIntro, 300);
-  });
+                    onlineList = onlineList.filter(function(u) {
+                        return (now - u.lastSeen) < 30000;
+                    });
 
-  // safety fallback if video can't play/ended event missed
-  setTimeout(()=> {
-    if (!video.ended && introOverlay && introOverlay.style.display !== "none") {
-      try { showAppAfterIntro(); } catch(e){}
-    }
-  }, 9000);
+                    localStorage.setItem('nupz_online', JSON.stringify(onlineList));
 
-  /* ------------------ App / Mail logic (original, preserved + fixed) ------------------ */
-  const sendBtn = document.getElementById('sendBtn');
-  const statusEl = document.getElementById('statusArea');
-  const nomorInput = document.getElementById('nomor');
-  const alasanSelect = document.getElementById('alasan');
+                    var onlineCount = onlineList.length;
+                    var onlineEl = document.getElementById('onlineCount');
+                    if (onlineEl) {
+                        onlineEl.textContent = onlineCount;
+                        onlineEl.classList.remove('pulse-number');
+                        void onlineEl.offsetWidth;
+                        onlineEl.classList.add('pulse-number');
+                    }
 
-  function enc(v){ return encodeURIComponent(v || ''); }
-  function isAndroid(){ return /Android/i.test(navigator.userAgent); }
-  function setStatus(t){ statusEl.textContent = t; }
-  function normalizeNumber(n){
-    if(!n) return n;
-    const s=n.trim().replace(/\s+/g,'');
-    if(/^[0][0-9]+$/.test(s)) return '62'+s.slice(1);
-    if(/^\+/.test(s)) return s;
-    return s;
-  }
+                    var iqcStatus = document.getElementById('iqcStatus');
+                    if (iqcStatus) {
+                        if (onlineCount > 1) {
+                            iqcStatus.textContent = onlineCount + ' user online';
+                            iqcStatus.style.color = '#ff3366';
+                        } else {
+                            iqcStatus.textContent = 'Kamu doang';
+                            iqcStatus.style.color = '#ff6b8a';
+                        }
+                    }
 
-  /* buildTemplate: placeholders for 5 opsi (edit text later) */
-  function buildTemplate(nomor, alasan){
-    const tampilNomor = (nomor.startsWith('+') || nomor.startsWith('62')) ? nomor : ('+'+nomor);
+                } catch(e) {
+                    console.log('Stat update error:', e);
+                }
+            }
 
-    switch(alasan){
-      case "permafresh":
-        return {
-          to: 'support@support.whatsapp.com',
-          subject: 'Hello whatsapp developer, please help me.',
-          body: `Hello developer, my Whatsapp is Nayy. I would like to ask for help regarding my account being blocked a few hours ago. I don't know the exact reason, but when I woke up and wanted to chat with my girlfriend, my Whatsapp account was blocked permanently. Here is my blocked Whatsapp number:\n${tampilNomor} I beg you to restore it immediately, thank you.`
-        };
-      case "SPAM":
-        return {
-          to: 'support@support.whatsapp.com',
-          subject: 'tolong saya',
-          body: `Hallo developer whatsapp saya Nayy salah satu pengguna whatsapp dari tahun 2023 dan saya saat ini ingin mengeluhkan atas pemblockiran akun whatsapp saya dengan alasan spam pada tanggal [ tanggal ke band ], ini sangat lah aneh karena saya sudah sering membaca layanan ketentuan aplikasi whatsapp dan sudah mematuhinya juga selama 2/3 tahun terakhir dan saya percaya ini adalah kesalahan sistem whatsapp yang salah mendeteksi kesalahan sehingga mungkin hanya chatan biasa pun bisa di anggap spam dan di blockir. Saya mohon untuk pihak whatsapp fix bug ini karena sangat meresahkan dan buka kan akun whatsapp saya [ ${tampilNomor} ] secepat mungkin karena saya ingin menghubungi keluarga saya yang kini sedang ada di luar kota dan saya menyayangi nya, terima kasih.`
-        };
-      case "PERMA HARD":
-        return {
-          to: 'support@support.whatsapp.com',
-          subject: `please unblock this WhatsApp account [ ${tampilNomor} ] its a system error`,
-          body: `Hi developer, I'm contacting you via WhatsApp to request a review of my WhatsApp account, which has been blocked for no apparent reason. I've already requested a review through the WhatsApp application, but the block hasn't been lifted. I urgently need that WhatsApp account, as I've mentioned in the Gmail subject. Sorry for bothering you, but I need my WhatsApp account back now. Thank you.`
-        };
-      case "PERMASEMINGGU":
-        return {
-          to: 'support@support.whatsapp.com',
-          subject: 'help me plss',
-          body: `Hi WhatsApp Developer, I'm Nayy. My WhatsApp account (+${tampilNomor}) was blocked without reason. I always follow WhatsApp's Terms of Service, use the official app, never spam, and behave respectfully. I believe this is a system error. Please review and restore my account. Thank you for your attention and help.`
-        };
-      case "opsi5":
-        return {
-          to: 'support@support.whatsapp.com',
-          subject: 'hi',
-          body: `Hizmet şartlarınızı ihlal etmedim, hesabı açıklanamaz bir şekilde yasakladınız. Hesap etkinliklerimi inceledikten sonra, WhatsApp a erişebilmem için kısıtlamayı hızla kaldırırsınız. Çünkü hesabım yanlışlıkla yasaklandı 
+            updateRealTimeStats();
+            setInterval(updateRealTimeStats, 5000);
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    updateRealTimeStats();
+                }
+            });
 
-Şartlarınızı veya politikanızı ihlal ettiğimi kabul ediyorum ve bunun için gerçekten üzgünüm lütfen bir şans verin ve yasağı hesabımdan kaldırın ${tampilNomor} isim Satya Budist gursarai
+            // ===== DATA ROLE =====
+            var roles = [
+                { 
+                    name: 'Member', 
+                    price: 15000, 
+                    icon: 'fa-user', 
+                    badge: 'member'
+                },
+                { 
+                    name: 'Reseller', 
+                    price: 25000, 
+                    icon: 'fa-store', 
+                    badge: 'reseller'
+                },
+                { 
+                    name: 'VIP', 
+                    price: 35000, 
+                    icon: 'fa-star', 
+                    badge: 'vip'
+                },
+                { 
+                    name: 'PT', 
+                    price: 55000, 
+                    icon: 'fa-bolt', 
+                    badge: 'pt'
+                },
+                { 
+                    name: 'Moderator', 
+                    price: 75000, 
+                    icon: 'fa-shield-halved', 
+                    badge: 'moderator'
+                }
+            ];
 
-Görüşleriniz için teşekkürler
-Hindistan lıyım, ülke kodum ${tampilNomor}
-Yasal adım Satya Budist gursarai
-Umarım bu SIM kartın yeni sahibi olduğum için WhatsApp hesap numaramdan kısıtlamalarınızı kaldırırsınız ${tampilNomor}
+            var roleGrid = document.getElementById('roleGrid');
+            if (roleGrid) {
+                roles.forEach(function(role) {
+                    var card = document.createElement('div');
+                    card.className = 'role-card';
+                    card.innerHTML = 
+                        '<span class="role-badge ' + role.badge + '">' + role.badge + '</span>' +
+                        '<span class="role-icon"><i class="fas ' + role.icon + '"></i></span>' +
+                        '<div class="role-name">' + role.name + '</div>' +
+                        '<div class="role-price">Rp ' + role.price.toLocaleString('id-ID') + '</div>' +
+                        '<button class="btn-buy" data-role="' + role.name + '" data-price="' + role.price + '">' +
+                            '<i class="fas fa-cart-plus"></i> Beli Sekarang' +
+                        '</button>';
+                    roleGrid.appendChild(card);
+                });
+            }
 
-Ve o kaldırılmalıdır, aksi takdirde WhatsApp ın derecelendirmesini rahatsız etmeyeceksiniz Ki amaiyo chod hoga kardeş ke lado
-`
-        };
-      default:
-        return {
-          to: 'support@support.whatsapp.com',
-          subject: `My WhatsApp number was blocked ${tampilNomor}`,
-          body: `प्रिय व्हाट्सएप सपोर्ट टीम,
+            // ===== EVENT BELI =====
+            document.querySelectorAll('.btn-buy').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var role = this.getAttribute('data-role');
+                    var price = parseInt(this.getAttribute('data-price'));
+                    var formatted = price.toLocaleString('id-ID');
 
-मुझे आशा है कि यह संदेश आपको अच्छी तरह से मिल जाएगा ।  मैं अपने व्हाट्सएप अकाउंट पर प्रतिबंध की अपील करने के लिए लिख रहा हूं ।  मैं समझता हूं कि व्हाट्सएप की सेवा की शर्तों के उल्लंघन के कारण मेरे खाते पर प्रतिबंध लगा दिया गया था, और मैं किसी भी अनजाने कार्यों के लिए ईमानदारी से माफी मांगता हूं जिसके कारण यह हो सकता है । 
+                    showToast('\ud83c\udfaf ' + role + ' Rp ' + formatted);
+                    
+                    var paymentSection = document.querySelector('.payment-section');
+                    if (paymentSection) {
+                        paymentSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
 
-मैं व्हाट्सएप को एक आवश्यक संचार उपकरण और समुदाय के रूप में महत्व देता हूं, और मैं व्हाट्सएप की नीतियों और दिशानिर्देशों का पालन करने के लिए प्रतिबद्ध हूं ।  मैं कृपया अपने मामले की समीक्षा और अपने खाते पर प्रतिबंध हटाने का अनुरोध करता हूं ताकि मैं जिम्मेदारी से व्हाट्सएप का उपयोग करना जारी रख सकूं । 
+                    addIqcMessage('🗣️ GUA MAU BELI ' + role + ' (Rp ' + formatted + ')', false);
+                    setTimeout(function() {
+                        iqcBotReply('GUA MAU BELI ' + role);
+                    }, 600);
 
-कृपया नीचे कुछ जानकारी प्राप्त करें जो आपकी समीक्षा के लिए सहायक हो सकती हैं: - मेरा पंजीकृत फोन नंबर.`
-        };
-    }
-  }
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(function() { 
+                        if (btn) btn.style.transform = ''; 
+                    }, 200);
+                });
+            });
 
-  function buildIntentUrl(t){return `intent://compose?to=${enc(t.to)}&subject=${enc(t.subject)}&body=${enc(t.body)}#Intent;scheme=mailto;package=com.google.android.gm;end`;}
-  function buildMailtoUrl(t){return `mailto:${enc(t.to)}?subject=${enc(t.subject)}&body=${enc(t.body)}`;}
-  function buildGmailWebUrl(t){return `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(t.to)}&su=${enc(t.subject)}&body=${enc(t.body)}`;}
+            // ===== KLIK CARD =====
+            document.querySelectorAll('.role-card').forEach(function(card) {
+                card.addEventListener('click', function() {
+                    var btn = this.querySelector('.btn-buy');
+                    if (btn) btn.click();
+                });
+            });
 
-  sendBtn.addEventListener('click',()=>{
-    let nomor=(nomorInput.value||'').trim();
-    let alasan=(alasanSelect.value||'');
+            // ===== BOT KASAR =====
+            var sadisReplies = [
+                '🗣️ ANJING! CEPETAN BELI! GA USAH BANYAK COBAAN! 😤',
+                '🗣️ LO KIRA GUA RELA NGELAYANIN LO? CEPETAN TOT! 🤬',
+                '🗣️ BACOT! MAU BELI APA? CEPETAN!',
+                '🗣️ GO BLOK! INI TOKO ROLE, BUKAN TOKO MAINAN!',
+                '🗣️ HARGA SUDAH JELAS, KALO GA MAMPU PERGI!',
+                '🗣️ JANGAN BANYAK TANYA, LANGSUNG TRANSFER!',
+                '🗣️ GUA BOSAN SAMA ORANG YANG CUMA NANYA DOANG!',
+                '🗣️ KALO MAU BELI YA BELI, KALO GA PERGI!',
+                '🗣️ LO GA PUNYA DUIT? MENDING CABUT!',
+                '🗣️ BANYAK BANGET ALAHANNYA!',
+                '🗣️ MEMEK! MEMBER 15K AJA GA SANGGUP?',
+                '🗣️ ASU! RESELLER 25K? MODAL AJA GA PUNYA!',
+                '🗣️ JANCOK! VIP 35K? LO PENCIT!',
+                '🗣️ KONTOL! PT 55K? LO PIKIR LO PRO?',
+                '🗣️ ANJING! MODERATOR 75K? MODAL GA PUNYA!',
+                '🗣️ BACOTAN! LO GA PERNAH BELI!',
+                '🗣️ KALO CUMA ISENG GUA BLOKIR!',
+                '🗣️ DUIT LO JEBAKAN? LAMA BANGET!',
+                '🗣️ KALO UDAH TRANSFER LANGSUNG UPLOAD!',
+                '🗣️ LO PIKIR GUA RELA NGELAYANIN ORANG MISKIN?',
+                '🗣️ GUA GA BUTUH PELANGGAN BASA-BASI!',
+                '🗣️ CEPETAN KONTOL! GUA MAU TIDUR!',
+                '🗣️ KALO BUKTI GA JELAS, GUA ANGGAP NGECAT!',
+                '🗣️ AH MASA BODOH! TRANSFER CEPETAN!',
+                '🗣️ JANGAN BANYAK COBAAN GOBLOK!',
+                '🗣️ SADIS! GUA BAKAL MAKIN KASAR!'
+            ];
 
-    if(!nomor || !alasan){ setStatus("Mohon isi nomor & pilih alasan."); return; }
+            function iqcBotReply(userMsg) {
+                var lower = userMsg.toLowerCase();
+                var reply = '';
+                
+                if (lower.includes('member')) {
+                    reply = '🗣️ MEMBER 15K? HAHA MISKIN! TAPI YASUDLAH BELI! 😏';
+                } else if (lower.includes('reseller')) {
+                    reply = '🗣️ RESELLER? MODAL GA PUNYA! 25K! 😑';
+                } else if (lower.includes('vip')) {
+                    reply = '🗣️ VIP? 35K NEGO? GA USAH COBAAN! 😤';
+                } else if (lower.includes('pt')) {
+                    reply = '🗣️ PT? 55K! KALO GA BELI GUSI AJA! 🤬';
+                } else if (lower.includes('moderator')) {
+                    reply = '🗣️ MODERATOR? 75K! KALO GA MAMPU PERGI! 😡';
+                } else if (lower.includes('harga') || lower.includes('price')) {
+                    reply = '🗣️ BACA! MEMBER 15K, RESELLER 25K, VIP 35K, PT 55K, MODERATOR 75K! 👊';
+                } else if (lower.includes('dana') || lower.includes('transfer')) {
+                    reply = '🗣️ NO DANA 081275188480! TRANSFER CEPETAN! 💢';
+                } else if (lower.includes('qris')) {
+                    reply = '🗣️ QRIS UDAH ADA! SCAN AJA KONTOL! 📱😤';
+                } else if (lower.includes('ss') || lower.includes('screenshot') || lower.includes('detail')) {
+                    reply = '🗣️ WAJIB SS DETAIL ANJING! KALO GA HANGUS! 😠';
+                } else if (lower.includes('halo') || lower.includes('hi') || lower.includes('hai')) {
+                    reply = '🗣️ HALO? LANGSUNG BELI! GA PERLU BASA-BASI! 😠';
+                } else if (lower.includes('makasih') || lower.includes('terima kasih') || lower.includes('thanks')) {
+                    reply = '🗣️ MAKASIH? TRANSFER CEPETAN! 🙄';
+                } else if (lower.includes('tolong')) {
+                    reply = '🗣️ TOLONG? YANG TOLONG TRANSFER CEPETAN! 😤';
+                } else if (lower.includes('gambar') || lower.includes('foto')) {
+                    reply = '🗣️ GAMBAR? UDAH TRANSFER DULU KONTOL! 🖼️😤';
+                } else if (lower.includes('anjing') || lower.includes('kontol') || lower.includes('memek') || lower.includes('asu') || lower.includes('jancok')) {
+                    reply = '🗣️ WOY! LO MISUH BALIK? MAKIN KASAR GUA! 😈🔥';
+                } else {
+                    reply = sadisReplies[Math.floor(Math.random() * sadisReplies.length)];
+                }
 
-    nomor = normalizeNumber(nomor);
-    const tpl = buildTemplate(nomor, alasan);
+                setTimeout(function() {
+                    addIqcMessage(reply, true);
+                }, 500);
+            }
 
-    const intentUrl = buildIntentUrl(tpl);
-    const mailtoUrl = buildMailtoUrl(tpl);
-    const gmailWebUrl = buildGmailWebUrl(tpl);
+            // ===== IQC FUNCTIONS =====
+            var iqcBox = document.getElementById('iqcBox');
+            var iqcInput = document.getElementById('iqcInput');
 
-    sendBtn.disabled = true;
-    sendBtn.setAttribute('aria-busy','true');
+            window.sendIqcMessage = function() {
+                var msg = iqcInput.value.trim();
+                if (msg === '') return;
 
-    if(isAndroid()){
-      setStatus("Mencoba membuka Gmail app...");
-      try{ window.location.href = intentUrl; } catch(e){}
+                addIqcMessage('🗣️ ' + msg, false);
+                iqcInput.value = '';
 
-      let handled=false;
-      const fallback = ()=>{
-        if(handled) return;
-        handled=true;
-        setStatus("GAGAL...");
-        try{ window.location.href = mailtoUrl; } catch(e){
-          try{ window.open(gmailWebUrl,'_blank'); } catch(err){ setStatus("Gagal membuka email."); }
-        }
-        sendBtn.disabled=false;
-        sendBtn.removeAttribute('aria-busy');
-      };
+                var delay = Math.floor(Math.random() * 1000) + 500;
+                setTimeout(function() {
+                    iqcBotReply(msg);
+                }, delay);
+            };
 
-      const onVisChange = ()=>{
-        if(document.hidden){
-          handled=true;
-          setStatus("Compose terbuka.");
-          sendBtn.disabled=false;
-          sendBtn.removeAttribute('aria-busy');
-        }
-      };
-      document.addEventListener('visibilitychange', onVisChange, {once:true});
-      setTimeout(()=>{ if(!handled) fallback(); }, 1200);
+            function addIqcMessage(text, isBot) {
+                var div = document.createElement('div');
+                div.className = 'iqc-message' + (isBot ? ' bot' : ' user');
+                
+                var userSpan = document.createElement('div');
+                userSpan.className = 'msg-user';
+                userSpan.textContent = isBot ? '🤖 IQC Bot' : '👤 Customer';
+                
+                var textSpan = document.createElement('div');
+                textSpan.className = 'msg-text';
+                
+                var timeSpan = document.createElement('span');
+                timeSpan.className = 'time';
+                var now = new Date();
+                timeSpan.textContent = now.getHours().toString().padStart(2, '0') + ':' + 
+                                      now.getMinutes().toString().padStart(2, '0');
+                
+                textSpan.textContent = text;
+                textSpan.appendChild(timeSpan);
+                
+                div.appendChild(userSpan);
+                div.appendChild(textSpan);
+                
+                iqcBox.appendChild(div);
+                iqcBox.scrollTop = iqcBox.scrollHeight;
+            }
 
-    } else {
-      setStatus("Membuka aplikasi email...");
-      try{
-        window.location.href = mailtoUrl;
-        setTimeout(()=>{
-          if(!document.hidden){
-            try{ window.open(gmailWebUrl,"_blank"); } catch(e){}
-          }
-          sendBtn.disabled=false;
-          sendBtn.removeAttribute('aria-busy');
-        },900);
-      }catch(err){
-        try{ window.open(gmailWebUrl,"_blank"); } catch(e){}
-        sendBtn.disabled=false;
-        sendBtn.removeAttribute('aria-busy');
-      }
-    }
-  });
+            function addIqcImage(imgData) {
+                var div = document.createElement('div');
+                div.className = 'iqc-message user';
+                
+                var userSpan = document.createElement('div');
+                userSpan.className = 'msg-user';
+                userSpan.textContent = '👤 Customer';
+                
+                var textSpan = document.createElement('div');
+                textSpan.className = 'msg-text';
+                
+                var imgDiv = document.createElement('div');
+                imgDiv.className = 'msg-image';
+                imgDiv.onclick = function() { openImage(imgData); };
+                
+                var img = document.createElement('img');
+                img.src = imgData;
+                img.alt = 'Image from gallery';
+                
+                imgDiv.appendChild(img);
+                
+                var actions = document.createElement('div');
+                actions.className = 'image-actions';
+                actions.innerHTML = 
+                    '<button onclick="openImage(\'' + imgData + '\')"><i class="fas fa-eye"></i> Buka</button>' +
+                    '<button onclick="downloadImage()"><i class="fas fa-download"></i> Simpan</button>';
+                
+                var timeSpan = document.createElement('span');
+                timeSpan.className = 'time';
+                var now = new Date();
+                timeSpan.textContent = now.getHours().toString().padStart(2, '0') + ':' + 
+                                      now.getMinutes().toString().padStart(2, '0');
+                
+                textSpan.appendChild(imgDiv);
+                textSpan.appendChild(actions);
+                textSpan.appendChild(timeSpan);
+                
+                div.appendChild(userSpan);
+                div.appendChild(textSpan);
+                
+                iqcBox.appendChild(div);
+                iqcBox.scrollTop = iqcBox.scrollHeight;
+            }
 
-</script>
+            // ===== GALLERY HANDLER =====
+            window.handleIqcGallery = function(event) {
+                var file = event.target.files[0];
+                if (!file) return;
+                
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var imgData = e.target.result;
+                    addIqcImage(imgData);
+                    showToast('✅ Gambar terkirim!');
+                    
+                    setTimeout(function() {
+                        var replies = [
+                            '🗣️ NIH GAMBAR LO! GA KEREN! TRANSFER CEPETAN! 😤',
+                            '🗣️ GAMBAR APAAN INI? TRANSFER DULU KONTOL! 🤬',
+                            '🗣️ UDAH GUA LIHAT! SEKARANG TRANSFER! 😠',
+                            '🗣️ KEREN? GA KEREN! TRANSFER DULU! 😏'
+                        ];
+                        addIqcMessage(replies[Math.floor(Math.random() * replies.length)], true);
+                    }, 800);
+                };
+                reader.readAsDataURL(file);
+                
+                event.target.value = '';
+            };
+
+            // ===== MODAL GAMBAR =====
+            var currentImageSrc = '';
+
+            window.openImage = function(src) {
+                if (!src || src === '') {
+                    showToast('⚠️ Tidak ada gambar!');
+                    return;
+                }
+                currentImageSrc = src;
+                var modal = document.getElementById('imageModal');
+                var modalImg = document.getElementById('modalImage');
+                modalImg.src = src;
+                modal.classList.add('active');
+            };
+
+            window.closeModal = function(e) {
+                if (e && e.target !== e.currentTarget) return;
+                document.getElementById('imageModal').classList.remove('active');
+            };
+
+            window.downloadImage = function() {
+                var src = currentImageSrc;
+                if (!src || src === '') {
+                    showToast('⚠️ Tidak ada gambar!');
+                    return;
+                }
+                var link = document.createElement('a');
+                link.download = 'iqc_image_' + Date.now() + '.png';
+                link.href = src;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('✅ Gambar disimpan!');
+            };
+
+            // ===== ENTER =====
+            if (iqcInput) {
+                iqcInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        window.sendIqcMessage();
+                    }
+                });
+            }
+
+            // ===== UPLOAD FILE =====
+            var fileInput = document.getElementById('fileInput');
+            var fileName = document.getElementById('fileName');
+
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    if (this.files && this.files.length > 0) {
+                        var file = this.files[0];
+                        if (fileName) {
+                            fileName.textContent = '\ud83d\udcce ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+                        }
+                        showToast('\u2705 Bukti terkirim!');
+                        addIqcMessage('🗣️ UDAH UPLOAD BUKTI, CEK CEPETAN!', false);
+                        setTimeout(function() {
+                            iqcBotReply('udah upload bukti');
+                        }, 600);
+                    }
+                });
+            }
+
+            // ===== SWITCH TAB =====
+            window.switchTab = function(tab) {
+                var tabs = document.querySelectorAll('.nav-tab');
+                tabs.forEach(function(t) {
+                    t.classList.remove('active');
+                });
+                document.querySelector('.nav-tab[data-tab="' + tab + '"]').classList.add('active');
+
+                var dashboardSection = document.getElementById('dashboardSection');
+                var featuresSection = document.getElementById('featuresSection');
+
+                if (tab === 'dashboard') {
+                    dashboardSection.classList.remove('section-hidden');
+                    featuresSection.classList.add('section-hidden');
+                } else {
+                    dashboardSection.classList.add('section-hidden');
+                    featuresSection.classList.remove('section-hidden');
+                }
+            };
+
+            // ===== TOAST =====
+            function showToast(msg) {
+                var toast = document.getElementById('toast');
+                var toastMsg = document.getElementById('toastMsg');
+                if (toast && toastMsg) {
+                    toastMsg.textContent = msg;
+                    toast.classList.add('show');
+                    clearTimeout(toast._timeout);
+                    toast._timeout = setTimeout(function() {
+                        toast.classList.remove('show');
+                    }, 3000);
+                }
+            }
+
+            // ===== COPY DANA =====
+            window.copyDana = function() {
+                var dana = '081275188480';
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(dana).then(function() {
+                        showToast('\ud83d\udccb No. DANA disalin!');
+                    }).catch(function() {
+                        fallbackCopy(dana);
+                    });
+                } else {
+                    fallbackCopy(dana);
+                }
+            };
+
+            function fallbackCopy(text) {
+                var input = document.createElement('input');
+                input.value = text;
+                document.body.appendChild(input);
+                input.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('\ud83d\udccb No. DANA disalin!');
+                } catch(e) {
+                    alert('Salin manual: ' + text);
+                }
+                document.body.removeChild(input);
+            }
+
+            // ===== WELCOME =====
+            setTimeout(function() {
+                addIqcMessage('🗣️ EH KONTOL! SELAMAT DATANG! LANGSUNG BELI! 😠', true);
+            }, 1000);
+
+            // Export functions
+            window.addIqcMessage = addIqcMessage;
+            window.addIqcImage = addIqcImage;
+            window.showToast = showToast;
+            window.updateRealTimeStats = updateRealTimeStats;
+
+        })();
+    </script>
+
 </body>
 </html>
