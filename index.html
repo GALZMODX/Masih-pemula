@@ -32,25 +32,28 @@
             position: relative;
         }
 
-        /* ===== BACKGROUND NEON ===== */
-        body::before {
-            content: '';
+        /* ===== VIDEO BACKGROUND ===== */
+        #bg-video {
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(122, 92, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 51, 102, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 50% 100%, rgba(74, 47, 208, 0.02) 0%, transparent 60%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             z-index: 0;
-            animation: bgPulse 8s ease-in-out infinite;
+            opacity: 0.12;
+            pointer-events: none;
         }
 
-        @keyframes bgPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.05); opacity: 1; }
+        #bg-video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 0;
+            pointer-events: none;
         }
 
         #particles-canvas {
@@ -61,13 +64,13 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.4;
+            opacity: 0.3;
         }
 
         .dashboard {
             max-width: 480px;
             width: 100%;
-            background: rgba(10, 10, 20, 0.85);
+            background: rgba(10, 10, 20, 0.88);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border-radius: 40px;
@@ -87,7 +90,6 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* ===== GLOW BORDER ANIMASI ===== */
         .dashboard::before {
             content: '';
             position: absolute;
@@ -273,7 +275,7 @@
             50% { opacity: 0.3; transform: scale(0.6); }
         }
 
-        /* NAVIGASI */
+        /* ===== NAVIGASI ===== */
         .nav-tabs {
             display: flex;
             gap: 8px;
@@ -332,7 +334,7 @@
             box-shadow: 0 2px 25px rgba(122, 92, 255, 0.05);
         }
 
-        /* STATS */
+        /* ===== STATS ===== */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -419,8 +421,131 @@
             50% { color: #ff6b8a; }
         }
 
-        /* ===== BANNER SLIDESHOW ===== */
-        .banner-slider {
+        /* ===== INFO TABLE ===== */
+        .info-table {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 12px 10px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            transition: 0.3s;
+        }
+
+        .info-item:hover {
+            border-color: rgba(122, 92, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .info-item .info-icon {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 4px;
+        }
+
+        .info-item .info-icon i {
+            font-size: 1.2rem;
+        }
+
+        .info-item .info-icon .clock-icon { color: #ffd700; }
+        .info-item .info-icon .weather-icon { color: #00c8ff; }
+        .info-item .info-icon .battery-icon { color: #00ff88; }
+
+        .info-item .info-label {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.45rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .info-item .info-value {
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 2px;
+            text-shadow: 0 0 20px rgba(122, 92, 255, 0.05);
+        }
+
+        .info-item .info-value .neon-gold {
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.05);
+        }
+
+        .info-item .info-value .battery-fill-mini {
+            display: inline-block;
+            width: 30px;
+            height: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            padding: 1px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        .info-item .info-value .battery-fill-mini .fill {
+            height: 100%;
+            border-radius: 1px;
+            transition: 0.3s;
+        }
+
+        .info-item .info-value .battery-fill-mini .fill.high { background: #00ff88; }
+        .info-item .info-value .battery-fill-mini .fill.medium { background: #ffd700; }
+        .info-item .info-value .battery-fill-mini .fill.low { background: #ff3366; }
+
+        /* ===== VIDEO ATAS BANNER ===== */
+        .top-video-container {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 14px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
+            height: 120px;
+        }
+
+        .top-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .top-video-container .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 16px 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.6));
+            z-index: 2;
+        }
+
+        .top-video-container .video-overlay .video-text {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .top-video-container .video-overlay .video-text i {
+            color: #ff3366;
+            margin-right: 4px;
+        }
+
+        /* ===== BANNER SLIDING ===== */
+        .banner-wrapper {
             position: relative;
             z-index: 2;
             margin-bottom: 18px;
@@ -432,19 +557,18 @@
             height: 200px;
         }
 
-        .banner-slider .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+        .banner-slider {
+            display: flex;
+            width: 300%;
             height: 100%;
-            opacity: 0;
-            transition: opacity 1.2s ease-in-out;
-            object-fit: cover;
+            animation: slideBanner 12s ease-in-out infinite;
         }
 
-        .banner-slider .slide.active {
-            opacity: 1;
+        .banner-slider .slide {
+            width: 33.333%;
+            height: 100%;
+            flex-shrink: 0;
+            position: relative;
         }
 
         .banner-slider .slide img {
@@ -454,7 +578,7 @@
             display: block;
         }
 
-        .banner-slider .banner-overlay {
+        .banner-slider .slide .banner-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -464,7 +588,7 @@
             z-index: 2;
         }
 
-        .banner-slider .banner-overlay .banner-text {
+        .banner-slider .slide .banner-overlay .banner-text {
             color: #fff;
             font-size: 1rem;
             font-weight: 700;
@@ -472,16 +596,24 @@
             letter-spacing: 0.5px;
         }
 
-        .banner-slider .banner-overlay .banner-text i {
+        .banner-slider .slide .banner-overlay .banner-text i {
             color: #ff3366;
             margin-right: 6px;
         }
 
-        .banner-slider .banner-overlay .banner-sub {
+        .banner-slider .slide .banner-overlay .banner-sub {
             color: rgba(255,255,255,0.2);
             font-size: 0.55rem;
             margin-top: 2px;
             letter-spacing: 2px;
+        }
+
+        @keyframes slideBanner {
+            0%, 20% { transform: translateX(0); }
+            25%, 45% { transform: translateX(-33.333%); }
+            50%, 70% { transform: translateX(-66.666%); }
+            75%, 95% { transform: translateX(-33.333%); }
+            100% { transform: translateX(0); }
         }
 
         /* ===== NEON TEXT ===== */
@@ -678,7 +810,7 @@
             50% { opacity: 0.4; transform: scale(0.95); }
         }
 
-        /* ===== ROLE GRID - EPIC ===== */
+        /* ===== ROLE GRID ===== */
         .role-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -748,20 +880,57 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
         }
 
-        .role-icon {
-            font-size: 2rem;
-            color: #b8a5ff;
-            margin-bottom: 4px;
-            display: block;
-            transition: 0.5s;
+        .role-icon-wrapper {
             position: relative;
-            z-index: 1;
+            display: inline-block;
+            margin-bottom: 6px;
         }
 
-        .role-card:hover .role-icon {
-            transform: scale(1.2) rotate(-8deg);
-            color: #ff6b8a;
-            filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.2));
+        .role-icon-wrapper .role-icon-bg {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: 0.5s;
+            position: relative;
+        }
+
+        .role-icon-wrapper .role-icon-bg .role-icon {
+            font-size: 1.8rem;
+            color: #fff;
+            transition: 0.5s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .role-icon-bg.member { background: linear-gradient(135deg, rgba(122, 92, 255, 0.2), rgba(122, 92, 255, 0.05)); border: 1px solid rgba(122, 92, 255, 0.15); }
+        .role-icon-bg.reseller { background: linear-gradient(135deg, rgba(0, 200, 255, 0.2), rgba(0, 200, 255, 0.05)); border: 1px solid rgba(0, 200, 255, 0.15); }
+        .role-icon-bg.vip { background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.05)); border: 1px solid rgba(255, 215, 0, 0.15); }
+        .role-icon-bg.pt { background: linear-gradient(135deg, rgba(255, 51, 102, 0.2), rgba(255, 51, 102, 0.05)); border: 1px solid rgba(255, 51, 102, 0.15); }
+        .role-icon-bg.moderator { background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.05)); border: 1px solid rgba(0, 255, 136, 0.15); }
+
+        .role-icon-bg.member::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(122, 92, 255, 0.1); filter: blur(8px); z-index: 0; animation: glowPulseMember 2s ease-in-out infinite; }
+        .role-icon-bg.reseller::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(0, 200, 255, 0.1); filter: blur(8px); z-index: 0; animation: glowPulseReseller 2s ease-in-out infinite; }
+        .role-icon-bg.vip::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(255, 215, 0, 0.1); filter: blur(8px); z-index: 0; animation: glowPulseVip 2s ease-in-out infinite; }
+        .role-icon-bg.pt::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(255, 51, 102, 0.1); filter: blur(8px); z-index: 0; animation: glowPulsePt 2s ease-in-out infinite; }
+        .role-icon-bg.moderator::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: rgba(0, 255, 136, 0.1); filter: blur(8px); z-index: 0; animation: glowPulseModerator 2s ease-in-out infinite; }
+
+        @keyframes glowPulseMember { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
+        @keyframes glowPulseReseller { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
+        @keyframes glowPulseVip { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
+        @keyframes glowPulsePt { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
+        @keyframes glowPulseModerator { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.15); } }
+
+        .role-card:hover .role-icon-bg {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .role-card:hover .role-icon-bg .role-icon {
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
         }
 
         .role-name {
@@ -771,6 +940,7 @@
             letter-spacing: 0.5px;
             position: relative;
             z-index: 1;
+            margin-top: 2px;
         }
 
         .role-price {
@@ -864,7 +1034,7 @@
         .role-badge.pt { background: rgba(255, 51, 102, 0.08); color: #ff3366; border: 1px solid rgba(255, 51, 102, 0.04); }
         .role-badge.moderator { background: rgba(0, 255, 136, 0.08); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.04); }
 
-        /* ===== 2 KOLOM ===== */
+        /* ===== PAYMENT ===== */
         .two-col {
             display: grid;
             grid-template-columns: 1fr;
@@ -874,7 +1044,6 @@
             margin-bottom: 20px;
         }
 
-        /* PAYMENT */
         .payment-section {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 24px;
@@ -901,6 +1070,101 @@
 
         .payment-info h3 i {
             color: #7a5cff;
+        }
+
+        .dana-box {
+            background: linear-gradient(135deg, rgba(0, 90, 156, 0.08), rgba(0, 50, 100, 0.04));
+            border: 1px solid rgba(0, 90, 156, 0.08);
+            border-radius: 18px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            transition: 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .dana-box:hover {
+            border-color: rgba(0, 90, 156, 0.15);
+            box-shadow: 0 0 40px rgba(0, 90, 156, 0.03);
+        }
+
+        .dana-box .dana-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #005a9c, #003d6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 0 30px rgba(0, 90, 156, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dana-box .dana-logo i {
+            color: #fff;
+            font-size: 1.6rem;
+        }
+
+        .dana-box .dana-info {
+            flex: 1;
+        }
+
+        .dana-box .dana-info .label {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .dana-box .dana-info .number {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            text-shadow: 0 0 30px rgba(0, 90, 156, 0.05);
+        }
+
+        .dana-box .dana-info .number i {
+            color: #00aaff;
+            font-size: 1rem;
+            margin-right: 4px;
+        }
+
+        .btn-copy-dana {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: #b8a5ff;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-copy-dana:active {
+            transform: scale(0.95);
+        }
+
+        .btn-copy-dana:hover {
+            background: #005a9c;
+            color: #fff;
+            border-color: #005a9c;
+            box-shadow: 0 0 30px rgba(0, 90, 156, 0.05);
         }
 
         .qris-container {
@@ -960,71 +1224,6 @@
             letter-spacing: 1px;
         }
 
-        .qris-container .qris-detail strong {
-            color: rgba(255, 255, 255, 0.12);
-            font-weight: 600;
-        }
-
-        .dana-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 14px;
-            padding: 12px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            margin-bottom: 10px;
-            transition: 0.3s;
-        }
-
-        .dana-box:hover {
-            border-color: rgba(122, 92, 255, 0.04);
-        }
-
-        .dana-box .label {
-            color: rgba(255, 255, 255, 0.12);
-            font-size: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .dana-box .number {
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
-        }
-
-        .dana-box .number i {
-            color: #7a5cff;
-            font-size: 1.1rem;
-        }
-
-        .btn-copy {
-            background: rgba(255, 255, 255, 0.03);
-            border: none;
-            color: #b8a5ff;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.55rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-copy:active {
-            transform: scale(0.95);
-        }
-
-        .btn-copy:hover {
-            background: #7a5cff;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(122, 92, 255, 0.1);
-        }
-
         .social-buttons {
             display: flex;
             gap: 6px;
@@ -1056,10 +1255,6 @@
         .social-btn:active {
             transform: scale(0.95);
         }
-
-        .social-btn.tele:active { background: #0088cc; box-shadow: 0 0 30px rgba(0, 136, 204, 0.1); }
-        .social-btn.tiktok:active { background: #000; box-shadow: 0 0 30px rgba(255, 0, 80, 0.05); }
-        .social-btn.dana:active { background: #005a9c; box-shadow: 0 0 30px rgba(0, 90, 156, 0.1); }
 
         .ss-warning {
             background: linear-gradient(135deg, rgba(255, 51, 102, 0.04), rgba(122, 92, 255, 0.02));
@@ -1332,10 +1527,6 @@
             transform: scale(0.95);
         }
 
-        .iqc-message .image-actions button i {
-            font-size: 0.45rem;
-        }
-
         .iqc-input-area {
             display: flex;
             gap: 6px;
@@ -1434,6 +1625,329 @@
             border-radius: 50%;
             background: #ff3366;
             animation: blinkRed 0.8s ease-in-out infinite;
+        }
+
+        /* ===== GLOBAL CHAT ===== */
+        .global-chat {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-bottom: 18px;
+            backdrop-filter: blur(8px);
+            transition: 0.4s;
+        }
+
+        .global-chat:hover {
+            border-color: rgba(122, 92, 255, 0.04);
+        }
+
+        .global-chat .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .global-chat .chat-header h3 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+        }
+
+        .global-chat .chat-header h3 i {
+            color: #00ff88;
+        }
+
+        .global-chat .chat-header .online-count {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.55rem;
+        }
+
+        .global-chat .chat-messages {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 12px;
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .global-chat .chat-messages::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .global-chat .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 10px;
+        }
+
+        .global-chat .chat-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #7a5cff, #ff3366);
+            border-radius: 10px;
+        }
+
+        .global-chat .chat-messages .msg {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 6px;
+            animation: msgSlide 0.3s ease;
+        }
+
+        .global-chat .chat-messages .msg .msg-user {
+            font-size: 0.5rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        .global-chat .chat-messages .msg .msg-user .badge {
+            background: rgba(122, 92, 255, 0.08);
+            color: #7a5cff;
+            font-size: 0.4rem;
+            padding: 1px 6px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+
+        .global-chat .chat-messages .msg .msg-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
+            word-wrap: break-word;
+        }
+
+        .global-chat .chat-messages .msg .msg-text .time {
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 0.4rem;
+            margin-left: 6px;
+        }
+
+        .global-chat .chat-input-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        .global-chat .chat-input-area input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            padding: 6px 14px;
+            color: #fff;
+            font-size: 0.7rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .global-chat .chat-input-area input::placeholder {
+            color: rgba(255, 255, 255, 0.06);
+        }
+
+        .global-chat .chat-input-area input:focus {
+            border-color: rgba(122, 92, 255, 0.08);
+        }
+
+        .global-chat .chat-input-area .chat-send {
+            background: linear-gradient(135deg, #7a5cff, #ff3366);
+            border: none;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .global-chat .chat-input-area .chat-send:active {
+            transform: scale(0.95);
+        }
+
+        /* ===== REVIEW SECTION ===== */
+        .review-section {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-bottom: 18px;
+            backdrop-filter: blur(8px);
+            transition: 0.4s;
+        }
+
+        .review-section:hover {
+            border-color: rgba(122, 92, 255, 0.04);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .review-header h3 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 30px rgba(122, 92, 255, 0.05);
+        }
+
+        .review-header h3 i {
+            color: #ffd700;
+        }
+
+        .review-header .review-count {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.55rem;
+        }
+
+        .review-video {
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            background: rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .review-video video {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .review-actions .action-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.3);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .review-actions .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .review-actions .action-btn.liked {
+            color: #ff3366;
+            border-color: rgba(255, 51, 102, 0.1);
+            background: rgba(255, 51, 102, 0.05);
+        }
+
+        .review-actions .action-btn i {
+            font-size: 0.8rem;
+        }
+
+        .review-comments {
+            margin-top: 8px;
+        }
+
+        .review-comments .comment {
+            display: flex;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .review-comments .comment:last-child {
+            border-bottom: none;
+        }
+
+        .review-comments .comment .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7a5cff, #ff3366);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .review-comments .comment .comment-body {
+            flex: 1;
+        }
+
+        .review-comments .comment .comment-body .name {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.55rem;
+            font-weight: 600;
+        }
+
+        .review-comments .comment .comment-body .text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
+            margin-top: 1px;
+        }
+
+        .review-comments .comment .comment-body .time {
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 0.45rem;
+            margin-top: 1px;
+        }
+
+        .review-input-area {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .review-input-area input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            padding: 6px 14px;
+            color: #fff;
+            font-size: 0.7rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .review-input-area input::placeholder {
+            color: rgba(255, 255, 255, 0.06);
+        }
+
+        .review-input-area input:focus {
+            border-color: rgba(122, 92, 255, 0.08);
+        }
+
+        .review-input-area .comment-send {
+            background: linear-gradient(135deg, #7a5cff, #ff3366);
+            border: none;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .review-input-area .comment-send:active {
+            transform: scale(0.95);
         }
 
         /* ===== BOT KASAR ===== */
@@ -1566,7 +2080,7 @@
             margin-top: 2px;
         }
 
-        /* FOOTER */
+        /* ===== FOOTER ===== */
         .footer {
             background: rgba(255, 255, 255, 0.02);
             border-top: 1px solid rgba(255, 255, 255, 0.02);
@@ -1654,7 +2168,7 @@
             font-weight: 600;
         }
 
-        /* TOAST */
+        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -1691,7 +2205,7 @@
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        /* HIDE SECTION */
+        /* ===== HIDE SECTION ===== */
         .section-hidden {
             display: none !important;
         }
@@ -1795,29 +2309,34 @@
             .stats { gap: 4px; }
             .stat-card { padding: 8px 4px; }
             .stat-card .value { font-size: 0.8rem; }
+            .info-table { gap: 6px; }
+            .info-item { padding: 8px 6px; }
+            .info-item .info-value { font-size: 0.7rem; }
             .role-grid { gap: 8px; }
             .role-card { padding: 12px 8px 10px; border-radius: 18px; }
-            .role-icon { font-size: 1.4rem; }
+            .role-icon-wrapper .role-icon-bg { width: 44px; height: 44px; }
+            .role-icon-wrapper .role-icon-bg .role-icon { font-size: 1.3rem; }
             .role-name { font-size: 0.75rem; }
             .role-price { font-size: 1rem; }
             .btn-buy { font-size: 0.5rem; padding: 6px 8px; }
-            .banner-slider { height: 140px; }
+            .top-video-container { height: 80px; }
+            .banner-wrapper { height: 140px; }
             .banner-overlay .banner-text { font-size: 0.75rem; }
+            .dana-box { padding: 12px 14px; gap: 10px; }
+            .dana-box .dana-logo { width: 38px; height: 38px; font-size: 1rem; }
+            .dana-box .dana-logo i { font-size: 1.2rem; }
+            .dana-box .dana-info .number { font-size: 1rem; }
             .qris-container .qris-image { max-width: 140px; }
-            .dana-box .number { font-size: 1rem; }
             .iqc-box { height: 130px; }
-            .iqc-input-area input { font-size: 0.6rem; padding: 5px 10px; }
-            .iqc-input-area .send-btn { font-size: 0.55rem; padding: 5px 10px; }
-            .iqc-input-area .gallery-btn { width: 28px; height: 28px; font-size: 0.6rem; }
-            .special-support .support-name { font-size: 1rem; }
-            .special-support .support-title { font-size: 0.65rem; }
-            .role-badge { font-size: 0.35rem; padding: 1px 6px; top: 4px; right: 4px; }
+            .global-chat .chat-messages { height: 150px; }
+            .review-video video { height: 180px; }
         }
 
         @media (max-width: 360px) {
             .role-grid { grid-template-columns: 1fr 1fr; gap: 5px; }
             .role-card { padding: 8px 4px 6px; border-radius: 14px; }
-            .role-icon { font-size: 1rem; }
+            .role-icon-wrapper .role-icon-bg { width: 36px; height: 36px; }
+            .role-icon-wrapper .role-icon-bg .role-icon { font-size: 1rem; }
             .role-name { font-size: 0.6rem; }
             .role-price { font-size: 0.8rem; }
             .btn-buy { font-size: 0.4rem; padding: 4px 6px; }
@@ -1825,15 +2344,28 @@
             .stat-card { padding: 4px 3px; }
             .stat-card .value { font-size: 0.65rem; }
             .stat-card .label { font-size: 0.35rem; }
-            .banner-slider { height: 110px; }
+            .info-table { gap: 4px; }
+            .info-item { padding: 6px 4px; }
+            .info-item .info-value { font-size: 0.6rem; }
+            .info-item .info-icon { font-size: 0.9rem; }
+            .top-video-container { height: 60px; }
+            .banner-wrapper { height: 110px; }
+            .dana-box .dana-info .number { font-size: 0.85rem; }
+            .dana-box .dana-logo { width: 32px; height: 32px; }
+            .dana-box .dana-logo i { font-size: 1rem; }
             .qris-container .qris-image { max-width: 100px; }
-            .special-support .support-name { font-size: 0.85rem; }
-            .special-support .support-title { font-size: 0.55rem; }
-            .special-support .support-icon { font-size: 1.2rem; }
+            .global-chat .chat-messages { height: 120px; }
+            .review-video video { height: 140px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== VIDEO BACKGROUND ===== -->
+    <video id="bg-video" autoplay loop muted playsinline>
+        <source src="https://files.catbox.moe/k1cj4h.mp4" type="video/mp4" />
+    </video>
+    <div id="bg-video-overlay"></div>
 
     <!-- ===== CANVAS PARTIKEL ===== -->
     <canvas id="particles-canvas"></canvas>
@@ -1852,6 +2384,14 @@
             <i class="fas fa-download"></i> Simpan
         </button>
     </div>
+
+    <!-- ===== AUDIO KLIK ===== -->
+    <audio id="clickSound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/pop-up-1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="likeSound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/bell-tick-1.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="dashboard">
 
@@ -1881,10 +2421,10 @@
 
         <!-- NAVIGASI -->
         <div class="nav-tabs">
-            <button class="nav-tab active" data-tab="dashboard" onclick="switchTab('dashboard')">
+            <button class="nav-tab active" data-tab="dashboard" onclick="playClick(); switchTab('dashboard')">
                 <i class="fas fa-th-large"></i> Dashboard
             </button>
-            <button class="nav-tab" data-tab="features" onclick="switchTab('features')">
+            <button class="nav-tab" data-tab="features" onclick="playClick(); switchTab('features')">
                 <i class="fas fa-cogs"></i> Fitur Lainnya
             </button>
         </div>
@@ -1911,11 +2451,45 @@
             </div>
         </div>
 
+        <!-- ===== INFO TABLE ===== -->
+        <div class="info-table">
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-clock clock-icon"></i></div>
+                <div class="info-label">Jam</div>
+                <div class="info-value"><span class="neon-gold" id="clockDisplay">00:00:00</span></div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-cloud-sun weather-icon"></i></div>
+                <div class="info-label">Cuaca</div>
+                <div class="info-value" id="weatherDisplay">--°C</div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-battery-three-quarters battery-icon"></i></div>
+                <div class="info-label">Baterai</div>
+                <div class="info-value">
+                    <span id="batteryDisplay">--%</span>
+                    <span class="battery-fill-mini">
+                        <span class="fill" id="batteryFillBar" style="width:0%;"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VIDEO ATAS BANNER ===== -->
+        <div class="top-video-container">
+            <video autoplay loop muted playsinline>
+                <source src="https://files.catbox.moe/qwjqp8.mp4" type="video/mp4" />
+            </video>
+            <div class="video-overlay">
+                <div class="video-text"><i class="fas fa-play-circle"></i> NUPZ STORE PREMIUM</div>
+            </div>
+        </div>
+
         <!-- ===== SECTION DASHBOARD ===== -->
         <div id="dashboardSection">
             
             <!-- SPECIAL SUPPORT -->
-            <div class="special-support">
+            <div class="special-support" onclick="playClick()">
                 <span class="support-icon">🌟</span>
                 <div class="support-title neon-gold"><i class="fas fa-star"></i> Spesial Support</div>
                 <div class="support-name neon-gold">MAMA ALLAH FRIEND</div>
@@ -1927,32 +2501,34 @@
                 </div>
             </div>
 
-            <!-- ===== BANNER SLIDESHOW ===== -->
-            <div class="banner-slider" id="bannerSlider">
-                <div class="slide active" data-index="0">
-                    <img src="https://files.catbox.moe/m7aqnc.jpg" alt="Banner 1" />
-                    <div class="banner-overlay">
-                        <div class="banner-text"><i class="fas fa-crown"></i> NUPZ Store Premium</div>
-                        <div class="banner-sub">✦ Pilih Role & Dapatkan Keistimewaan ✦</div>
+            <!-- ===== BANNER SLIDING ===== -->
+            <div class="banner-wrapper">
+                <div class="banner-slider" id="bannerSlider">
+                    <div class="slide">
+                        <img src="https://files.catbox.moe/m7aqnc.jpg" alt="Banner 1" />
+                        <div class="banner-overlay">
+                            <div class="banner-text"><i class="fas fa-crown"></i> NUPZ Store Premium</div>
+                            <div class="banner-sub">✦ Pilih Role & Dapatkan Keistimewaan ✦</div>
+                        </div>
                     </div>
-                </div>
-                <div class="slide" data-index="1">
-                    <img src="https://files.catbox.moe/h3pxnz.jpg" alt="Banner 2" />
-                    <div class="banner-overlay">
-                        <div class="banner-text neon-red"><i class="fas fa-fire"></i> Hot Deal!</div>
-                        <div class="banner-sub">✦ Dapatkan Diskon Spesial ✦</div>
+                    <div class="slide">
+                        <img src="https://files.catbox.moe/h3pxnz.jpg" alt="Banner 2" />
+                        <div class="banner-overlay">
+                            <div class="banner-text neon-red"><i class="fas fa-fire"></i> Hot Deal!</div>
+                            <div class="banner-sub">✦ Dapatkan Diskon Spesial ✦</div>
+                        </div>
                     </div>
-                </div>
-                <div class="slide" data-index="2">
-                    <img src="https://files.catbox.moe/vmynac.jpg" alt="Banner 3" />
-                    <div class="banner-overlay">
-                        <div class="banner-text"><i class="fas fa-gem"></i> Premium Role</div>
-                        <div class="banner-sub">✦ Harga Terbaik Se-Indonesia ✦</div>
+                    <div class="slide">
+                        <img src="https://files.catbox.moe/vmynac.jpg" alt="Banner 3" />
+                        <div class="banner-overlay">
+                            <div class="banner-text"><i class="fas fa-gem"></i> Premium Role</div>
+                            <div class="banner-sub">✦ Harga Terbaik Se-Indonesia ✦</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ROLE GRID - EPIC -->
+            <!-- ROLE GRID -->
             <div class="section-title">
                 <i class="fas fa-gem neon-text"></i> <span class="neon-text">Pilih Role Premium</span>
                 <span class="badge-new neon-red">🔥 HOT</span>
@@ -1966,10 +2542,9 @@
                     <div class="payment-info">
                         <h3><i class="fas fa-credit-card neon-text"></i> <span class="neon-text">Payment & Kontak</span></h3>
                         
-                        <!-- ===== QRIS ===== -->
-                        <div class="qris-container">
+                        <div class="qris-container" onclick="playClick(); openImage('https://files.catbox.moe/1wlm3v.jpg')">
                             <div class="qris-label neon-text"><i class="fas fa-qrcode"></i> QRIS</div>
-                            <div class="qris-image" onclick="openImage('https://files.catbox.moe/1wlm3v.jpg')">
+                            <div class="qris-image">
                                 <img src="https://files.catbox.moe/1wlm3v.jpg" alt="QRIS NUPZ" />
                             </div>
                             <div class="qris-detail">
@@ -1978,27 +2553,33 @@
                         </div>
 
                         <div class="dana-box">
-                            <div class="label">No. DANA (Owner)</div>
-                            <div class="number">
-                                <i class="fas fa-phone-alt"></i> 081275188480
-                                <button class="btn-copy" onclick="copyDana()"><i class="fas fa-copy"></i> Salin</button>
+                            <div class="dana-logo">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="dana-info">
+                                <div class="label">No. DANA (Owner)</div>
+                                <div class="number">
+                                    <i class="fas fa-phone-alt"></i> 081275188480
+                                    <button class="btn-copy-dana" onclick="playClick(); copyDana()">
+                                        <i class="fas fa-copy"></i> Salin
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <div class="social-buttons">
-                            <a href="https://wa.me/6281275188480?text=Halo%20Nupz%2C%20saya%20mau%20beli%20role" target="_blank" class="social-btn dana">
+                            <a href="https://wa.me/6281275188480?text=Halo%20Nupz%2C%20saya%20mau%20beli%20role" target="_blank" class="social-btn dana" onclick="playClick()">
                                 <i class="fab fa-whatsapp"></i> Chat
                             </a>
-                            <a href="https://t.me/Nupzz_reals" target="_blank" class="social-btn tele">
+                            <a href="https://t.me/Nupzz_reals" target="_blank" class="social-btn tele" onclick="playClick()">
                                 <i class="fab fa-telegram-plane"></i> @Nupzz
                             </a>
-                            <a href="https://tiktok.com/@nupzz99" target="_blank" class="social-btn tiktok">
+                            <a href="https://tiktok.com/@nupzz99" target="_blank" class="social-btn tiktok" onclick="playClick()">
                                 <i class="fab fa-tiktok"></i> @nupzz99
                             </a>
                         </div>
                     </div>
 
-                    <!-- ===== WAJIB SS DETAIL ===== -->
                     <div class="ss-warning">
                         <i class="fas fa-exclamation-triangle neon-red"></i>
                         <span><strong class="neon-red">WAJIB SS DETAIL!</strong> Kalo gak SS detail, <strong class="neon-red">HANGUS!</strong></span>
@@ -2008,7 +2589,7 @@
                         <h4><i class="fas fa-cloud-upload-alt"></i> Kirim Bukti Transfer</h4>
                         <p>Upload screenshot pembayaran (WAJIB SS DETAIL)</p>
                         <input type="file" id="fileInput" accept="image/*" />
-                        <label for="fileInput" class="file-label">
+                        <label for="fileInput" class="file-label" onclick="playClick()">
                             <i class="fas fa-image"></i> Pilih Bukti
                         </label>
                         <div style="margin-top:4px; color:rgba(255,255,255,0.05); font-size:0.5rem;" id="fileName">Belum ada file</div>
@@ -2042,11 +2623,11 @@
                     </div>
                     <div class="iqc-input-area">
                         <input type="text" id="iqcInput" placeholder="Ketik pesan..." />
-                        <label class="gallery-btn" title="Kirim dari Galeri">
+                        <label class="gallery-btn" title="Kirim dari Galeri" onclick="playClick()">
                             <i class="fas fa-images"></i>
-                            <input type="file" id="iqcGalleryInput" accept="image/*" onchange="handleIqcGallery(event)" />
+                            <input type="file" id="iqcGalleryInput" accept="image/*" onchange="playClick(); handleIqcGallery(event)" />
                         </label>
-                        <button class="send-btn" onclick="sendIqcMessage()">
+                        <button class="send-btn" onclick="playClick(); sendIqcMessage()">
                             <i class="fas fa-paper-plane"></i> Kirim
                         </button>
                     </div>
@@ -2059,6 +2640,87 @@
             <div class="section-title">
                 <i class="fas fa-cogs neon-text"></i> <span class="neon-text">Fitur Lainnya</span>
                 <span class="badge-new">NEW</span>
+            </div>
+
+            <!-- ===== GLOBAL CHAT ===== -->
+            <div class="global-chat">
+                <div class="chat-header">
+                    <h3><i class="fas fa-globe-asia"></i> <span class="neon-text">Chat Global</span></h3>
+                    <span class="online-count" id="globalOnline">👤 0 online</span>
+                </div>
+                <div class="chat-messages" id="globalChatMessages">
+                    <div class="msg">
+                        <div class="msg-user">🤖 System <span class="badge">Bot</span></div>
+                        <div class="msg-text">Selamat datang di Chat Global NUPZ Store! Chat dengan sesama pengunjung 💬</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="globalChatInput" placeholder="Tulis pesan ke semua pengunjung..." />
+                    <button class="chat-send" onclick="playClick(); sendGlobalMessage()">
+                        <i class="fas fa-paper-plane"></i> Kirim
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== REVIEW SECTION ===== -->
+            <div class="review-section">
+                <div class="review-header">
+                    <h3><i class="fas fa-star"></i> <span class="neon-gold">Review & Komentar</span></h3>
+                    <span class="review-count">★ 4.8 (120 reviews)</span>
+                </div>
+
+                <div class="review-video" onclick="playClick()">
+                    <video id="reviewVideo" controls playsinline>
+                        <source src="https://files.catbox.moe/he9ari.mp4" type="video/mp4" />
+                        Browser kamu tidak support video.
+                    </video>
+                </div>
+
+                <div class="review-actions">
+                    <button class="action-btn" id="likeBtn" onclick="playLikeSound(); toggleLike()">
+                        <i class="fas fa-heart"></i> <span id="likeCount">47</span>
+                    </button>
+                    <button class="action-btn" onclick="playClick(); document.getElementById('commentInput').focus()">
+                        <i class="fas fa-comment"></i> Komentar
+                    </button>
+                    <button class="action-btn" onclick="playClick(); shareReview()">
+                        <i class="fas fa-share-alt"></i> Bagikan
+                    </button>
+                </div>
+
+                <div class="review-comments" id="commentSection">
+                    <div class="comment">
+                        <div class="avatar">N</div>
+                        <div class="comment-body">
+                            <div class="name">Nupz • Owner</div>
+                            <div class="text">🔥 Mantap banget ini! Role premium terbaik!</div>
+                            <div class="time">2 jam lalu</div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="avatar">A</div>
+                        <div class="comment-body">
+                            <div class="name">Ahmad • User</div>
+                            <div class="text">👍 Langsung beli Member, pelayanan cepet banget!</div>
+                            <div class="time">5 jam lalu</div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="avatar">R</div>
+                        <div class="comment-body">
+                            <div class="name">Rina • User</div>
+                            <div class="text">❤️ VIP keren abis! Recommended!</div>
+                            <div class="time">1 hari lalu</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-input-area">
+                    <input type="text" id="commentInput" placeholder="Tulis komentar..." />
+                    <button class="comment-send" onclick="playClick(); postComment()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- BOT KASAR -->
@@ -2075,35 +2737,35 @@
                 </div>
 
                 <div class="bot-kasar-grid">
-                    <div class="kasar-card">
+                    <div class="kasar-card" onclick="playClick()">
                         <span class="kasar-icon"><i class="fas fa-fire"></i></span>
                         <div class="kasar-text neon-red">🗣️ <span>ANJING!</span> CEPETAN!</div>
                     </div>
-                    <div class="kasar-card">
+                    <div class="kasar-card" onclick="playClick()">
                         <span class="kasar-icon"><i class="fas fa-skull"></i></span>
                         <div class="kasar-text neon-red">🗣️ <span>KONTOL!</span> GA USAH COBAAN!</div>
                     </div>
-                    <div class="kasar-card">
+                    <div class="kasar-card" onclick="playClick()">
                         <span class="kasar-icon"><i class="fas fa-bolt"></i></span>
                         <div class="kasar-text neon-red">🗣️ <span>MEMEK!</span> TRANSFER!</div>
                     </div>
-                    <div class="kasar-card">
+                    <div class="kasar-card" onclick="playClick()">
                         <span class="kasar-icon"><i class="fas fa-dragon"></i></span>
                         <div class="kasar-text neon-red">🗣️ <span>ASU!</span> GA PUNYA WAKTU!</div>
                     </div>
-                    <div class="kasar-card">
+                    <div class="kasar-card" onclick="playClick()">
                         <span class="kasar-icon"><i class="fas fa-fist-raised"></i></span>
                         <div class="kasar-text neon-red">🗣️ <span>BACOT!</span> BELI AJA!</div>
                     </div>
-                    <div class="kasar-card">
+                    <div class="kasar-card" onclick="playClick()">
                         <span class="kasar-icon"><i class="fas fa-crown"></i></span>
                         <div class="kasar-text neon-red">🗣️ <span>GOBLOK!</span> KALO GA BELI!</div>
                     </div>
-                    <div class="kasar-card">
+                    <div class="kasar-card" onclick="playClick()">
                         <span class="kasar-icon"><i class="fas fa-robot"></i></span>
                         <div class="kasar-text neon-red">🗣️ <span>JANCOK!</span> BOSAN!</div>
                     </div>
-                    <div class="kasar-card">
+                    <div class="kasar-card" onclick="playClick()">
                         <span class="kasar-icon"><i class="fas fa-ghost"></i></span>
                         <div class="kasar-text neon-red">🗣️ <span>TOLOL!</span> MAU APA?</div>
                     </div>
@@ -2112,32 +2774,32 @@
 
             <!-- FEATURE CARDS -->
             <div class="feature-grid">
-                <div class="feature-card">
+                <div class="feature-card" onclick="playClick()">
                     <div class="value neon-text"><i class="fas fa-rocket"></i></div>
                     <div class="label neon-text">Fast Response</div>
                     <p>Bot siap mencaci kapan aja</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="playClick()">
                     <div class="value neon-text"><i class="fas fa-qrcode"></i></div>
                     <div class="label neon-text">QRIS</div>
                     <p>Bayar pake QRIS</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="playClick()">
                     <div class="value neon-text"><i class="fas fa-bolt"></i></div>
                     <div class="label neon-text">Real-Time Online</div>
                     <p>Lihat user online</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="playClick()">
                     <div class="value neon-red"><i class="fas fa-skull"></i></div>
                     <div class="label neon-red">Bot Sadis</div>
                     <p>50+ kata-kata kasar</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="playClick()">
                     <div class="value neon-text"><i class="fas fa-download"></i></div>
                     <div class="label neon-text">Simpan Gambar</div>
                     <p>Download hasil generate</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="playClick()">
                     <div class="value neon-gold"><i class="fas fa-crown"></i></div>
                     <div class="label neon-gold">NUPZ Store</div>
                     <p>Role premium sadis</p>
@@ -2156,27 +2818,107 @@
                         &copy; 2026 <strong>NUPZ</strong> · 
                         <span class="heart">♥</span> by <strong>Nupz</strong>
                         <br>
-                        <span style="font-size:0.35rem; opacity:0.3;">Bot Sadis · QRIS · Kirim Gambar</span>
+                        <span style="font-size:0.35rem; opacity:0.3;">Bot Sadis · QRIS · Chat Global</span>
                     </div>
                 </div>
                 <div class="footer-right">
                     <div class="footer-social">
-                        <a href="https://t.me/Nupzz_reals" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-                        <a href="https://tiktok.com/@nupzz99" target="_blank"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://wa.me/6281275188480" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://t.me/Nupzz_reals" target="_blank" onclick="playClick()"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="https://tiktok.com/@nupzz99" target="_blank" onclick="playClick()"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://wa.me/6281275188480" target="_blank" onclick="playClick()"><i class="fab fa-whatsapp"></i></a>
                     </div>
-                    <div class="footer-version">v15.0</div>
+                    <div class="footer-version">v21.0</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== NUPZ STORE v15.0 - NEON + SLIDESHOW =====
+        // ===== NUPZ STORE v21.0 - INFO TABLE RAPIH =====
         (function() {
             'use strict';
             
-            console.log('🔥 NUPZ Store v15.0 - Neon + Slideshow Loaded!');
+            console.log('🔥 NUPZ Store v21.0 - Info Table Rapi Loaded!');
+
+            // ===== SUARA KLIK =====
+            var clickAudio = document.getElementById('clickSound');
+            var likeAudio = document.getElementById('likeSound');
+
+            window.playClick = function() {
+                try {
+                    if (clickAudio) {
+                        clickAudio.currentTime = 0;
+                        clickAudio.play().catch(function(e) {});
+                    }
+                } catch(e) {}
+            };
+
+            window.playLikeSound = function() {
+                try {
+                    if (likeAudio) {
+                        likeAudio.currentTime = 0;
+                        likeAudio.play().catch(function(e) {});
+                    }
+                } catch(e) {}
+            };
+
+            // ===== VIDEO BACKGROUND =====
+            var bgVideo = document.getElementById('bg-video');
+            if (bgVideo) {
+                bgVideo.play().catch(function(e) {});
+            }
+
+            // ===== JAM =====
+            function updateClock() {
+                var now = new Date();
+                document.getElementById('clockDisplay').textContent = 
+                    String(now.getHours()).padStart(2, '0') + ':' +
+                    String(now.getMinutes()).padStart(2, '0') + ':' +
+                    String(now.getSeconds()).padStart(2, '0');
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // ===== CUACA =====
+            function updateWeather() {
+                var weathers = ['☀️ Cerah', '⛅ Berawan', '🌤️ Sebagian Cerah', '🌧️ Hujan', '⛈️ Badai', '🌫️ Berkabut'];
+                var temps = [24, 26, 28, 30, 32, 34];
+                document.getElementById('weatherDisplay').textContent = 
+                    weathers[Math.floor(Math.random() * weathers.length)] + ' ' + 
+                    temps[Math.floor(Math.random() * temps.length)] + '°C';
+            }
+            updateWeather();
+            setInterval(updateWeather, 300000);
+
+            // ===== BATTERY =====
+            function updateBattery() {
+                if (navigator.getBattery) {
+                    navigator.getBattery().then(function(battery) {
+                        var level = Math.round(battery.level * 100);
+                        var isCharging = battery.charging;
+                        document.getElementById('batteryDisplay').textContent = 
+                            (isCharging ? '⚡' : '🔋') + ' ' + level + '%';
+                        var fillBar = document.getElementById('batteryFillBar');
+                        fillBar.style.width = level + '%';
+                        fillBar.className = 'fill';
+                        if (level > 50) fillBar.classList.add('high');
+                        else if (level > 20) fillBar.classList.add('medium');
+                        else fillBar.classList.add('low');
+                    }).catch(function() { fallbackBattery(); });
+                } else {
+                    fallbackBattery();
+                }
+            }
+
+            function fallbackBattery() {
+                var level = Math.floor(Math.random() * 40) + 60;
+                document.getElementById('batteryDisplay').textContent = '🔋 ' + level + '%';
+                var fillBar = document.getElementById('batteryFillBar');
+                fillBar.style.width = level + '%';
+                fillBar.className = 'fill high';
+            }
+            updateBattery();
+            setInterval(updateBattery, 10000);
 
             // ===== PARTIKEL =====
             (function initParticles() {
@@ -2220,28 +2962,6 @@
                 draw();
             })();
 
-            // ===== BANNER SLIDESHOW =====
-            var currentSlide = 0;
-            var slides = document.querySelectorAll('.banner-slider .slide');
-            var totalSlides = slides.length;
-
-            function showSlide(index) {
-                slides.forEach(function(slide, i) {
-                    slide.classList.remove('active');
-                    if (i === index) {
-                        slide.classList.add('active');
-                    }
-                });
-            }
-
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                showSlide(currentSlide);
-            }
-
-            // Auto slide setiap 4 detik
-            setInterval(nextSlide, 4000);
-
             // ===== REAL TIME STATS =====
             function updateRealTimeStats() {
                 try {
@@ -2251,13 +2971,7 @@
                         localStorage.setItem('nupz_visitors', visitors.toString());
                         sessionStorage.setItem('nupz_visited', 'true');
                     }
-                    var visitorEl = document.getElementById('visitorCount');
-                    if (visitorEl) {
-                        visitorEl.textContent = visitors.toLocaleString();
-                        visitorEl.classList.remove('pulse-number');
-                        void visitorEl.offsetWidth;
-                        visitorEl.classList.add('pulse-number');
-                    }
+                    document.getElementById('visitorCount').textContent = visitors.toLocaleString();
 
                     var userId = sessionStorage.getItem('nupz_user_id');
                     if (!userId) {
@@ -2269,88 +2983,42 @@
                     var now = Date.now();
                     
                     var exists = onlineList.some(function(u) { return u.id === userId; });
-                    if (!exists) {
-                        onlineList.push({ id: userId, lastSeen: now });
-                    } else {
+                    if (!exists) onlineList.push({ id: userId, lastSeen: now });
+                    else {
                         onlineList = onlineList.map(function(u) {
-                            if (u.id === userId) {
-                                u.lastSeen = now;
-                            }
+                            if (u.id === userId) u.lastSeen = now;
                             return u;
                         });
                     }
 
-                    onlineList = onlineList.filter(function(u) {
-                        return (now - u.lastSeen) < 30000;
-                    });
-
+                    onlineList = onlineList.filter(function(u) { return (now - u.lastSeen) < 30000; });
                     localStorage.setItem('nupz_online', JSON.stringify(onlineList));
 
                     var onlineCount = onlineList.length;
-                    var onlineEl = document.getElementById('onlineCount');
-                    if (onlineEl) {
-                        onlineEl.textContent = onlineCount;
-                        onlineEl.classList.remove('pulse-number');
-                        void onlineEl.offsetWidth;
-                        onlineEl.classList.add('pulse-number');
-                    }
+                    document.getElementById('onlineCount').textContent = onlineCount;
+                    document.getElementById('globalOnline').textContent = '👤 ' + onlineCount + ' online';
 
                     var iqcStatus = document.getElementById('iqcStatus');
                     if (iqcStatus) {
-                        if (onlineCount > 1) {
-                            iqcStatus.textContent = onlineCount + ' user online';
-                            iqcStatus.style.color = '#ff3366';
-                        } else {
-                            iqcStatus.textContent = 'Kamu doang';
-                            iqcStatus.style.color = '#ff6b8a';
-                        }
+                        iqcStatus.textContent = onlineCount > 1 ? onlineCount + ' user online' : 'Kamu doang';
+                        iqcStatus.style.color = onlineCount > 1 ? '#ff3366' : '#ff6b8a';
                     }
 
-                } catch(e) {
-                    console.log('Stat update error:', e);
-                }
+                } catch(e) { console.log('Stat error:', e); }
             }
-
             updateRealTimeStats();
             setInterval(updateRealTimeStats, 5000);
             document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) {
-                    updateRealTimeStats();
-                }
+                if (!document.hidden) updateRealTimeStats();
             });
 
             // ===== DATA ROLE =====
             var roles = [
-                { 
-                    name: 'Member', 
-                    price: 15000, 
-                    icon: 'fa-user', 
-                    badge: 'member'
-                },
-                { 
-                    name: 'Reseller', 
-                    price: 25000, 
-                    icon: 'fa-store', 
-                    badge: 'reseller'
-                },
-                { 
-                    name: 'VIP', 
-                    price: 35000, 
-                    icon: 'fa-star', 
-                    badge: 'vip'
-                },
-                { 
-                    name: 'PT', 
-                    price: 55000, 
-                    icon: 'fa-bolt', 
-                    badge: 'pt'
-                },
-                { 
-                    name: 'Moderator', 
-                    price: 75000, 
-                    icon: 'fa-shield-halved', 
-                    badge: 'moderator'
-                }
+                { name: 'Member', price: 15000, icon: 'fa-user', badge: 'member', iconClass: 'member' },
+                { name: 'Reseller', price: 25000, icon: 'fa-store', badge: 'reseller', iconClass: 'reseller' },
+                { name: 'VIP', price: 35000, icon: 'fa-star', badge: 'vip', iconClass: 'vip' },
+                { name: 'PT', price: 55000, icon: 'fa-bolt', badge: 'pt', iconClass: 'pt' },
+                { name: 'Moderator', price: 75000, icon: 'fa-shield-halved', badge: 'moderator', iconClass: 'moderator' }
             ];
 
             var roleGrid = document.getElementById('roleGrid');
@@ -2360,7 +3028,11 @@
                     card.className = 'role-card';
                     card.innerHTML = 
                         '<span class="role-badge ' + role.badge + '">' + role.badge + '</span>' +
-                        '<span class="role-icon"><i class="fas ' + role.icon + '"></i></span>' +
+                        '<div class="role-icon-wrapper">' +
+                            '<div class="role-icon-bg ' + role.iconClass + '">' +
+                                '<i class="fas ' + role.icon + ' role-icon"></i>' +
+                            '</div>' +
+                        '</div>' +
                         '<div class="role-name">' + role.name + '</div>' +
                         '<div class="role-price">Rp ' + role.price.toLocaleString('id-ID') + '</div>' +
                         '<button class="btn-buy" data-role="' + role.name + '" data-price="' + role.price + '">' +
@@ -2374,30 +3046,22 @@
             document.querySelectorAll('.btn-buy').forEach(function(btn) {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
+                    playClick();
                     var role = this.getAttribute('data-role');
                     var price = parseInt(this.getAttribute('data-price'));
                     var formatted = price.toLocaleString('id-ID');
 
                     showToast('\ud83c\udfaf ' + role + ' Rp ' + formatted);
-                    
-                    var paymentSection = document.querySelector('.payment-section');
-                    if (paymentSection) {
-                        paymentSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
+                    document.querySelector('.payment-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
                     addIqcMessage('🗣️ GUA MAU BELI ' + role + ' (Rp ' + formatted + ')', false);
-                    setTimeout(function() {
-                        iqcBotReply('GUA MAU BELI ' + role);
-                    }, 600);
+                    setTimeout(function() { iqcBotReply('GUA MAU BELI ' + role); }, 600);
 
                     this.style.transform = 'scale(0.95)';
-                    setTimeout(function() { 
-                        if (btn) btn.style.transform = ''; 
-                    }, 200);
+                    setTimeout(function() { if (btn) btn.style.transform = ''; }, 200);
                 });
             });
 
-            // ===== KLIK CARD =====
             document.querySelectorAll('.role-card').forEach(function(card) {
                 card.addEventListener('click', function() {
                     var btn = this.querySelector('.btn-buy');
@@ -2421,101 +3085,45 @@
                 '🗣️ ASU! RESELLER 25K? MODAL AJA GA PUNYA!',
                 '🗣️ JANCOK! VIP 35K? LO PENCIT!',
                 '🗣️ KONTOL! PT 55K? LO PIKIR LO PRO?',
-                '🗣️ ANJING! MODERATOR 75K? MODAL GA PUNYA!',
-                '🗣️ BACOTAN! LO GA PERNAH BELI!',
-                '🗣️ KALO CUMA ISENG GUA BLOKIR!',
-                '🗣️ DUIT LO JEBAKAN? LAMA BANGET!',
-                '🗣️ KALO UDAH TRANSFER LANGSUNG UPLOAD!',
-                '🗣️ LO PIKIR GUA RELA NGELAYANIN ORANG MISKIN?',
-                '🗣️ GUA GA BUTUH PELANGGAN BASA-BASI!',
-                '🗣️ CEPETAN KONTOL! GUA MAU TIDUR!',
-                '🗣️ KALO BUKTI GA JELAS, GUA ANGGAP NGECAT!',
-                '🗣️ AH MASA BODOH! TRANSFER CEPETAN!',
-                '🗣️ JANGAN BANYAK COBAAN GOBLOK!',
-                '🗣️ SADIS! GUA BAKAL MAKIN KASAR!'
+                '🗣️ ANJING! MODERATOR 75K? MODAL GA PUNYA!'
             ];
 
             function iqcBotReply(userMsg) {
                 var lower = userMsg.toLowerCase();
                 var reply = '';
-                
-                if (lower.includes('member')) {
-                    reply = '🗣️ MEMBER 15K? HAHA MISKIN! TAPI YASUDLAH BELI! 😏';
-                } else if (lower.includes('reseller')) {
-                    reply = '🗣️ RESELLER? MODAL GA PUNYA! 25K! 😑';
-                } else if (lower.includes('vip')) {
-                    reply = '🗣️ VIP? 35K NEGO? GA USAH COBAAN! 😤';
-                } else if (lower.includes('pt')) {
-                    reply = '🗣️ PT? 55K! KALO GA BELI GUSI AJA! 🤬';
-                } else if (lower.includes('moderator')) {
-                    reply = '🗣️ MODERATOR? 75K! KALO GA MAMPU PERGI! 😡';
-                } else if (lower.includes('harga') || lower.includes('price')) {
-                    reply = '🗣️ BACA! MEMBER 15K, RESELLER 25K, VIP 35K, PT 55K, MODERATOR 75K! 👊';
-                } else if (lower.includes('dana') || lower.includes('transfer')) {
-                    reply = '🗣️ NO DANA 081275188480! TRANSFER CEPETAN! 💢';
-                } else if (lower.includes('qris')) {
-                    reply = '🗣️ QRIS UDAH ADA! SCAN AJA KONTOL! 📱😤';
-                } else if (lower.includes('ss') || lower.includes('screenshot') || lower.includes('detail')) {
-                    reply = '🗣️ WAJIB SS DETAIL ANJING! KALO GA HANGUS! 😠';
-                } else if (lower.includes('halo') || lower.includes('hi') || lower.includes('hai')) {
-                    reply = '🗣️ HALO? LANGSUNG BELI! GA PERLU BASA-BASI! 😠';
-                } else if (lower.includes('makasih') || lower.includes('terima kasih') || lower.includes('thanks')) {
-                    reply = '🗣️ MAKASIH? TRANSFER CEPETAN! 🙄';
-                } else if (lower.includes('tolong')) {
-                    reply = '🗣️ TOLONG? YANG TOLONG TRANSFER CEPETAN! 😤';
-                } else if (lower.includes('gambar') || lower.includes('foto')) {
-                    reply = '🗣️ GAMBAR? UDAH TRANSFER DULU KONTOL! 🖼️😤';
-                } else if (lower.includes('anjing') || lower.includes('kontol') || lower.includes('memek') || lower.includes('asu') || lower.includes('jancok')) {
-                    reply = '🗣️ WOY! LO MISUH BALIK? MAKIN KASAR GUA! 😈🔥';
-                } else {
-                    reply = sadisReplies[Math.floor(Math.random() * sadisReplies.length)];
-                }
+                if (lower.includes('member')) reply = '🗣️ MEMBER 15K? HAHA MISKIN! TAPI YASUDLAH BELI! 😏';
+                else if (lower.includes('reseller')) reply = '🗣️ RESELLER? MODAL GA PUNYA! 25K! 😑';
+                else if (lower.includes('vip')) reply = '🗣️ VIP? 35K NEGO? GA USAH COBAAN! 😤';
+                else if (lower.includes('pt')) reply = '🗣️ PT? 55K! KALO GA BELI GUSI AJA! 🤬';
+                else if (lower.includes('moderator')) reply = '🗣️ MODERATOR? 75K! KALO GA MAMPU PERGI! 😡';
+                else if (lower.includes('harga')) reply = '🗣️ BACA! MEMBER 15K, RESELLER 25K, VIP 35K, PT 55K, MODERATOR 75K! 👊';
+                else if (lower.includes('dana')) reply = '🗣️ NO DANA 081275188480! TRANSFER CEPETAN! 💢';
+                else if (lower.includes('ss') || lower.includes('screenshot')) reply = '🗣️ WAJIB SS DETAIL ANJING! KALO GA HANGUS! 😠';
+                else reply = sadisReplies[Math.floor(Math.random() * sadisReplies.length)];
 
-                setTimeout(function() {
-                    addIqcMessage(reply, true);
-                }, 500);
+                setTimeout(function() { addIqcMessage(reply, true); }, 500);
             }
 
-            // ===== IQC FUNCTIONS =====
+            // ===== IQC =====
             var iqcBox = document.getElementById('iqcBox');
             var iqcInput = document.getElementById('iqcInput');
 
             window.sendIqcMessage = function() {
                 var msg = iqcInput.value.trim();
                 if (msg === '') return;
-
                 addIqcMessage('🗣️ ' + msg, false);
                 iqcInput.value = '';
-
-                var delay = Math.floor(Math.random() * 1000) + 500;
-                setTimeout(function() {
-                    iqcBotReply(msg);
-                }, delay);
+                setTimeout(function() { iqcBotReply(msg); }, 500);
             };
 
             function addIqcMessage(text, isBot) {
                 var div = document.createElement('div');
                 div.className = 'iqc-message' + (isBot ? ' bot' : ' user');
-                
-                var userSpan = document.createElement('div');
-                userSpan.className = 'msg-user';
-                userSpan.textContent = isBot ? '🤖 IQC Bot' : '👤 Customer';
-                
-                var textSpan = document.createElement('div');
-                textSpan.className = 'msg-text';
-                
-                var timeSpan = document.createElement('span');
-                timeSpan.className = 'time';
-                var now = new Date();
-                timeSpan.textContent = now.getHours().toString().padStart(2, '0') + ':' + 
-                                      now.getMinutes().toString().padStart(2, '0');
-                
-                textSpan.textContent = text;
-                textSpan.appendChild(timeSpan);
-                
-                div.appendChild(userSpan);
-                div.appendChild(textSpan);
-                
+                div.innerHTML = 
+                    '<div class="msg-user">' + (isBot ? '🤖 IQC Bot' : '👤 Customer') + '</div>' +
+                    '<div class="msg-text">' + text + '<span class="time">' + 
+                    new Date().getHours().toString().padStart(2, '0') + ':' + 
+                    new Date().getMinutes().toString().padStart(2, '0') + '</span></div>';
                 iqcBox.appendChild(div);
                 iqcBox.scrollTop = iqcBox.scrollHeight;
             }
@@ -2523,86 +3131,152 @@
             function addIqcImage(imgData) {
                 var div = document.createElement('div');
                 div.className = 'iqc-message user';
-                
-                var userSpan = document.createElement('div');
-                userSpan.className = 'msg-user';
-                userSpan.textContent = '👤 Customer';
-                
-                var textSpan = document.createElement('div');
-                textSpan.className = 'msg-text';
-                
-                var imgDiv = document.createElement('div');
-                imgDiv.className = 'msg-image';
-                imgDiv.onclick = function() { openImage(imgData); };
-                
-                var img = document.createElement('img');
-                img.src = imgData;
-                img.alt = 'Image from gallery';
-                
-                imgDiv.appendChild(img);
-                
-                var actions = document.createElement('div');
-                actions.className = 'image-actions';
-                actions.innerHTML = 
-                    '<button onclick="openImage(\'' + imgData + '\')"><i class="fas fa-eye"></i> Buka</button>' +
-                    '<button onclick="downloadImage()"><i class="fas fa-download"></i> Simpan</button>';
-                
-                var timeSpan = document.createElement('span');
-                timeSpan.className = 'time';
-                var now = new Date();
-                timeSpan.textContent = now.getHours().toString().padStart(2, '0') + ':' + 
-                                      now.getMinutes().toString().padStart(2, '0');
-                
-                textSpan.appendChild(imgDiv);
-                textSpan.appendChild(actions);
-                textSpan.appendChild(timeSpan);
-                
-                div.appendChild(userSpan);
-                div.appendChild(textSpan);
-                
+                div.innerHTML = 
+                    '<div class="msg-user">👤 Customer</div>' +
+                    '<div class="msg-text">' +
+                        '<div class="msg-image" onclick="openImage(\'' + imgData + '\')"><img src="' + imgData + '" /></div>' +
+                        '<div class="image-actions">' +
+                            '<button onclick="openImage(\'' + imgData + '\')"><i class="fas fa-eye"></i> Buka</button>' +
+                            '<button onclick="downloadImage()"><i class="fas fa-download"></i> Simpan</button>' +
+                        '</div>' +
+                        '<span class="time">' + 
+                        new Date().getHours().toString().padStart(2, '0') + ':' + 
+                        new Date().getMinutes().toString().padStart(2, '0') + '</span>' +
+                    '</div>';
                 iqcBox.appendChild(div);
                 iqcBox.scrollTop = iqcBox.scrollHeight;
             }
 
-            // ===== GALLERY HANDLER =====
             window.handleIqcGallery = function(event) {
                 var file = event.target.files[0];
                 if (!file) return;
-                
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    var imgData = e.target.result;
-                    addIqcImage(imgData);
+                    addIqcImage(e.target.result);
                     showToast('✅ Gambar terkirim!');
-                    
                     setTimeout(function() {
-                        var replies = [
-                            '🗣️ NIH GAMBAR LO! GA KEREN! TRANSFER CEPETAN! 😤',
-                            '🗣️ GAMBAR APAAN INI? TRANSFER DULU KONTOL! 🤬',
-                            '🗣️ UDAH GUA LIHAT! SEKARANG TRANSFER! 😠',
-                            '🗣️ KEREN? GA KEREN! TRANSFER DULU! 😏'
-                        ];
+                        var replies = ['🗣️ NIH GAMBAR LO! GA KEREN! TRANSFER CEPETAN! 😤', '🗣️ GAMBAR APAAN INI? TRANSFER DULU KONTOL! 🤬'];
                         addIqcMessage(replies[Math.floor(Math.random() * replies.length)], true);
                     }, 800);
                 };
                 reader.readAsDataURL(file);
-                
                 event.target.value = '';
             };
 
-            // ===== MODAL GAMBAR =====
+            if (iqcInput) {
+                iqcInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') { e.preventDefault(); playClick(); window.sendIqcMessage(); }
+                });
+            }
+
+            // ===== GLOBAL CHAT =====
+            var globalMessages = document.getElementById('globalChatMessages');
+            var globalInput = document.getElementById('globalChatInput');
+
+            window.sendGlobalMessage = function() {
+                var text = globalInput.value.trim();
+                if (text === '') { showToast('⚠️ Tulis pesan dulu!'); return; }
+                playClick();
+
+                var userId = sessionStorage.getItem('nupz_user_id') || 'Guest';
+                var userName = 'User_' + userId.substr(userId.length - 4);
+
+                var msgDiv = document.createElement('div');
+                msgDiv.className = 'msg';
+                msgDiv.innerHTML = 
+                    '<div class="msg-user">👤 ' + userName + '</div>' +
+                    '<div class="msg-text">' + text + 
+                    '<span class="time">' + new Date().getHours().toString().padStart(2, '0') + ':' + 
+                    new Date().getMinutes().toString().padStart(2, '0') + '</span></div>';
+                globalMessages.appendChild(msgDiv);
+                globalMessages.scrollTop = globalMessages.scrollHeight;
+                globalInput.value = '';
+
+                var chatHistory = JSON.parse(localStorage.getItem('nupz_global_chat') || '[]');
+                chatHistory.push({ user: userName, text: text, time: new Date().toISOString() });
+                if (chatHistory.length > 50) chatHistory.shift();
+                localStorage.setItem('nupz_global_chat', JSON.stringify(chatHistory));
+
+                showToast('💬 Pesan terkirim!');
+            };
+
+            function loadGlobalChat() {
+                var chatHistory = JSON.parse(localStorage.getItem('nupz_global_chat') || '[]');
+                chatHistory.forEach(function(msg) {
+                    var msgDiv = document.createElement('div');
+                    msgDiv.className = 'msg';
+                    var time = new Date(msg.time);
+                    msgDiv.innerHTML = 
+                        '<div class="msg-user">👤 ' + msg.user + '</div>' +
+                        '<div class="msg-text">' + msg.text + 
+                        '<span class="time">' + time.getHours().toString().padStart(2, '0') + ':' + 
+                        time.getMinutes().toString().padStart(2, '0') + '</span></div>';
+                    globalMessages.appendChild(msgDiv);
+                });
+                globalMessages.scrollTop = globalMessages.scrollHeight;
+            }
+            loadGlobalChat();
+
+            globalInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); window.sendGlobalMessage(); }
+            });
+
+            // ===== REVIEW =====
+            var likeCount = 47;
+            var isLiked = false;
+
+            window.toggleLike = function() {
+                playLikeSound();
+                isLiked = !isLiked;
+                var btn = document.getElementById('likeBtn');
+                var count = document.getElementById('likeCount');
+                if (isLiked) { btn.classList.add('liked'); likeCount++; } 
+                else { btn.classList.remove('liked'); likeCount--; }
+                count.textContent = likeCount;
+            };
+
+            window.postComment = function() {
+                var input = document.getElementById('commentInput');
+                var text = input.value.trim();
+                if (text === '') { showToast('⚠️ Tulis komentar dulu!'); return; }
+                playClick();
+                var commentSection = document.getElementById('commentSection');
+                var div = document.createElement('div');
+                div.className = 'comment';
+                div.innerHTML = 
+                    '<div class="avatar">K</div>' +
+                    '<div class="comment-body">' +
+                        '<div class="name">Kamu • User</div>' +
+                        '<div class="text">' + text + '</div>' +
+                        '<div class="time">Baru saja</div>' +
+                    '</div>';
+                commentSection.appendChild(div);
+                input.value = '';
+                showToast('✅ Komentar terkirim!');
+            };
+
+            window.shareReview = function() {
+                playClick();
+                if (navigator.share) {
+                    navigator.share({ title: 'NUPZ Store Review', text: 'Lihat review NUPZ Store!', url: window.location.href }).catch(function() {});
+                } else {
+                    showToast('📋 Link disalin!');
+                }
+            };
+
+            document.getElementById('commentInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); window.postComment(); }
+            });
+
+            // ===== MODAL =====
             var currentImageSrc = '';
 
             window.openImage = function(src) {
-                if (!src || src === '') {
-                    showToast('⚠️ Tidak ada gambar!');
-                    return;
-                }
+                if (!src) { showToast('⚠️ Tidak ada gambar!'); return; }
+                playClick();
                 currentImageSrc = src;
-                var modal = document.getElementById('imageModal');
-                var modalImg = document.getElementById('modalImage');
-                modalImg.src = src;
-                modal.classList.add('active');
+                document.getElementById('modalImage').src = src;
+                document.getElementById('imageModal').classList.add('active');
             };
 
             window.closeModal = function(e) {
@@ -2611,68 +3285,39 @@
             };
 
             window.downloadImage = function() {
-                var src = currentImageSrc;
-                if (!src || src === '') {
-                    showToast('⚠️ Tidak ada gambar!');
-                    return;
-                }
+                if (!currentImageSrc) { showToast('⚠️ Tidak ada gambar!'); return; }
+                playClick();
                 var link = document.createElement('a');
                 link.download = 'iqc_image_' + Date.now() + '.png';
-                link.href = src;
+                link.href = currentImageSrc;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 showToast('✅ Gambar disimpan!');
             };
 
-            // ===== ENTER =====
-            if (iqcInput) {
-                iqcInput.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        window.sendIqcMessage();
-                    }
-                });
-            }
-
             // ===== UPLOAD FILE =====
             var fileInput = document.getElementById('fileInput');
             var fileName = document.getElementById('fileName');
-
             if (fileInput) {
                 fileInput.addEventListener('change', function() {
                     if (this.files && this.files.length > 0) {
                         var file = this.files[0];
-                        if (fileName) {
-                            fileName.textContent = '\ud83d\udcce ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
-                        }
+                        fileName.textContent = '\ud83d\udcce ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+                        playClick();
                         showToast('\u2705 Bukti terkirim!');
                         addIqcMessage('🗣️ UDAH UPLOAD BUKTI, CEK CEPETAN!', false);
-                        setTimeout(function() {
-                            iqcBotReply('udah upload bukti');
-                        }, 600);
+                        setTimeout(function() { iqcBotReply('udah upload bukti'); }, 600);
                     }
                 });
             }
 
             // ===== SWITCH TAB =====
             window.switchTab = function(tab) {
-                var tabs = document.querySelectorAll('.nav-tab');
-                tabs.forEach(function(t) {
-                    t.classList.remove('active');
-                });
+                document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
                 document.querySelector('.nav-tab[data-tab="' + tab + '"]').classList.add('active');
-
-                var dashboardSection = document.getElementById('dashboardSection');
-                var featuresSection = document.getElementById('featuresSection');
-
-                if (tab === 'dashboard') {
-                    dashboardSection.classList.remove('section-hidden');
-                    featuresSection.classList.add('section-hidden');
-                } else {
-                    dashboardSection.classList.add('section-hidden');
-                    featuresSection.classList.remove('section-hidden');
-                }
+                document.getElementById('dashboardSection').classList.toggle('section-hidden', tab !== 'dashboard');
+                document.getElementById('featuresSection').classList.toggle('section-hidden', tab !== 'features');
             };
 
             // ===== TOAST =====
@@ -2683,9 +3328,7 @@
                     toastMsg.textContent = msg;
                     toast.classList.add('show');
                     clearTimeout(toast._timeout);
-                    toast._timeout = setTimeout(function() {
-                        toast.classList.remove('show');
-                    }, 3000);
+                    toast._timeout = setTimeout(function() { toast.classList.remove('show'); }, 3000);
                 }
             }
 
@@ -2695,9 +3338,7 @@
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(dana).then(function() {
                         showToast('\ud83d\udccb No. DANA disalin!');
-                    }).catch(function() {
-                        fallbackCopy(dana);
-                    });
+                    }).catch(function() { fallbackCopy(dana); });
                 } else {
                     fallbackCopy(dana);
                 }
@@ -2722,11 +3363,9 @@
                 addIqcMessage('🗣️ EH KONTOL! SELAMAT DATANG! LANGSUNG BELI! 😠', true);
             }, 1000);
 
-            // Export functions
             window.addIqcMessage = addIqcMessage;
             window.addIqcImage = addIqcImage;
             window.showToast = showToast;
-            window.updateRealTimeStats = updateRealTimeStats;
 
         })();
     </script>
